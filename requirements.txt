@@ -7,7 +7,7 @@ openai==1.12.0
 langdetect==1.0.9
 
 # Monitoramento e observabilidade
-datadog-lambda==1.0.0
+datadog-lambda==6.111.0
 
 # Testes
 pytest==7.4.4
