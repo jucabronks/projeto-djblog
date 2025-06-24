@@ -11,14 +11,13 @@ terraform {
     }
   }
 
-  # Comentado para usar backend local durante CI/CD
-  # backend "s3" {
-  #   bucket         = "projeto-vm-terraform-state"
-  #   key            = "aws/dev/terraform.tfstate"
-  #   region         = "us-east-1"
-  #   encrypt        = true
-  #   dynamodb_table = "terraform-locks"
-  # }
+  backend "s3" {
+    bucket         = "projeto-vm-terraform-state-ACCOUNT_ID"  # Será substituído pelo script
+    key            = "aws/dev/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-locks"
+  }
 }
 
 # =============================================================================

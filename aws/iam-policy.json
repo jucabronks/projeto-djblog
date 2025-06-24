@@ -1,0 +1,163 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LambdaPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:CreateFunction",
+        "lambda:UpdateFunctionCode",
+        "lambda:UpdateFunctionConfiguration",
+        "lambda:DeleteFunction",
+        "lambda:GetFunction",
+        "lambda:ListFunctions",
+        "lambda:InvokeFunction",
+        "lambda:AddPermission",
+        "lambda:RemovePermission",
+        "lambda:GetFunctionConfiguration",
+        "lambda:GetFunctionCodeSigningConfig",
+        "lambda:GetRuntimeManagementConfig"
+      ],
+      "Resource": [
+        "arn:aws:lambda:*:*:function:coletor-noticias",
+        "arn:aws:lambda:*:*:function:publicador-noticias", 
+        "arn:aws:lambda:*:*:function:limpeza-noticias",
+        "arn:aws:lambda:*:*:function:health-check",
+        "arn:aws:lambda:*:*:function:projeto-vm-*"
+      ]
+    },
+    {
+      "Sid": "IAMPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:GetRole",
+        "iam:ListRoles",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:DeleteRolePolicy",
+        "iam:GetRolePolicy",
+        "iam:ListRolePolicies",
+        "iam:ListAttachedRolePolicies",
+        "iam:PassRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:role/lambda_coletor_role",
+        "arn:aws:iam::*:role/projeto-vm-*"
+      ]
+    },
+    {
+      "Sid": "EventBridgePermissions",
+      "Effect": "Allow",
+      "Action": [
+        "events:CreateRule",
+        "events:DeleteRule",
+        "events:GetRule",
+        "events:ListRules",
+        "events:PutTargets",
+        "events:RemoveTargets",
+        "events:ListTargetsByRule",
+        "events:EnableRule",
+        "events:DisableRule",
+        "events:PutEvents"
+      ],
+      "Resource": [
+        "arn:aws:events:*:*:rule/coleta-diaria",
+        "arn:aws:events:*:*:rule/publicacao-diaria",
+        "arn:aws:events:*:*:rule/limpeza-semanal",
+        "arn:aws:events:*:*:rule/coletor-batch",
+        "arn:aws:events:*:*:rule/publicador-manha",
+        "arn:aws:events:*:*:rule/health-check-schedule",
+        "arn:aws:events:*:*:rule/projeto-vm-*"
+      ]
+    },
+    {
+      "Sid": "SNSPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "sns:CreateTopic",
+        "sns:DeleteTopic",
+        "sns:GetTopicAttributes",
+        "sns:ListTopics",
+        "sns:Subscribe",
+        "sns:Unsubscribe",
+        "sns:ListSubscriptions",
+        "sns:ListSubscriptionsByTopic",
+        "sns:Publish"
+      ],
+      "Resource": [
+        "arn:aws:sns:*:*:lambda-error-notifications",
+        "arn:aws:sns:*:*:projeto-vm-*"
+      ]
+    },
+    {
+      "Sid": "CloudWatchPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutMetricAlarm",
+        "cloudwatch:DeleteAlarms",
+        "cloudwatch:DescribeAlarms",
+        "cloudwatch:ListMetrics",
+        "cloudwatch:GetMetricData",
+        "cloudwatch:PutMetricData",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:DeleteLogGroup"
+      ],
+      "Resource": [
+        "arn:aws:cloudwatch:*:*:alarm:lambda-coletor-errors",
+        "arn:aws:cloudwatch:*:*:alarm:projeto-vm-*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/coletor-noticias:*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/publicador-noticias:*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/limpeza-noticias:*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/health-check:*",
+        "arn:aws:logs:*:*:log-group:/aws/lambda/projeto-vm-*:*"
+      ]
+    },
+    {
+      "Sid": "TerraformStatePermissions",
+      "Effect": "Allow",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:DeleteBucket",
+        "s3:GetBucketLocation",
+        "s3:ListBucket",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:GetBucketVersioning",
+        "s3:PutBucketVersioning",
+        "dynamodb:CreateTable",
+        "dynamodb:DeleteTable",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:ListTables"
+      ],
+      "Resource": [
+        "arn:aws:s3:::projeto-vm-terraform-state",
+        "arn:aws:s3:::projeto-vm-terraform-state/*",
+        "arn:aws:dynamodb:*:*:table/terraform-locks"
+      ]
+    },
+    {
+      "Sid": "GeneralPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "iam:GetUser",
+        "iam:ListUsers",
+        "sts:GetCallerIdentity",
+        "ec2:DescribeRegions",
+        "ec2:DescribeAvailabilityZones"
+      ],
+      "Resource": "*"
+    }
+  ]
+} 
