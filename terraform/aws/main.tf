@@ -3,6 +3,7 @@
 # =============================================================================
 
 terraform {
+  required_version = ">= 1.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -10,13 +11,14 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket         = "projeto-vm-terraform-state"
-    key            = "aws/dev/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "terraform-locks"
-  }
+  # Comentado para usar backend local durante CI/CD
+  # backend "s3" {
+  #   bucket         = "projeto-vm-terraform-state"
+  #   key            = "aws/dev/terraform.tfstate"
+  #   region         = "us-east-1"
+  #   encrypt        = true
+  #   dynamodb_table = "terraform-locks"
+  # }
 }
 
 # =============================================================================
@@ -137,6 +139,7 @@ variable "coletas" {
     copys_api_user   = string
     copys_api_key    = string
   }))
+  default = []
 }
 
 variable "nicho_lista" {
@@ -165,9 +168,18 @@ variable "categorias_wp" {
   }
 }
 
-variable "wp_url" { type = string }
-variable "wp_user" { type = string }
-variable "wp_app_password" { type = string }
+variable "wp_url" { 
+  type = string
+  default = ""
+}
+variable "wp_user" { 
+  type = string
+  default = ""
+}
+variable "wp_app_password" { 
+  type = string
+  default = ""
+}
 
 variable "alarm_email" {
   description = "E-mail para receber alertas de erro das Lambdas"
@@ -329,7 +341,7 @@ resource "aws_lambda_function" "coletor" {
   function_name = "coletor-noticias"
   filename      = "../../lambda_coletor.zip"
   handler       = "lambda_coletor.lambda_handler"
-  runtime       = "python3.8"
+  runtime       = "python3.11"
   timeout       = 300
   memory_size   = 512
   role          = aws_iam_role.lambda_coletor_role.arn
@@ -354,7 +366,7 @@ resource "aws_lambda_function" "publicador" {
   function_name = "publicador-noticias"
   filename      = "../../lambda_publicar_wordpress.zip"
   handler       = "lambda_publicar_wordpress.lambda_handler"
-  runtime       = "python3.8"
+  runtime       = "python3.11"
   timeout       = 300
   memory_size   = 512
   role          = aws_iam_role.lambda_coletor_role.arn
@@ -374,9 +386,9 @@ resource "aws_lambda_function" "limpeza" {
   function_name = "limpeza-noticias"
   filename      = "../../lambda_limpeza.zip"
   handler       = "lambda_limpeza.lambda_handler"
-  runtime       = "python3.8"
-  timeout       = 120
-  memory_size   = 256
+  runtime       = "python3.11"
+  timeout       = 300
+  memory_size   = 512
   role          = aws_iam_role.lambda_coletor_role.arn
   environment {
     variables = {
@@ -387,12 +399,12 @@ resource "aws_lambda_function" "limpeza" {
 }
 
 resource "aws_lambda_function" "health_check" {
-  function_name = "health-check-fontes"
+  function_name = "health-check"
   filename      = "../../lambda_health_check.zip"
-  handler       = "lambda_health_check.health_check_handler"
-  runtime       = "python3.8"
-  timeout       = 120
-  memory_size   = 128
+  handler       = "lambda_health_check.lambda_handler"
+  runtime       = "python3.11"
+  timeout       = 60
+  memory_size   = 256
   role          = aws_iam_role.lambda_coletor_role.arn
   environment {
     variables = {

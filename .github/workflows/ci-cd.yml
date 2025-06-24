@@ -56,14 +56,85 @@ jobs:
           zip -j lambda_limpeza.zip lambda_limpeza.py utils.py
           zip -j lambda_health_check.zip lambda_health_check.py utils.py
 
+      - name: Configurar Terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd terraform/aws
+          
+          # Criar arquivo terraform.tfvars com as variáveis
+          cat > terraform.tfvars << EOF
+          aws_region = "us-east-1"
+          project_name = "projeto-vm"
+          environment = "dev"
+          
+          # MongoDB
+          mongo_uri = "${{ secrets.MONGO_URI }}"
+          
+          # OpenAI (opcional)
+          openai_api_key = "${{ secrets.OPENAI_API_KEY }}"
+          
+          # Datadog (opcional)
+          dd_api_key = "${{ secrets.DD_API_KEY }}"
+          
+          # WordPress (opcional)
+          wp_url = "${{ secrets.WP_URL }}"
+          wp_user = "${{ secrets.WP_USER }}"
+          wp_app_password = "${{ secrets.WP_APP_PASSWORD }}"
+          
+          # Email para alertas
+          alarm_email = "${{ secrets.ALARM_EMAIL }}"
+          
+          # Configurações de coleta
+          nicho = "tecnologia"
+          pais = "Brasil"
+          max_news_per_source = 3
+          
+          # Nichos a coletar
+          nicho_lista = [
+            "tecnologia",
+            "esportes", 
+            "saude",
+            "economia"
+          ]
+          
+          # Categorias WordPress
+          categorias_wp = {
+            tecnologia = 2
+            esportes   = 3
+            saude      = 4
+            economia   = 5
+          }
+          
+          # Configuração de coletas
+          coletas = [
+            {
+              pais           = "Brasil"
+              cron           = "0 */6 * * ? *"
+              timezone       = "America/Sao_Paulo"
+              nicho          = "tecnologia"
+              mongo_uri      = "${{ secrets.MONGO_URI }}"
+              openai_api_key = "${{ secrets.OPENAI_API_KEY }}"
+              dd_api_key     = "${{ secrets.DD_API_KEY }}"
+              dd_site        = "datadoghq.com"
+              dd_env         = "prod"
+              max_news       = 3
+              copys_api_user = ""
+              copys_api_key  = ""
+            }
+          ]
+          EOF
+
       - name: Deploy via Terraform
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          ALARM_EMAIL: ${{ secrets.ALARM_EMAIL }}
-          # Adicione outros segredos conforme necessário
         run: |
           cd terraform/aws
-          terraform init
+          
+          # Inicializar Terraform sem backend S3 (usar local)
+          terraform init -backend=false
+          
+          # Aplicar configuração
           terraform apply -auto-approve 
