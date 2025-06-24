@@ -64,7 +64,12 @@ Este diretório contém scripts e configurações para configurar as permissões
    - **WSL/Linux**: Execute `./install-aws-cli-wsl.sh`
    - **Manual**: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
-2. **Configurar credenciais AWS**
+2. **Terraform instalado (versão >= 1.12.0)**
+   - **Windows**: Execute `.\install-terraform-windows.ps1`
+   - **WSL/Linux**: Execute `./install-terraform-wsl.sh`
+   - **Manual**: https://www.terraform.io/downloads.html
+
+3. **Configurar credenciais AWS**
    ```bash
    aws configure
    ```
@@ -83,12 +88,17 @@ Este diretório contém scripts e configurações para configurar as permissões
    .\install-aws-cli-windows.ps1
    ```
 
-2. **Configurar permissões AWS:**
+2. **Instalar Terraform (se necessário):**
+   ```powershell
+   .\install-terraform-windows.ps1
+   ```
+
+3. **Configurar permissões AWS:**
    ```powershell
    .\setup-aws-permissions.ps1
    ```
 
-3. **Configurar backend S3 do Terraform:**
+4. **Configurar backend S3 do Terraform:**
    ```powershell
    .\configure-terraform-backend.ps1
    ```
@@ -102,13 +112,19 @@ Este diretório contém scripts e configurações para configurar as permissões
    ./install-aws-cli-wsl.sh
    ```
 
-2. **Configurar permissões AWS:**
+2. **Instalar Terraform (se necessário):**
+   ```bash
+   chmod +x install-terraform-wsl.sh
+   ./install-terraform-wsl.sh
+   ```
+
+3. **Configurar permissões AWS:**
    ```bash
    chmod +x setup-aws-permissions-wsl.sh
    ./setup-aws-permissions-wsl.sh
    ```
 
-3. **Configurar backend S3 do Terraform:**
+4. **Configurar backend S3 do Terraform:**
    ```bash
    chmod +x configure-terraform-backend-wsl.sh
    ./configure-terraform-backend-wsl.sh
@@ -174,6 +190,10 @@ aws dynamodb create-table \
 Após a configuração, teste as permissões:
 
 ```bash
+# Verificar versões
+terraform version
+aws --version
+
 # Listar funções Lambda
 aws lambda list-functions
 
@@ -185,6 +205,11 @@ aws s3 ls s3://projeto-vm-terraform-state-SEU_ACCOUNT_ID
 
 # Verificar tabela DynamoDB
 aws dynamodb describe-table --table-name terraform-locks
+
+# Testar Terraform
+cd ../terraform/aws
+terraform init
+terraform plan
 ```
 
 ## 🚨 Troubleshooting
@@ -204,6 +229,10 @@ aws dynamodb describe-table --table-name terraform-locks
 ### Erro: AWS CLI não encontrado
 - Execute o script de instalação correspondente ao seu SO
 - Reinicie o terminal após a instalação
+
+### Erro: Terraform não encontrado
+- Execute o script de instalação correspondente ao seu SO
+- Verifique se a versão é >= 1.12.0
 
 ## 📞 Suporte
 
@@ -228,6 +257,8 @@ aws/
 ├── iam-policy.json                     # Política IAM
 ├── install-aws-cli-windows.ps1         # Instalar AWS CLI (Windows)
 ├── install-aws-cli-wsl.sh              # Instalar AWS CLI (WSL/Linux)
+├── install-terraform-windows.ps1       # Instalar Terraform (Windows)
+├── install-terraform-wsl.sh            # Instalar Terraform (WSL/Linux)
 ├── setup-aws-permissions.ps1           # Configurar permissões (Windows)
 ├── setup-aws-permissions-wsl.sh        # Configurar permissões (WSL/Linux)
 ├── configure-terraform-backend.ps1     # Configurar Terraform (Windows)
