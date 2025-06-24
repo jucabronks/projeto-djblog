@@ -281,7 +281,11 @@ class TestLambdaHandler:
         }
         mock_collector_class.return_value = mock_collector
         
-        result = lambda_handler({}, {})
+        # Criar mock adequado para o context do Lambda
+        mock_context = Mock()
+        mock_context.get_remaining_time_in_millis.return_value = 30000
+        
+        result = lambda_handler({}, mock_context)
         
         assert result["salvas"] == 5
         assert result["existentes"] == 2
@@ -295,8 +299,12 @@ class TestLambdaHandler:
         """Testa handler com erro de validação"""
         mock_validate.side_effect = ValueError("Missing required variables")
         
+        # Criar mock adequado para o context do Lambda
+        mock_context = Mock()
+        mock_context.get_remaining_time_in_millis.return_value = 30000
+        
         with pytest.raises(ValueError):
-            lambda_handler({}, {})
+            lambda_handler({}, mock_context)
     
     @patch('lambda_coletor.validar_variaveis_obrigatorias')
     @patch('lambda_coletor.NewsCollector')
@@ -306,8 +314,12 @@ class TestLambdaHandler:
         mock_collector.collect_all_news.side_effect = Exception("Collection failed")
         mock_collector_class.return_value = mock_collector
         
+        # Criar mock adequado para o context do Lambda
+        mock_context = Mock()
+        mock_context.get_remaining_time_in_millis.return_value = 30000
+        
         with pytest.raises(Exception):
-            lambda_handler({}, {})
+            lambda_handler({}, mock_context)
 
 class TestIntegration:
     """Testes de integração"""
@@ -354,8 +366,12 @@ class TestIntegration:
                     mock_collection.find_one.return_value = None
                     mock_collection.insert_one.return_value = True
                     
+                    # Criar mock adequado para o context do Lambda
+                    mock_context = Mock()
+                    mock_context.get_remaining_time_in_millis.return_value = 30000
+                    
                     # Execute
-                    result = lambda_handler({}, {})
+                    result = lambda_handler({}, mock_context)
                     
                     # Assertions
                     assert "salvas" in result
