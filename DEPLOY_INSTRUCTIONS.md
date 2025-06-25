@@ -80,10 +80,17 @@ chmod +x scripts/deploy_local.sh
 
 **🔧 Os scripts fazem automaticamente:**
 - ✅ Detectam Python 3.8+ disponível  
-- ✅ Instalam dependências se necessário
+- ✅ Criam ambiente virtual Python (venv/)
+- ✅ Instalam dependências no ambiente isolado
 - ✅ Executam testes completos
 - ✅ Validam credenciais AWS
 - ✅ Fazem deploy via Terraform
+
+**🛡️ Ambiente Virtual:**
+- ✅ Resolve erros de "externally-managed-environment" 
+- ✅ Isolamento completo de dependências Python
+- ✅ Compatível com Ubuntu 22.04+, Debian 12+, WSL
+- ✅ Criado automaticamente em `venv/` (ignorado pelo git)
 
 ### **Passo 5: Verificar e Monitorar**
 
@@ -205,27 +212,41 @@ timeout     = 300  # Timeout em segundos
 
 ## 🛠️ **Troubleshooting**
 
-### **Erro "python: command not found" no WSL/Linux:**
+### **Erro "externally-managed-environment" no Ubuntu 22.04+/Debian:**
 
-**✅ Solução Automática** - Os scripts agora detectam e instalam Python automaticamente!
+**✅ Solução Automática** - Os scripts agora usam ambiente virtual Python automaticamente!
 
-1. **Execute o script novamente**:
+1. **Execute o script de teste atualizado**:
+   ```bash
+   chmod +x scripts/test_setup.sh
+   ./scripts/test_setup.sh
+   ```
+
+2. **Ou execute o deploy diretamente** (cria ambiente virtual automaticamente):
    ```bash
    chmod +x scripts/deploy_local.sh
    ./scripts/deploy_local.sh
    ```
 
-2. **Se ainda houver problemas, configure manualmente**:
+3. **Configuração manual** (se necessário):
    ```bash
-   # Ubuntu/Debian
+   # Instalar python3-venv se necessário
    sudo apt update
-   sudo apt install python3 python3-pip python3-venv
+   sudo apt install python3-venv python3-full
    
-   # Criar alias (opcional)
-   echo "alias python=python3" >> ~/.bashrc
-   echo "alias pip=pip3" >> ~/.bashrc
-   source ~/.bashrc
+   # Criar ambiente virtual
+   python3 -m venv venv
+   source venv/bin/activate
+   
+   # Instalar dependências
+   python -m pip install -r requirements.txt
    ```
+
+**💡 Os scripts agora:**
+- ✅ Criam ambiente virtual automaticamente (`venv/`)
+- ✅ Instalam dependências isoladamente  
+- ✅ Ativam ambiente virtual antes de executar testes
+- ✅ Funcionam no Ubuntu 22.04+, Debian 12+, WSL
 
 ### **Erro "python: command not found" no Windows:**
 
