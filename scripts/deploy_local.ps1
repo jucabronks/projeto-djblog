@@ -75,12 +75,34 @@ else {
 $pythonVersionOutput = & $PythonCmd --version 2>&1
 Write-Info "Usando Python: $PythonCmd ($pythonVersionOutput)"
 
-# Verificar e instalar dependências se necessário
-if (-not (Test-Path ".venv_created")) {
-    Write-Info "Instalando dependências Python..."
-    & $PipCmd install --user -r requirements.txt
+# Verificar e instalar dependências sempre
+Write-Info "Verificando dependências Python..."
+
+# Tentar importar boto3 para verificar se as dependências estão instaladas
+try {
+    & $PythonCmd -c "import boto3" 2>$null
     if ($LASTEXITCODE -eq 0) {
-        New-Item -ItemType File -Path ".venv_created" -Force | Out-Null
+        Write-Success "Dependências já instaladas"
+    } else {
+        throw "boto3 não encontrado"
+    }
+} catch {
+    Write-Info "Instalando dependências Python..."
+    
+    # Tentar com --user primeiro
+    & $PipCmd install --user -r requirements.txt
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Instalação com --user falhou, tentando sem --user..."
+        & $PipCmd install -r requirements.txt
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "Falha ao instalar dependências. Tente manualmente:"
+            Write-Error "$PipCmd install -r requirements.txt"
+            exit 1
+        } else {
+            Write-Success "Dependências instaladas globalmente"
+        }
+    } else {
+        Write-Success "Dependências instaladas com --user"
     }
 }
 

@@ -104,11 +104,28 @@ fi
 # 1. Executar testes
 log_info "Executando testes completos..."
 
-# Instalar dependências se necessário
-if [ ! -d "venv" ] && [ ! -f ".venv_created" ]; then
+# Verificar e instalar dependências sempre
+log_info "Verificando dependências Python..."
+
+# Tentar importar boto3 para verificar se as dependências estão instaladas
+if ! $PYTHON_CMD -c "import boto3" &> /dev/null; then
     log_info "Instalando dependências Python..."
-    $PIP_CMD install --user -r requirements.txt
-    touch .venv_created
+    
+    # Tentar com --user primeiro
+    if $PIP_CMD install --user -r requirements.txt; then
+        log_success "Dependências instaladas com --user"
+    else
+        log_warning "Instalação com --user falhou, tentando sem --user..."
+        if $PIP_CMD install -r requirements.txt; then
+            log_success "Dependências instaladas globalmente"
+        else
+            log_error "Falha ao instalar dependências. Tente manualmente:"
+            log_error "$PIP_CMD install -r requirements.txt"
+            exit 1
+        fi
+    fi
+else
+    log_success "Dependências já instaladas"
 fi
 
 $PYTHON_CMD test_runner.py
