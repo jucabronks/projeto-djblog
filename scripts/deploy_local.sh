@@ -23,6 +23,78 @@ log_warning() {
     echo -e "\033[33m[WARNING]\033[0m $1"
 }
 
+# Detectar comando Python e ambiente
+PYTHON_CMD=""
+PIP_CMD=""
+
+# Verificar se está no WSL
+if grep -q Microsoft /proc/version 2>/dev/null; then
+    log_info "Detectado ambiente WSL"
+    export WSL_ENVIRONMENT=true
+fi
+
+# Detectar Python
+if command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+    PIP_CMD="pip3"
+elif command -v python &> /dev/null; then
+    # Verificar se é Python 3
+    python_version=$($PYTHON_CMD --version 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
+    if [ "$python_version" = "3" ]; then
+        PYTHON_CMD="python"
+        PIP_CMD="pip"
+    else
+        log_error "Python 2 detectado. Este projeto requer Python 3.8+"
+        exit 1
+    fi
+else
+    log_error "Python não encontrado. Instalando automaticamente..."
+    
+    # Auto-instalar Python se possível
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [ "$WSL_ENVIRONMENT" = true ]; then
+        # WSL/Linux - Ubuntu/Debian
+        if command -v apt &> /dev/null; then
+            sudo apt update
+            sudo apt install -y python3 python3-pip python3-venv
+            PYTHON_CMD="python3"
+            PIP_CMD="pip3"
+        # Red Hat/CentOS
+        elif command -v yum &> /dev/null; then
+            sudo yum install -y python3 python3-pip
+            PYTHON_CMD="python3"
+            PIP_CMD="pip3"
+        else
+            log_error "Não foi possível instalar Python automaticamente"
+            log_error "Instale Python 3.8+ manualmente e execute novamente"
+            exit 1
+        fi
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        if command -v brew &> /dev/null; then
+            brew install python3
+            PYTHON_CMD="python3"
+            PIP_CMD="pip3"
+        else
+            log_error "Homebrew não encontrado. Instale Python 3.8+ manualmente"
+            exit 1
+        fi
+    else
+        log_error "Sistema não suportado para instalação automática"
+        log_error "Instale Python 3.8+ manualmente e execute novamente"
+        exit 1
+    fi
+fi
+
+log_info "Usando Python: $PYTHON_CMD ($($PYTHON_CMD --version))"
+
+# Verificar se pip está disponível
+if ! command -v $PIP_CMD &> /dev/null; then
+    log_warning "pip não encontrado, tentando instalar..."
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [ "$WSL_ENVIRONMENT" = true ]; then
+        sudo apt install -y python3-pip
+    fi
+fi
+
 # Verificar se estamos no diretório correto
 if [ ! -f "requirements.txt" ]; then
     log_error "Execute este script do diretório raiz do projeto"
@@ -31,7 +103,15 @@ fi
 
 # 1. Executar testes
 log_info "Executando testes completos..."
-python test_runner.py
+
+# Instalar dependências se necessário
+if [ ! -d "venv" ] && [ ! -f ".venv_created" ]; then
+    log_info "Instalando dependências Python..."
+    $PIP_CMD install --user -r requirements.txt
+    touch .venv_created
+fi
+
+$PYTHON_CMD test_runner.py
 
 if [ $? -ne 0 ]; then
     log_error "Testes falharam! Corrija os erros antes de fazer deploy."

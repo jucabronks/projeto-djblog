@@ -38,9 +38,55 @@ if (-not (Test-Path "requirements.txt")) {
     exit 1
 }
 
+# Detectar comando Python
+$PythonCmd = $null
+$PipCmd = $null
+
+# Tentar python3 primeiro (WSL/Linux style)
+if (Get-Command "python3" -ErrorAction SilentlyContinue) {
+    $PythonCmd = "python3"
+    $PipCmd = "pip3"
+}
+# Depois tentar python (Windows style)
+elseif (Get-Command "python" -ErrorAction SilentlyContinue) {
+    $PythonCmd = "python"
+    $PipCmd = "pip"
+    
+    # Verificar se é Python 3
+    $pythonVersion = & $PythonCmd --version 2>&1
+    if ($pythonVersion -match "Python 2\.") {
+        Write-Error "Python 2 detectado. Este projeto requer Python 3.8+"
+        Write-Error "Instale Python 3.8+ em: https://python.org/downloads"
+        exit 1
+    }
+}
+# Tentar py launcher (Windows)
+elseif (Get-Command "py" -ErrorAction SilentlyContinue) {
+    $PythonCmd = "py -3"
+    $PipCmd = "py -3 -m pip"
+}
+else {
+    Write-Error "Python não encontrado!"
+    Write-Error "Instale Python 3.8+ em: https://python.org/downloads"
+    Write-Error "Ou se estiver no WSL, execute: sudo apt install python3 python3-pip"
+    exit 1
+}
+
+$pythonVersionOutput = & $PythonCmd --version 2>&1
+Write-Info "Usando Python: $PythonCmd ($pythonVersionOutput)"
+
+# Verificar e instalar dependências se necessário
+if (-not (Test-Path ".venv_created")) {
+    Write-Info "Instalando dependências Python..."
+    & $PipCmd install --user -r requirements.txt
+    if ($LASTEXITCODE -eq 0) {
+        New-Item -ItemType File -Path ".venv_created" -Force | Out-Null
+    }
+}
+
 # 1. Executar testes
 Write-Info "Executando testes completos..."
-python test_runner.py
+& $PythonCmd test_runner.py
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Testes falharam! Corrija os erros antes de fazer deploy."

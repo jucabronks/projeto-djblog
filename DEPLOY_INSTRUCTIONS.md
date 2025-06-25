@@ -52,15 +52,38 @@ export WP_APP_PASSWORD=senha-app
 
 ### **Passo 4: Deploy Local (Alternativo)**
 
-Se preferir fazer deploy local:
+Se preferir fazer deploy local, os scripts detectam automaticamente o ambiente e instalam dependências:
 
-```bash
-# Linux/Mac
-./scripts/deploy_complete.sh
+#### **Windows (PowerShell)**:
+```powershell
+# Execute no PowerShell (não precisa ser Administrador)
+.\scripts\deploy_local.ps1
 
-# Windows (PowerShell)
-bash scripts/deploy_complete.sh
+# Apenas testes
+.\scripts\deploy_local.ps1 -Test
+
+# Ver ajuda
+.\scripts\deploy_local.ps1 -Help
 ```
+
+#### **WSL/Linux/MacOS**:
+```bash
+# Torna o script executável e executa
+chmod +x scripts/deploy_local.sh
+./scripts/deploy_local.sh
+
+# O script detecta automaticamente:
+# - Se está no WSL, Linux ou macOS
+# - Qual comando Python usar (python3/python)
+# - Instala dependências automaticamente se necessário
+```
+
+**🔧 Os scripts fazem automaticamente:**
+- ✅ Detectam Python 3.8+ disponível  
+- ✅ Instalam dependências se necessário
+- ✅ Executam testes completos
+- ✅ Validam credenciais AWS
+- ✅ Fazem deploy via Terraform
 
 ### **Passo 5: Verificar e Monitorar**
 
@@ -182,13 +205,58 @@ timeout     = 300  # Timeout em segundos
 
 ## 🛠️ **Troubleshooting**
 
-### **Erro de Conexão MongoDB:**
+### **Erro "python: command not found" no WSL/Linux:**
+
+**✅ Solução Automática** - Os scripts agora detectam e instalam Python automaticamente!
+
+1. **Execute o script novamente**:
+   ```bash
+   chmod +x scripts/deploy_local.sh
+   ./scripts/deploy_local.sh
+   ```
+
+2. **Se ainda houver problemas, configure manualmente**:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt update
+   sudo apt install python3 python3-pip python3-venv
+   
+   # Criar alias (opcional)
+   echo "alias python=python3" >> ~/.bashrc
+   echo "alias pip=pip3" >> ~/.bashrc
+   source ~/.bashrc
+   ```
+
+### **Erro "python: command not found" no Windows:**
+
+1. **Execute no PowerShell**:
+   ```powershell
+   .\scripts\deploy_local.ps1
+   ```
+
+2. **Se Python não estiver instalado**:
+   - Baixe em: https://python.org/downloads
+   - Ou use Microsoft Store: `winget install Python.Python.3.11`
+   - Ou use Chocolatey: `choco install python`
+
+### **Testando em Ambos os Ambientes:**
+
+```bash
+# WSL/Linux
+./scripts/deploy_local.sh
+
+# PowerShell (na mesma máquina)
+.\scripts\deploy_local.ps1 -Test
+```
+
+### **Erro de Conexão DynamoDB:**
 ```bash
 # Testar conexão
 python3 -c "
-from pymongo import MongoClient
-client = MongoClient('sua_connection_string')
-print('Conexão OK!')
+import boto3
+dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+table = dynamodb.Table('djblog-noticias')
+print('Conexão DynamoDB OK!')
 "
 ```
 
