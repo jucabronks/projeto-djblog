@@ -78,37 +78,58 @@ Write-Info "Usando Python: $PythonCmd ($pythonVersionOutput)"
 # Verificar e instalar dependências sempre
 Write-Info "Verificando dependências Python..."
 
-# Tentar importar boto3 para verificar se as dependências estão instaladas
-try {
-    & $PythonCmd -c "import boto3" 2>$null
+# Criar ambiente virtual se não existir  
+if (-not (Test-Path "venv")) {
+    Write-Info "Criando ambiente virtual Python..."
+    & $PythonCmd -m venv venv
     if ($LASTEXITCODE -eq 0) {
-        Write-Success "Dependências já instaladas"
+        Write-Success "Ambiente virtual criado"
+    } else {
+        Write-Error "Falha ao criar ambiente virtual"
+        exit 1
+    }
+}
+
+# Ativar ambiente virtual (Windows)
+Write-Info "Ativando ambiente virtual..."
+$VenvPython = "venv\Scripts\python.exe"
+$VenvPip = "venv\Scripts\pip.exe"
+
+# Verificar se o ambiente virtual foi ativado corretamente
+if (Test-Path $VenvPython) {
+    Write-Success "Ambiente virtual ativado"
+} else {
+    Write-Error "Falha ao encontrar ambiente virtual"
+    exit 1
+}
+
+# Atualizar pip no ambiente virtual
+Write-Info "Atualizando pip..."
+& $VenvPython -m pip install --upgrade pip | Out-Null
+
+# Verificar se boto3 está instalado no ambiente virtual
+try {
+    & $VenvPython -c "import boto3" 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Success "Dependências já instaladas no ambiente virtual"
     } else {
         throw "boto3 não encontrado"
     }
 } catch {
-    Write-Info "Instalando dependências Python..."
+    Write-Info "Instalando dependências no ambiente virtual..."
     
-    # Tentar com --user primeiro
-    & $PipCmd install --user -r requirements.txt
+    & $VenvPip install -r requirements.txt
     if ($LASTEXITCODE -ne 0) {
-        Write-Warning "Instalação com --user falhou, tentando sem --user..."
-        & $PipCmd install -r requirements.txt
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error "Falha ao instalar dependências. Tente manualmente:"
-            Write-Error "$PipCmd install -r requirements.txt"
-            exit 1
-        } else {
-            Write-Success "Dependências instaladas globalmente"
-        }
+        Write-Error "Falha ao instalar dependências. Verifique o requirements.txt"
+        exit 1
     } else {
-        Write-Success "Dependências instaladas com --user"
+        Write-Success "Dependências instaladas no ambiente virtual"
     }
 }
 
 # 1. Executar testes
 Write-Info "Executando testes completos..."
-& $PythonCmd test_runner.py
+& $VenvPython test_runner.py
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Testes falharam! Corrija os erros antes de fazer deploy."

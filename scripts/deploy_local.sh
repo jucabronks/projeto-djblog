@@ -107,28 +107,47 @@ log_info "Executando testes completos..."
 # Verificar e instalar dependências sempre
 log_info "Verificando dependências Python..."
 
-# Tentar importar boto3 para verificar se as dependências estão instaladas
-if ! $PYTHON_CMD -c "import boto3" &> /dev/null; then
-    log_info "Instalando dependências Python..."
-    
-    # Tentar com --user primeiro
-    if $PIP_CMD install --user -r requirements.txt; then
-        log_success "Dependências instaladas com --user"
+# Criar ambiente virtual se não existir
+if [ ! -d "venv" ]; then
+    log_info "Criando ambiente virtual Python..."
+    if command -v python3-venv &> /dev/null || $PYTHON_CMD -m venv --help &> /dev/null; then
+        $PYTHON_CMD -m venv venv
+        log_success "Ambiente virtual criado"
     else
-        log_warning "Instalação com --user falhou, tentando sem --user..."
-        if $PIP_CMD install -r requirements.txt; then
-            log_success "Dependências instaladas globalmente"
+        log_warning "python3-venv não encontrado, instalando..."
+        if [[ "$OSTYPE" == "linux-gnu"* ]] || [ "$WSL_ENVIRONMENT" = true ]; then
+            sudo apt install -y python3-venv python3-full
+            $PYTHON_CMD -m venv venv
         else
-            log_error "Falha ao instalar dependências. Tente manualmente:"
-            log_error "$PIP_CMD install -r requirements.txt"
+            log_error "Não foi possível criar ambiente virtual"
             exit 1
         fi
     fi
-else
-    log_success "Dependências já instaladas"
 fi
 
-$PYTHON_CMD test_runner.py
+# Ativar ambiente virtual
+log_info "Ativando ambiente virtual..."
+source venv/bin/activate
+
+# Atualizar pip no ambiente virtual
+log_info "Atualizando pip..."
+python -m pip install --upgrade pip
+
+# Verificar se boto3 está instalado no ambiente virtual
+if ! python -c "import boto3" &> /dev/null; then
+    log_info "Instalando dependências no ambiente virtual..."
+    
+    if python -m pip install -r requirements.txt; then
+        log_success "Dependências instaladas no ambiente virtual"
+    else
+        log_error "Falha ao instalar dependências. Verifique o requirements.txt"
+        exit 1
+    fi
+else
+    log_success "Dependências já instaladas no ambiente virtual"
+fi
+
+python test_runner.py
 
 if [ $? -ne 0 ]; then
     log_error "Testes falharam! Corrija os erros antes de fazer deploy."
