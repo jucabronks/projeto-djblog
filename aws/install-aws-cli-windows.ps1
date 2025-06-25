@@ -8,30 +8,29 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# Função para imprimir com cores
 function Write-Status {
     param([string]$Message)
-    Write-Host "✅ $Message" -ForegroundColor Green
+    Write-Host "[OK] $Message" -ForegroundColor Green
 }
 
-function Write-Warning {
+function Write-WarningMsg {
     param([string]$Message)
-    Write-Host "⚠️  $Message" -ForegroundColor Yellow
+    Write-Host "[WARN] $Message" -ForegroundColor Yellow
 }
 
-function Write-Error {
+function Write-ErrorMsg {
     param([string]$Message)
-    Write-Host "❌ $Message" -ForegroundColor Red
+    Write-Host "[ERROR] $Message" -ForegroundColor Red
 }
 
 function Write-Info {
     param([string]$Message)
-    Write-Host "📋 $Message" -ForegroundColor Cyan
+    Write-Host "[INFO] $Message" -ForegroundColor Cyan
 }
 
 function Write-Header {
     param([string]$Message)
-    Write-Host "🚀 $Message" -ForegroundColor White
+    Write-Host "==== $Message ====" -ForegroundColor White
 }
 
 Write-Header "Instalando AWS CLI no Windows..."
@@ -49,74 +48,63 @@ try {
 }
 
 # Verificar se winget está disponível
+$wingetOk = $false
 try {
     $null = Get-Command winget -ErrorAction Stop
+    $wingetOk = $true
+} catch {}
+
+if ($wingetOk) {
     Write-Info "Winget encontrado, usando para instalação..."
-    
     if ($Force) {
         Write-Info "Removendo instalação existente..."
         winget uninstall -e --id Amazon.AWSCLI 2>$null
     }
-    
     Write-Info "Instalando AWS CLI via winget..."
     winget install -e --id Amazon.AWSCLI
-    
     Write-Status "AWS CLI instalado via winget"
-    
-} catch {
-    Write-Warning "Winget não disponível, tentando download manual..."
-    
-    # Download manual
+} else {
+    Write-WarningMsg "Winget não disponível, tentando download manual..."
     $tempDir = [System.IO.Path]::GetTempPath()
-    $zipFile = Join-Path $tempDir "awscliv2.zip"
-    $extractDir = Join-Path $tempDir "awscliv2"
-    
+    $msiFile = Join-Path $tempDir "awscliv2.msi"
     Write-Info "Baixando AWS CLI..."
-    
     try {
-        Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile $zipFile
-        
+        Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile $msiFile
         Write-Info "Instalando AWS CLI..."
-        Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $zipFile /quiet /norestart" -Wait
-        
+        Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $msiFile /quiet /norestart" -Wait
         Write-Status "AWS CLI instalado via MSI"
-        
     } catch {
-        Write-Error "Falha na instalação manual"
+        Write-ErrorMsg "Falha na instalação manual"
         Write-Info "Tente instalar manualmente:"
         Write-Info "1. Baixe de: https://awscli.amazonaws.com/AWSCLIV2.msi"
         Write-Info "2. Execute o instalador"
         exit 1
     } finally {
-        # Limpar arquivos temporários
-        if (Test-Path $zipFile) { Remove-Item $zipFile -Force }
-        if (Test-Path $extractDir) { Remove-Item $extractDir -Recurse -Force }
+        if (Test-Path $msiFile) { Remove-Item $msiFile -Force }
     }
 }
 
 # Verificar instalação
 try {
-    # Atualizar PATH temporariamente
     $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH","User")
-    
     $awsVersion = aws --version
     Write-Status "AWS CLI instalado com sucesso: $awsVersion"
 } catch {
-    Write-Warning "AWS CLI instalado, mas pode precisar reiniciar o terminal"
+    Write-WarningMsg "AWS CLI instalado, mas pode precisar reiniciar o terminal"
     Write-Info "Reinicie o PowerShell ou abra um novo terminal"
 }
 
-echo ""
+Write-Host ""
 Write-Header "Instalação concluída!"
-echo ""
+Write-Host ""
 Write-Info "Próximos passos:"
-echo "   1. Configure suas credenciais: aws configure"
-echo "   2. Execute: .\setup-aws-permissions.ps1"
-echo "   3. Execute: .\configure-terraform-backend.ps1"
-echo ""
+Write-Host "   1. Configure suas credenciais: aws configure"
+Write-Host "   2. Execute: .\setup-aws-permissions.ps1"
+Write-Host "   3. Execute: .\configure-terraform-backend.ps1"
+Write-Host ""
 Write-Info "Para configurar credenciais AWS:"
-echo "   aws configure"
-echo "   # AWS Access Key ID: [sua-access-key]"
-echo "   # AWS Secret Access Key: [sua-secret-key]"
-echo "   # Default region name: us-east-1"
-echo "   # Default output format: json" 
+Write-Host "   aws configure"
+Write-Host "   # AWS Access Key ID: [sua-access-key]"
+Write-Host "   # AWS Secret Access Key: [sua-secret-key]"
+Write-Host "   # Default region name: us-east-1"
+Write-Host "   # Default output format: json" 

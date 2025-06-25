@@ -1,175 +1,53 @@
-name: Deploy to AWS
+name: Deploy Lambda e Infraestrutura
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
-
-env:
-  AWS_REGION: us-east-1
-  TF_VERSION: 1.5.0
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Configurar Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-cov
-
-      - name: Run tests with coverage
-        run: |
-          pytest --cov=. --cov-report=xml --cov-report=term-missing
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
-
-  build-and-deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Package Lambdas
-        run: |
-          echo "📦 Empacotando Lambda Functions..."
-          
-          # Coletor
-          zip -j lambda_coletor.zip lambda_coletor.py utils.py summarize_ai.py
-          
-          # Publicador
-          zip -j lambda_publicar_wordpress.zip lambda_publicar_wordpress.py utils.py
-          
-          # Limpeza
-          zip -j lambda_limpeza.zip lambda_limpeza.py utils.py
-          
-          # Health Check
-          zip -j lambda_health_check.zip lambda_health_check.py utils.py
-          
-          echo "✅ Lambda Functions empacotadas com sucesso!"
-
-      - name: Set up Terraform
+      - name: Instalar dependências do Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ env.TF_VERSION }}
+          terraform_version: 1.5.0
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+      - name: Instalar AWS CLI
+        run: pip install awscli
 
-      - name: Create terraform.tfvars
+      - name: Empacotar Lambda coletor
         run: |
-          cat > terraform/aws/terraform.tfvars << EOF
-          # Configurações básicas
-          aws_region = "${{ env.AWS_REGION }}"
-          project_name = "projeto-vm"
-          environment = "dev"
-          
-          # MongoDB Atlas
-          mongo_uri = "${{ secrets.MONGO_URI }}"
-          
-          # OpenAI (opcional)
-          openai_api_key = "${{ secrets.OPENAI_API_KEY }}"
-          
-          # Datadog (opcional)
-          dd_api_key = "${{ secrets.DD_API_KEY }}"
-          dd_site = "datadoghq.com"
-          dd_env = "prod"
-          
-          # Configurações de coleta
-          nicho = "ciencia"
-          pais = "Brasil"
-          max_news_per_source = 3
-          
-          # Copyscape (opcional)
-          copys_api_user = "${{ secrets.COPYS_API_USER }}"
-          copys_api_key = "${{ secrets.COPYS_API_KEY }}"
-          
-          # Nichos a coletar
-          nicho_lista = ["saude", "esportes", "tecnologia", "economia"]
-          
-          # Mapeamento WordPress
-          categorias_wp = {
-            saude      = 2
-            esportes   = 3
-            tecnologia = 4
-            economia   = 5
-          }
-          
-          # WordPress
-          wp_url = "${{ secrets.WP_URL }}"
-          wp_user = "${{ secrets.WP_USER }}"
-          wp_app_password = "${{ secrets.WP_APP_PASSWORD }}"
-          
-          # Email para alertas
-          alarm_email = "${{ secrets.ALARM_EMAIL }}"
-          
-          # Tags
-          tags = {
-            Owner       = "DevOps Team"
-            Environment = "dev"
-            Project     = "projeto-vm"
-            ManagedBy   = "Terraform"
-          }
-          EOF
+          zip -j lambda_coletor.zip lambda_coletor.py utils.py
+
+      - name: Empacotar Lambda publicador
+        run: |
+          zip -j lambda_publicar_wordpress.zip lambda_publicar_wordpress.py utils.py
+
+      - name: Deploy Lambda coletor
+        run: |
+          aws lambda update-function-code --function-name coletor-noticias --zip-file fileb://lambda_coletor.zip --region us-east-1
+
+      - name: Deploy Lambda publicador
+        run: |
+          aws lambda update-function-code --function-name publicador-noticias --zip-file fileb://lambda_publicar_wordpress.zip --region us-east-1
 
       - name: Terraform Init
-        run: |
-          echo "🔧 Inicializando Terraform..."
-          terraform -chdir=terraform/aws init
-          echo "✅ Terraform inicializado!"
-
-      - name: Terraform Plan
-        run: |
-          echo "📋 Gerando plano de execução..."
-          terraform -chdir=terraform/aws plan -out=tfplan
-          echo "✅ Plano gerado com sucesso!"
+        run: cd terraform/aws && terraform init
 
       - name: Terraform Apply
-        run: |
-          echo "🚀 Aplicando infraestrutura..."
-          terraform -chdir=terraform/aws apply tfplan
-          echo "✅ Infraestrutura aplicada com sucesso!"
+        run: cd terraform/aws && terraform apply -auto-approve
 
-      - name: Get outputs
-        run: |
-          echo "📊 Informações da infraestrutura:"
-          terraform -chdir=terraform/aws output -json
-
-      - name: Notify deployment
-        if: success()
-        run: |
-          echo "🎉 Deploy concluído com sucesso!"
-          echo "📧 Verifique seu email para confirmar os alertas SNS"
-          echo "🔍 Monitore as execuções no CloudWatch"
-
-      - name: Notify failure
-        if: failure()
-        run: |
-          echo "❌ Deploy falhou!"
-          echo "🔍 Verifique os logs acima para mais detalhes" 
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1 

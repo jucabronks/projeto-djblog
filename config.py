@@ -11,10 +11,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class DatabaseConfig:
     """Configurações do banco de dados"""
-    mongo_uri: str
-    max_connections: int = 100
-    connection_timeout: int = 5000
-    server_selection_timeout: int = 5000
+    dynamodb_table_name: str = "djblog-noticias"
+    aws_region: str = "us-east-1"
 
 @dataclass
 class APIConfig:
@@ -59,10 +57,8 @@ class Config:
         """Carrega todas as configurações do ambiente"""
         # Database
         self.database = DatabaseConfig(
-            mongo_uri=os.environ.get("MONGO_URI"),
-            max_connections=int(os.environ.get("MONGO_MAX_CONNECTIONS", 100)),
-            connection_timeout=int(os.environ.get("MONGO_CONNECTION_TIMEOUT", 5000)),
-            server_selection_timeout=int(os.environ.get("MONGO_SERVER_SELECTION_TIMEOUT", 5000))
+            dynamodb_table_name=os.environ.get("DYNAMODB_TABLE_NAME", "djblog-noticias"),
+            aws_region=os.environ.get("AWS_REGION", "us-east-1")
         )
         
         # APIs
@@ -117,13 +113,13 @@ class Config:
         errors = []
         
         # Validações obrigatórias
-        if not self.database.mongo_uri:
-            errors.append("MONGO_URI é obrigatória")
+        if not self.database.dynamodb_table_name:
+            errors.append("DYNAMODB_TABLE_NAME é obrigatória")
+        
+        if not self.database.aws_region:
+            errors.append("AWS_REGION é obrigatória")
         
         # Validações de formato
-        if self.database.mongo_uri and not self.database.mongo_uri.startswith(("mongodb://", "mongodb+srv://")):
-            errors.append("MONGO_URI deve começar com mongodb:// ou mongodb+srv://")
-        
         if self.content.max_news_per_source <= 0:
             errors.append("MAX_NEWS_PER_SOURCE deve ser maior que 0")
         
@@ -161,23 +157,10 @@ class Config:
         """Verifica se o Datadog está configurado"""
         return bool(self.monitoring.dd_api_key)
     
-    def get_mongo_connection_string(self) -> str:
-        """Retorna string de conexão do MongoDB com parâmetros otimizados"""
-        base_uri = self.database.mongo_uri
-        if "?" in base_uri:
-            base_uri += "&"
-        else:
-            base_uri += "?"
-        
-        params = [
-            f"maxPoolSize={self.database.max_connections}",
-            f"connectTimeoutMS={self.database.connection_timeout}",
-            f"serverSelectionTimeoutMS={self.database.server_selection_timeout}",
-            "retryWrites=true",
-            "w=majority"
-        ]
-        
-        return base_uri + "&".join(params)
+    def get_dynamodb_resource(self):
+        """Retorna recurso DynamoDB configurado"""
+        import boto3
+        return boto3.resource('dynamodb', region_name=self.database.aws_region)
 
 _config_instance = None
 
@@ -190,11 +173,13 @@ def get_config():
 def validate_required_vars() -> List[str]:
     """Valida variáveis obrigatórias e retorna lista de faltantes"""
     config = get_config()
-    required_vars = ["MONGO_URI"]
+    required_vars = ["DYNAMODB_TABLE_NAME", "AWS_REGION"]
     missing = []
     
     for var in required_vars:
-        if var == "MONGO_URI" and not config.database.mongo_uri:
+        if var == "DYNAMODB_TABLE_NAME" and not config.database.dynamodb_table_name:
+            missing.append(var)
+        elif var == "AWS_REGION" and not config.database.aws_region:
             missing.append(var)
     
     return missing

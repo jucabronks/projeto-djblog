@@ -46,34 +46,7 @@ class TestValidacao:
         monkeypatch.delenv("TEST_VAR", raising=False)
         with pytest.raises(ValueError, match="TEST_VAR"):
             validar_variaveis_obrigatorias(["TEST_VAR"])
-
-class TestMongoDB:
-    """Testes para conexão com MongoDB"""
     
-    @patch('utils.MongoClient')
-    def test_conectar_mongodb_sucesso(self, mock_client):
-        """Testa conexão bem-sucedida com MongoDB"""
-        mock_instance = Mock()
-        mock_instance.admin.command.return_value = True
-        mock_instance.get_default_database.return_value = Mock()
-        mock_client.return_value = mock_instance
-        
-        client, db = conectar_mongodb("mongodb://test")
-        
-        assert client == mock_instance
-        assert db is not None
-        mock_instance.admin.command.assert_called_once_with('ping')
-    
-    @patch('utils.MongoClient')
-    def test_conectar_mongodb_falha(self, mock_client):
-        """Testa falha na conexão com MongoDB"""
-        mock_instance = Mock()
-        mock_instance.admin.command.side_effect = Exception("Connection failed")
-        mock_client.return_value = mock_instance
-        
-        with pytest.raises(Exception):
-            conectar_mongodb("mongodb://test")
-
 class TestURLValidation:
     """Testes para validação de URLs"""
     
@@ -119,7 +92,7 @@ class TestPlagioDetection:
         collection.find.return_value = mock_cursor
         result = checar_plagio_local("Título único", "Resumo único", collection)
         assert result is True
-
+    
 class TestDuplicateDetection:
     """Testes para detecção de duplicatas"""
     
@@ -144,7 +117,7 @@ class TestDuplicateDetection:
         noticia = {"titulo": "Título único", "resumo": "Resumo único"}
         result = is_duplicate(noticia, collection)
         assert result is True
-
+    
 class TestTextProcessing:
     """Testes para processamento de texto"""
     

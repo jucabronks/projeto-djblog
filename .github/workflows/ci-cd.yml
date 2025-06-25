@@ -24,8 +24,12 @@ jobs:
           pip install -r requirements.txt
 
       - name: Rodar testes
+        env:
+          AWS_REGION: us-east-1
+          DYNAMODB_TABLE_NAME: djblog-noticias-test
+          OPENAI_API_KEY: sk-test-key
         run: |
-          python -m pytest tests/ -v
+          python test_runner.py --quick
 
       - name: Lint (opcional)
         run: |
@@ -66,22 +70,22 @@ jobs:
           # Criar arquivo terraform.tfvars com as variáveis
           cat > terraform.tfvars << EOF
           aws_region = "us-east-1"
-          project_name = "projeto-vm"
-          environment = "dev"
+          project_name = "djblog"
+          environment = "prod"
           
-          # MongoDB
-          mongo_uri = "${{ secrets.MONGO_URI }}"
+          # DynamoDB
+          dynamodb_table_name = "${{ secrets.DYNAMODB_TABLE_NAME || 'djblog-noticias' }}"
           
           # OpenAI (opcional)
-          openai_api_key = "${{ secrets.OPENAI_API_KEY }}"
+          openai_api_key = "${{ secrets.OPENAI_API_KEY || '' }}"
           
           # Datadog (opcional)
-          dd_api_key = "${{ secrets.DD_API_KEY }}"
+          dd_api_key = "${{ secrets.DD_API_KEY || '' }}"
           
           # WordPress (opcional)
-          wp_url = "${{ secrets.WP_URL }}"
-          wp_user = "${{ secrets.WP_USER }}"
-          wp_app_password = "${{ secrets.WP_APP_PASSWORD }}"
+          wp_url = "${{ secrets.WP_URL || '' }}"
+          wp_user = "${{ secrets.WP_USER || '' }}"
+          wp_app_password = "${{ secrets.WP_APP_PASSWORD || '' }}"
           
           # Email para alertas
           alarm_email = "${{ secrets.ALARM_EMAIL }}"
@@ -114,7 +118,6 @@ jobs:
               cron           = "0 */6 * * ? *"
               timezone       = "America/Sao_Paulo"
               nicho          = "tecnologia"
-              mongo_uri      = "${{ secrets.MONGO_URI }}"
               openai_api_key = "${{ secrets.OPENAI_API_KEY }}"
               dd_api_key     = "${{ secrets.DD_API_KEY }}"
               dd_site        = "datadoghq.com"

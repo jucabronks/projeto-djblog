@@ -15,7 +15,8 @@ def setup_test_environment():
     
     # Define variáveis de teste
     test_env = {
-        "MONGO_URI": "mongodb://test:27017/test",
+        "AWS_REGION": "us-east-1",
+        "DYNAMODB_TABLE_NAME": "djblog-noticias-test",
         "OPENAI_API_KEY": "sk-test-key",
         "DD_API_KEY": "test-dd-key",
         "DD_SITE": "datadoghq.com",
@@ -41,16 +42,6 @@ def setup_test_environment():
     # Restaura variáveis originais
     os.environ.clear()
     os.environ.update(original_env)
-
-@pytest.fixture
-def mock_mongodb():
-    """Mock para conexão MongoDB"""
-    with patch('utils.MongoClient') as mock_client:
-        mock_instance = Mock()
-        mock_instance.admin.command.return_value = True
-        mock_instance.get_default_database.return_value = Mock()
-        mock_client.return_value = mock_instance
-        yield mock_instance
 
 @pytest.fixture
 def mock_requests():

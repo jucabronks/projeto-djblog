@@ -12,7 +12,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "projeto-vm-terraform-state-ACCOUNT_ID"  # Será substituído pelo script
+    bucket         = "projeto-vm-terraform-state-317304475005"  # Será substituído pelo script
     key            = "aws/dev/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
@@ -61,11 +61,6 @@ variable "environment" {
     condition     = contains(["dev", "staging", "prod"], var.environment)
     error_message = "Environment must be dev, staging, or prod."
   }
-}
-
-variable "mongo_uri" {
-  description = "String de conexão do MongoDB Atlas"
-  type        = string
 }
 
 variable "openai_api_key" {
@@ -338,7 +333,8 @@ data "aws_caller_identity" "current" {}
 # =============================================================================
 resource "aws_lambda_function" "coletor" {
   function_name = "coletor-noticias"
-  filename      = "../../lambda_coletor.zip"
+  s3_bucket     = "projeto-vm-terraform-state-317304475005"
+  s3_key        = "lambdas/lambda_package_optimized.zip"
   handler       = "lambda_coletor.lambda_handler"
   runtime       = "python3.11"
   timeout       = 300
@@ -346,7 +342,6 @@ resource "aws_lambda_function" "coletor" {
   role          = aws_iam_role.lambda_coletor_role.arn
   environment {
     variables = {
-      MONGO_URI         = var.mongo_uri
       NICHOS            = join(",", var.nicho_lista)
       OPENAI_API_KEY    = var.openai_api_key
       DD_API_KEY        = var.dd_api_key
@@ -358,7 +353,7 @@ resource "aws_lambda_function" "coletor" {
       COPYS_API_KEY     = var.copys_api_key
     }
   }
-  source_code_hash = filebase64sha256("../../lambda_coletor.zip")
+  source_code_hash = filebase64sha256("../../lambda_package_optimized.zip")
 }
 
 resource "aws_lambda_function" "publicador" {
@@ -371,7 +366,6 @@ resource "aws_lambda_function" "publicador" {
   role          = aws_iam_role.lambda_coletor_role.arn
   environment {
     variables = {
-      MONGO_URI      = var.mongo_uri
       WP_URL         = var.wp_url
       WP_USER        = var.wp_user
       WP_APP_PASSWORD= var.wp_app_password
@@ -391,7 +385,6 @@ resource "aws_lambda_function" "limpeza" {
   role          = aws_iam_role.lambda_coletor_role.arn
   environment {
     variables = {
-      MONGO_URI = var.mongo_uri
     }
   }
   source_code_hash = filebase64sha256("../../lambda_limpeza.zip")
@@ -407,10 +400,57 @@ resource "aws_lambda_function" "health_check" {
   role          = aws_iam_role.lambda_coletor_role.arn
   environment {
     variables = {
-      MONGO_URI = var.mongo_uri
     }
   }
   source_code_hash = filebase64sha256("../../lambda_health_check.zip")
+}
+
+resource "aws_lambda_function" "api_noticias" {
+  function_name = "api-noticias"
+  handler       = "lambda_api_noticias.lambda_handler"
+  runtime       = "python3.11"
+  role          = aws_iam_role.lambda_coletor_role.arn
+  filename      = "../lambda_api_noticias.zip"
+  source_code_hash = filebase64sha256("../lambda_api_noticias.zip")
+  timeout       = 10
+  environment {
+    variables = {
+      # Adicione variáveis se necessário
+    }
+  }
+}
+
+resource "aws_apigatewayv2_api" "noticias_api" {
+  name          = "noticias-api"
+  protocol_type = "HTTP"
+}
+
+resource "aws_apigatewayv2_integration" "noticias_lambda_integration" {
+  api_id                 = aws_apigatewayv2_api.noticias_api.id
+  integration_type       = "AWS_PROXY"
+  integration_uri        = aws_lambda_function.api_noticias.invoke_arn
+  integration_method     = "POST"
+  payload_format_version = "2.0"
+}
+
+resource "aws_apigatewayv2_route" "noticias_route" {
+  api_id    = aws_apigatewayv2_api.noticias_api.id
+  route_key = "GET /noticias"
+  target    = "integrations/${aws_apigatewayv2_integration.noticias_lambda_integration.id}"
+}
+
+resource "aws_apigatewayv2_stage" "noticias_stage" {
+  api_id      = aws_apigatewayv2_api.noticias_api.id
+  name        = "$default"
+  auto_deploy = true
+}
+
+resource "aws_lambda_permission" "allow_apigw_invoke_api_noticias" {
+  statement_id  = "AllowAPIGatewayInvokeApiNoticias"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.api_noticias.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.noticias_api.execution_arn}/*/*"
 }
 
 resource "aws_iam_role" "lambda_coletor_role" {
@@ -593,6 +633,30 @@ resource "aws_cloudwatch_metric_alarm" "coletor_error_alarm" {
     FunctionName = aws_lambda_function.coletor.function_name
   }
   alarm_actions = [aws_sns_topic.lambda_errors.arn]
+}
+
+# =============================================================================
+# EVENTBRIDGE RULES PARA LIMPEZA DE LOGS
+# =============================================================================
+
+resource "aws_cloudwatch_event_rule" "limpeza_logs" {
+  name                = "limpeza-logs-semanal"
+  description         = "Executa a função de limpeza de logs semanalmente"
+  schedule_expression = "cron(0 3 ? * MON *)" # toda segunda-feira às 03:00 UTC
+}
+
+resource "aws_cloudwatch_event_target" "limpeza_logs_target" {
+  rule      = aws_cloudwatch_event_rule.limpeza_logs.name
+  target_id = "lambda-limpeza-logs"
+  arn       = aws_lambda_function.limpeza.arn
+}
+
+resource "aws_lambda_permission" "allow_eventbridge_limpeza_logs" {
+  statement_id  = "AllowExecutionFromEventBridgeLimpezaLogs"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.limpeza.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.limpeza_logs.arn
 }
 
 # =============================================================================

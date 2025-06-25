@@ -7,9 +7,6 @@ aws_region = "us-east-1"
 project_name = "projeto-vm"
 environment = "dev"
 
-# MongoDB Atlas (OBRIGATÓRIO)
-mongo_uri = "mongodb+srv://projeto-vm-user:senha-forte-123!@projeto-vm-cluster.xxxxx.mongodb.net/?retryWrites=true&w=majority"
-
 # OpenAI (OPCIONAL - para resumos com IA)
 openai_api_key = "sk-..."  # Deixe vazio se não usar OpenAI
 
@@ -64,7 +61,6 @@ coletas = [
     cron           = "cron(0,10,20,30 23 * * ? *)"
     timezone       = "America/Sao_Paulo"
     nicho          = "tecnologia"
-    mongo_uri      = "mongodb+srv://SEU_USUARIO:SUA_SENHA@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority"
     openai_api_key = ""
     dd_api_key     = ""
     dd_site        = ""

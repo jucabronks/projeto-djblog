@@ -2,19 +2,17 @@
 
 ## 📋 **Resumo do Projeto**
 
-Sistema automatizado de agregação de notícias usando AWS Lambda, MongoDB Atlas e EventBridge. **Custo: $5-8/mês** com **zero manutenção**.
+Sistema automatizado de agregação de notícias usando AWS Lambda, DynamoDB e EventBridge. **Custo: $3-5/mês** com **zero manutenção**.
 
 ## 🎯 **Próximos Passos (1-2-3-4-5)**
 
-### **Passo 1: Configurar MongoDB Atlas (Gratuito)**
+### **Passo 1: Configurar DynamoDB (Automático)**
 
-1. **Criar conta**: https://www.mongodb.com/atlas
-2. **Criar cluster M0** (gratuito) na região us-east-1
-3. **Configurar usuário**: `projeto-vm-user` com senha forte
-4. **Network Access**: `0.0.0.0/0` (permite acesso de qualquer lugar)
-5. **Obter connection string** e guardar
-
-**Guia detalhado**: `scripts/setup_mongodb_atlas.md`
+**As tabelas DynamoDB são criadas automaticamente via Terraform!**
+- ✅ **Zero configuração manual**
+- ✅ **100% serverless** 
+- ✅ **Auto-scaling automático**
+- ✅ **Pay-per-request** - você só paga pelo que usar
 
 ### **Passo 2: Configurar Variáveis de Ambiente**
 
@@ -22,7 +20,8 @@ Sistema automatizado de agregação de notícias usando AWS Lambda, MongoDB Atla
 ```bash
 export AWS_ACCESS_KEY_ID=sua_access_key
 export AWS_SECRET_ACCESS_KEY=sua_secret_key
-export MONGO_URI=mongodb+srv://projeto-vm-user:senha@cluster.mongodb.net/?retryWrites=true&w=majority
+export AWS_REGION=us-east-1
+export DYNAMODB_TABLE_NAME=djblog-noticias
 export ALARM_EMAIL=seu@email.com
 ```
 
@@ -65,9 +64,13 @@ bash scripts/deploy_complete.sh
 
 ### **Passo 5: Verificar e Monitorar**
 
-1. **Executar verificação**:
+1. **Executar testes completos**:
    ```bash
-   python3 scripts/monitor_deployment.py
+   # Windows
+   python test_runner.py
+   
+   # Ou usar script completo
+   .\scripts\deploy_local.ps1 -Test
    ```
 
 2. **Confirmar email SNS**:
@@ -77,6 +80,40 @@ bash scripts/deploy_complete.sh
 3. **Monitorar no CloudWatch**:
    - https://console.aws.amazon.com/cloudwatch
    - Verificar logs das Lambdas
+
+4. **Testar execução manual**:
+   ```bash
+   # Testar coletor
+   aws lambda invoke \
+     --function-name djblog-coletor \
+     --payload '{}' \
+     --region us-east-1 \
+     response.json
+   
+   # Ver resultado
+   cat response.json
+   ```
+
+## 🧪 **Guia Completo de Testes**
+
+**📖 Para testes detalhados, veja: [`TESTING_GUIDE.md`](TESTING_GUIDE.md)**
+
+### **Testes Locais Rápidos:**
+```bash
+# Teste completo automatizado
+python test_runner.py
+
+# Apenas validação rápida
+python test_runner.py --quick
+
+# Pular testes AWS (desenvolvimento)
+python test_runner.py --no-aws
+```
+
+### **CI/CD GitHub Actions:**
+- ✅ **Automático**: Push para `main` executa testes + deploy
+- ✅ **Manual**: Vá para Actions → Run workflow
+- ✅ **Monitoramento**: Acompanhe logs em tempo real
 
 ## 📊 **O que será criado**
 
@@ -93,10 +130,16 @@ bash scripts/deploy_complete.sh
 - **Limpeza**: Domingo 3:00 (BRT)
 - **Health Check**: Diário
 
+### **DynamoDB Tables:**
+- `djblog-noticias` - Tabela principal de notícias
+- `djblog-noticias-resumidas` - Notícias processadas pela IA
+- `djblog-fontes` - Configuração de fontes RSS
+
 ### **Monitoramento:**
-- **SNS Topic** para alertas por email
+- **SNS Topic** para alertas por email  
 - **CloudWatch Alarms** para erros
 - **Logs estruturados** para debugging
+- **Métricas DynamoDB** para performance
 
 ## 🔧 **Configurações Personalizáveis**
 

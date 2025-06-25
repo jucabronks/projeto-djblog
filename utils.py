@@ -6,12 +6,11 @@ import os
 import time
 from typing import List, Dict, Any, Optional, Tuple
 from difflib import SequenceMatcher
-from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError, PyMongoError
 import requests
 from urllib.parse import urlparse
 import hashlib
 from datetime import datetime, timedelta, UTC
+import boto3
 
 from config import get_config
 
@@ -39,78 +38,6 @@ def validar_variaveis_obrigatorias(nomes: List[str]) -> None:
         logger.error(error_msg)
         raise ValueError(error_msg)
 
-def conectar_mongodb(uri: Optional[str] = None, max_retries: int = 3) -> Tuple[MongoClient, Any]:
-    """
-    Conecta ao MongoDB com retry e configurações otimizadas
-    
-    Args:
-        uri: String de conexão do MongoDB (opcional)
-        max_retries: Número máximo de tentativas de conexão
-    
-    Returns:
-        Tuple com client e database
-        
-    Raises:
-        ConnectionFailure: Se não conseguir conectar após todas as tentativas
-    """
-    mongo_uri = uri or get_config().get_mongo_connection_string()
-    
-    if not mongo_uri:
-        raise ValueError("MONGO_URI não configurada")
-    
-    for attempt in range(max_retries):
-        try:
-            logger.info(f"Tentativa {attempt + 1} de conexão com MongoDB")
-            client = MongoClient(mongo_uri)
-            
-            # Testa a conexão
-            client.admin.command('ping')
-            db = client.get_default_database()
-            
-            logger.info("Conexão com MongoDB estabelecida com sucesso")
-            return client, db
-            
-        except (ConnectionFailure, ServerSelectionTimeoutError) as e:
-            logger.warning(f"Tentativa {attempt + 1} falhou: {e}")
-            if attempt == max_retries - 1:
-                logger.error(f"Falha ao conectar no MongoDB após {max_retries} tentativas")
-                raise ConnectionFailure(f"Não foi possível conectar ao MongoDB: {e}")
-            time.sleep(2 ** attempt)  # Exponential backoff
-        except Exception as e:
-            logger.error(f"Erro inesperado ao conectar no MongoDB: {e}")
-            raise
-
-def buscar_fontes(nicho: Optional[str] = None, ativo: bool = True) -> List[Dict[str, Any]]:
-    """
-    Busca fontes de notícias no MongoDB com cache e validação
-    
-    Args:
-        nicho: Nicho específico para filtrar
-        ativo: Se deve buscar apenas fontes ativas
-    
-    Returns:
-        Lista de fontes de notícias
-    """
-    try:
-        client, db = conectar_mongodb()
-        query = {"ativo": ativo}
-        
-        if nicho:
-            query["nicho"] = nicho
-        
-        # Adiciona índices para melhor performance
-        db["fontes_noticias"].create_index([("nicho", 1), ("ativo", 1)])
-        
-        fontes = list(db["fontes_noticias"].find(query))
-        client.close()
-        
-        logger.info(f"Encontradas {len(fontes)} fontes para nicho: {nicho or 'todos'}")
-        return fontes
-        
-    except Exception as e:
-        logger.error(f"Erro ao buscar fontes no MongoDB: {e}")
-        return []
-
 def validar_url(url: str) -> bool:
     """
     Valida se uma URL é acessível
@@ -133,34 +60,39 @@ def validar_url(url: str) -> bool:
         logger.debug(f"URL inválida ou inacessível: {url} - {e}")
         return False
 
-def checar_plagio_local(title: str, resumo: str, collection: Any, threshold: float = 0.8) -> bool:
+def checar_plagio_local(title: str, resumo: str, table, threshold: float = 0.8) -> bool:
     """
-    Verifica se uma notícia é plágio comparando com notícias existentes
+    Verifica se uma notícia é plágio comparando com notícias existentes no DynamoDB
     
     Args:
         title: Título da notícia
         resumo: Resumo da notícia
-        collection: Coleção do MongoDB
+        table: Tabela do DynamoDB
         threshold: Limiar de similaridade (0-1)
     
     Returns:
         True se for considerado plágio
     """
     try:
+        from boto3.dynamodb.conditions import Attr
+        
         # Normaliza o texto para comparação
         title_normalized = title.lower().strip()
         resumo_normalized = resumo.lower().strip()
         
-        # Busca apenas notícias recentes para melhor performance
-        cutoff_date = datetime.now(UTC) - timedelta(days=7)  # 7 dias atrás
+        # Busca notícias recentes (últimos 7 dias)
+        cutoff_date = datetime.now(UTC) - timedelta(days=7)
+        cutoff_timestamp = int(cutoff_date.timestamp())
         
-        for noticia_existente in collection.find(
-            {"data_insercao": {"$gte": cutoff_date}},
-            {"titulo": 1, "resumo": 1}
-        ).limit(100):  # Limita para performance
-            
-            titulo_existente = noticia_existente.get("titulo", "").lower().strip()
-            resumo_existente = noticia_existente.get("resumo", "").lower().strip()
+        response = table.scan(
+            FilterExpression=Attr('data_insercao').gte(cutoff_timestamp),
+            ProjectionExpression='titulo, resumo',
+            Limit=100  # Limita para performance
+        )
+        
+        for item in response.get('Items', []):
+            titulo_existente = item.get("titulo", "").lower().strip()
+            resumo_existente = item.get("resumo", "").lower().strip()
             
             # Calcula similaridade
             sim_titulo = SequenceMatcher(None, titulo_existente, title_normalized).ratio()
@@ -219,26 +151,23 @@ def is_duplicate(noticia: Dict[str, Any], collection: Any, threshold: float = 0.
         logger.error(f"Erro ao verificar duplicidade: {e}")
         return False
 
-def get_collection(collection_name: str = "noticias_coletadas") -> Tuple[MongoClient, Any]:
+def get_dynamodb_table(table_name: str = None):
     """
-    Obtém uma coleção específica do MongoDB com configurações otimizadas
+    Obtém uma tabela do DynamoDB
     
     Args:
-        collection_name: Nome da coleção
+        table_name: Nome da tabela (opcional, usa configuração padrão)
     
     Returns:
-        Tuple com client e collection
+        Objeto tabela do DynamoDB
     """
-    client, db = conectar_mongodb()
-    collection = db[collection_name]
+    config = get_config()
+    table_name = table_name or config.database.dynamodb_table_name
     
-    # Cria índices para melhor performance
-    collection.create_index([("link", 1)], unique=True)
-    collection.create_index([("nicho", 1), ("aprovado", 1), ("publicado", 1)])
-    collection.create_index([("data_insercao", -1)])
-    collection.create_index([("fonte", 1)])
+    dynamodb = config.get_dynamodb_resource()
+    table = dynamodb.Table(table_name)
     
-    return client, collection
+    return table
 
 def sanitize_text(text: str, max_length: int = 1000) -> str:
     """
@@ -307,6 +236,92 @@ def retry_on_failure(func=None, *, max_retries: int = 3, delay: float = 1.0):
     else:
         return decorator(func)
 
+def inserir_noticia_coletada_legacy(item):
+    """Função legacy - usar inserir_noticia_coletada() ao invés desta"""
+    table = get_dynamodb_table()
+    table.put_item(Item=item)
+
+def buscar_noticias_coletadas():
+    """Busca todas as notícias coletadas"""
+    table = get_dynamodb_table()
+    response = table.scan()
+    return response.get('Items', [])
+
+def inserir_noticia_resumida(item):
+    """Insere notícia resumida"""
+    config = get_config()
+    dynamodb = config.get_dynamodb_resource()
+    table = dynamodb.Table(f"{config.database.dynamodb_table_name}-resumidas")
+    table.put_item(Item=item)
+
+def buscar_noticias_resumidas():
+    """Busca todas as notícias resumidas"""
+    config = get_config()
+    dynamodb = config.get_dynamodb_resource()
+    table = dynamodb.Table(f"{config.database.dynamodb_table_name}-resumidas")
+    response = table.scan()
+    return response.get('Items', [])
+
+def buscar_fontes(nicho: str = None, pais: str = "Brasil") -> List[Dict[str, str]]:
+    """
+    Busca fontes de notícias por nicho e país
+    
+    Args:
+        nicho: Nicho das notícias (tecnologia, esportes, etc.)
+        pais: País das fontes
+    
+    Returns:
+        Lista de fontes de notícias
+    """
+    # Fontes exemplo - em produção viriam do DynamoDB
+    fontes_exemplo = {
+        "tecnologia": [
+            {"name": "TechCrunch", "url": "https://techcrunch.com/feed/", "type": "RSS"},
+            {"name": "Ars Technica", "url": "https://feeds.arstechnica.com/arstechnica/index", "type": "RSS"},
+            {"name": "The Verge", "url": "https://www.theverge.com/rss/index.xml", "type": "RSS"}
+        ],
+        "esportes": [
+            {"name": "ESPN", "url": "https://www.espn.com/espn/rss/news", "type": "RSS"},
+            {"name": "Sports Illustrated", "url": "https://www.si.com/rss/si_topstories.rss", "type": "RSS"}
+        ]
+    }
+    
+    if nicho and nicho in fontes_exemplo:
+        return fontes_exemplo[nicho]
+    
+    # Retorna todas as fontes se nicho não especificado
+    todas_fontes = []
+    for lista_fontes in fontes_exemplo.values():
+        todas_fontes.extend(lista_fontes)
+    
+    return todas_fontes
+
+def inserir_noticia_coletada(noticia: Dict[str, Any]) -> bool:
+    """
+    Insere uma notícia coletada no DynamoDB
+    
+    Args:
+        noticia: Dados da notícia
+    
+    Returns:
+        True se inserção foi bem-sucedida
+    """
+    try:
+        table = get_dynamodb_table()
+        
+        # Gera ID único baseado no link
+        noticia_id = generate_content_hash(noticia.get('link', ''))
+        noticia['id'] = noticia_id
+        noticia['data_insercao'] = int(datetime.now(UTC).timestamp())
+        
+        table.put_item(Item=noticia)
+        logger.info(f"Notícia inserida com sucesso: {noticia.get('titulo', '')}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Erro ao inserir notícia: {e}")
+        return False
+
 # Exemplos de uso:
 if __name__ == "__main__":
     print("Fontes de tecnologia do Brasil:")
@@ -315,4 +330,4 @@ if __name__ == "__main__":
 
     print("\nFontes de redes sociais internacionais:")
     for f in buscar_fontes(nicho="redes_sociais"):
-        print(f"- {f['name']} ({f.get('type', '')})") 
+        print(f"- {f['name']} ({f.get('type', '')})")

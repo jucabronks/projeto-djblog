@@ -1,67 +1,57 @@
-#!/usr/bin/env python3
 """
-Lambda Function para Limpeza Automática de Notícias Antigas
-Remove notícias com mais de 7 dias do MongoDB
+Função AWS Lambda para limpeza automática de notícias antigas
+Remove notícias com mais de 7 dias do DynamoDB
 """
 
-import json
+import boto3
 from datetime import datetime, timedelta, UTC
-from bson import ObjectId
-from utils import setup_logging, get_collection
+from utils import setup_logging, get_dynamodb_table
 
 logger = setup_logging()
 
 def lambda_handler(event, context):
-    """
-    Handler principal da Lambda de limpeza
-    Remove notícias antigas (> 7 dias) do MongoDB
-    """
-    client = None
+    """Remove notícias antigas do DynamoDB"""
     try:
-        # Conectar ao MongoDB
-        client, db = get_collection("noticias_coletadas")
-        collection = db["noticias_coletadas"]
+        logger.info("Iniciando limpeza de notícias antigas")
+        
+        table = get_dynamodb_table()
         
         # Data limite (7 dias atrás)
-        data_limite = datetime.now(UTC) - timedelta(days=7)
+        cutoff_date = datetime.now(UTC) - timedelta(days=7)
+        cutoff_timestamp = int(cutoff_date.timestamp())
         
-        logger.info(f"Iniciando limpeza de notícias anteriores a {data_limite}")
+        # Busca notícias antigas
+        from boto3.dynamodb.conditions import Attr
         
-        # Contar notícias antes da limpeza
-        total_antes = collection.count_documents({})
-        logger.info(f"Total de notícias antes da limpeza: {total_antes}")
+        response = table.scan(
+            FilterExpression=Attr('data_insercao').lt(cutoff_timestamp),
+            ProjectionExpression='id'
+        )
         
-        # Remover notícias antigas
-        resultado = collection.delete_many({
-            "data_insercao": {"$lt": data_limite}
-        })
+        items_to_delete = response.get('Items', [])
+        deleted_count = 0
         
-        # Contar notícias após a limpeza
-        total_depois = collection.count_documents({})
+        # Remove em lotes
+        for item in items_to_delete:
+            try:
+                table.delete_item(Key={'id': item['id']})
+                deleted_count += 1
+            except Exception as e:
+                logger.error(f"Erro ao deletar item {item['id']}: {e}")
         
-        # Logs do resultado
-        logger.info(f"Notícias removidas: {resultado.deleted_count}")
-        logger.info(f"Total de notícias após limpeza: {total_depois}")
+        logger.info(f"Limpeza concluída: {deleted_count} notícias removidas")
         
         return {
             'statusCode': 200,
-            'body': json.dumps({
-                'message': 'Limpeza concluída com sucesso',
-                'noticias_removidas': resultado.deleted_count,
-                'total_antes': total_antes,
-                'total_depois': total_depois,
-                'data_limite': data_limite.isoformat()
-            })
+            'body': {
+                'message': f'Limpeza executada com sucesso',
+                'deleted_count': deleted_count
+            }
         }
         
     except Exception as e:
-        logger.error(f"Erro na limpeza: {str(e)}")
+        logger.error(f"Erro na limpeza: {e}")
         return {
             'statusCode': 500,
-            'body': json.dumps({
-                'error': f'Erro na limpeza: {str(e)}'
-            })
+            'body': {'message': f'Erro na limpeza: {str(e)}'}
         }
-    finally:
-        if client:
-            client.close() 
