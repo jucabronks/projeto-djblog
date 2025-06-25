@@ -125,19 +125,28 @@ if [ ! -d "venv" ]; then
     fi
 fi
 
-# Ativar ambiente virtual
-log_info "Ativando ambiente virtual..."
-source venv/bin/activate
+# Configurar caminhos do ambiente virtual
+log_info "Configurando ambiente virtual..."
+VENV_PYTHON="venv/bin/python"
+VENV_PIP="venv/bin/pip"
+
+# Verificar se o ambiente virtual foi criado corretamente
+if [ ! -f "$VENV_PYTHON" ]; then
+    log_error "Ambiente virtual não foi criado corretamente"
+    exit 1
+fi
+
+log_success "Ambiente virtual configurado"
 
 # Atualizar pip no ambiente virtual
 log_info "Atualizando pip..."
-python -m pip install --upgrade pip
+$VENV_PYTHON -m pip install --upgrade pip
 
 # Verificar se boto3 está instalado no ambiente virtual
-if ! python -c "import boto3" &> /dev/null; then
+if ! $VENV_PYTHON -c "import boto3" &> /dev/null; then
     log_info "Instalando dependências no ambiente virtual..."
     
-    if python -m pip install -r requirements.txt; then
+    if $VENV_PIP install -r requirements.txt; then
         log_success "Dependências instaladas no ambiente virtual"
     else
         log_error "Falha ao instalar dependências. Verifique o requirements.txt"
@@ -147,7 +156,7 @@ else
     log_success "Dependências já instaladas no ambiente virtual"
 fi
 
-python test_runner.py
+$VENV_PYTHON test_runner.py
 
 if [ $? -ne 0 ]; then
     log_error "Testes falharam! Corrija os erros antes de fazer deploy."

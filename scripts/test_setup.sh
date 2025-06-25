@@ -42,16 +42,27 @@ else
     echo "✅ Ambiente virtual já existe"
 fi
 
-# 4. Ativar ambiente virtual e instalar dependências
+# 4. Instalar dependências no ambiente virtual
 echo ""
-echo "4. Ativando ambiente virtual e instalando dependências..."
-source venv/bin/activate
+echo "4. Instalando dependências no ambiente virtual..."
 
-# Atualizar pip
-python -m pip install --upgrade pip
+# Usar caminho direto para o Python do ambiente virtual
+VENV_PYTHON="venv/bin/python"
+VENV_PIP="venv/bin/pip"
+
+# Verificar se o ambiente virtual foi criado corretamente
+if [ ! -f "$VENV_PYTHON" ]; then
+    echo "❌ Ambiente virtual não foi criado corretamente"
+    exit 1
+fi
+
+# Atualizar pip no ambiente virtual
+echo "📦 Atualizando pip..."
+$VENV_PYTHON -m pip install --upgrade pip
 
 # Instalar dependências
-python -m pip install -r requirements.txt
+echo "📦 Instalando dependências do requirements.txt..."
+$VENV_PIP install -r requirements.txt
 
 if [ $? -eq 0 ]; then
     echo "✅ Dependências instaladas com sucesso no ambiente virtual"
@@ -63,7 +74,7 @@ fi
 # 5. Testar importação
 echo ""
 echo "5. Testando importações no ambiente virtual..."
-python -c "
+$VENV_PYTHON -c "
 import boto3
 import pytest  
 import requests
@@ -78,6 +89,7 @@ if [ $? -eq 0 ]; then
     echo ""
     echo "💡 O ambiente virtual foi criado em 'venv/'"
     echo "💡 Para ativar manualmente: source venv/bin/activate"
+    echo "💡 Para usar Python do venv: venv/bin/python"
 else
     echo "❌ Erro ao importar dependências"
     exit 1
