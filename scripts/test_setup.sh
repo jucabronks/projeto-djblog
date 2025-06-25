@@ -48,7 +48,6 @@ echo "4. Instalando dependências no ambiente virtual..."
 
 # Usar caminho direto para o Python do ambiente virtual
 VENV_PYTHON="venv/bin/python"
-VENV_PIP="venv/bin/pip"
 
 # Verificar se o ambiente virtual foi criado corretamente
 if [ ! -f "$VENV_PYTHON" ]; then
@@ -56,13 +55,29 @@ if [ ! -f "$VENV_PYTHON" ]; then
     exit 1
 fi
 
-# Atualizar pip no ambiente virtual
+# Atualizar pip no ambiente virtual usando python -m pip
 echo "📦 Atualizando pip..."
 $VENV_PYTHON -m pip install --upgrade pip
 
-# Instalar dependências
+# Verificar se pip está funcionando
+if ! $VENV_PYTHON -m pip --version &> /dev/null; then
+    echo "❌ pip não está funcionando no ambiente virtual"
+    echo "🔧 Tentando reinstalar pip..."
+    
+    # Tentar baixar e instalar pip manualmente
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    $VENV_PYTHON get-pip.py
+    rm get-pip.py
+    
+    if ! $VENV_PYTHON -m pip --version &> /dev/null; then
+        echo "❌ Falha ao instalar pip"
+        exit 1
+    fi
+fi
+
+# Instalar dependências usando python -m pip
 echo "📦 Instalando dependências do requirements.txt..."
-$VENV_PIP install -r requirements.txt
+$VENV_PYTHON -m pip install -r requirements.txt
 
 if [ $? -eq 0 ]; then
     echo "✅ Dependências instaladas com sucesso no ambiente virtual"

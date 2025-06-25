@@ -128,7 +128,6 @@ fi
 # Configurar caminhos do ambiente virtual
 log_info "Configurando ambiente virtual..."
 VENV_PYTHON="venv/bin/python"
-VENV_PIP="venv/bin/pip"
 
 # Verificar se o ambiente virtual foi criado corretamente
 if [ ! -f "$VENV_PYTHON" ]; then
@@ -138,15 +137,31 @@ fi
 
 log_success "Ambiente virtual configurado"
 
-# Atualizar pip no ambiente virtual
+# Atualizar pip no ambiente virtual usando python -m pip
 log_info "Atualizando pip..."
 $VENV_PYTHON -m pip install --upgrade pip
+
+# Verificar se pip está funcionando
+if ! $VENV_PYTHON -m pip --version &> /dev/null; then
+    log_warning "pip não está funcionando, tentando reinstalar..."
+    
+    # Tentar baixar e instalar pip manualmente
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    $VENV_PYTHON get-pip.py
+    rm get-pip.py
+    
+    if ! $VENV_PYTHON -m pip --version &> /dev/null; then
+        log_error "Falha ao instalar pip no ambiente virtual"
+        exit 1
+    fi
+    log_success "pip reinstalado com sucesso"
+fi
 
 # Verificar se boto3 está instalado no ambiente virtual
 if ! $VENV_PYTHON -c "import boto3" &> /dev/null; then
     log_info "Instalando dependências no ambiente virtual..."
     
-    if $VENV_PIP install -r requirements.txt; then
+    if $VENV_PYTHON -m pip install -r requirements.txt; then
         log_success "Dependências instaladas no ambiente virtual"
     else
         log_error "Falha ao instalar dependências. Verifique o requirements.txt"
