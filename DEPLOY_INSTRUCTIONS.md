@@ -28,7 +28,21 @@ Sistema automatizado de agregação de notícias usando AWS Lambda, DynamoDB e E
 
 **🚀 DEPLOY 100% FUNCIONAL:** O sistema está completamente pronto para deploy! Terraform validate 100% OK, todos os arquivos zip das Lambdas corretos.
 
-**💡 PRÓXIMO PASSO:** Execute o deploy! Tudo funciona perfeitamente.
+**🌐 SITE AUTOMATIZADO:** GitHub Pages configurado com URL: `https://jucabronks.github.io/projeto-djblog`
+
+**⚡ VERIFICAÇÃO COM 1 COMANDO:** 
+```bash
+# Super rápida (5 segundos)
+python verificar_site.py --quick
+
+# Abrir no navegador
+python verificar_site.py --open
+
+# Deploy completo se necessário
+python deploy_oneclick.py
+```
+
+**💡 PRÓXIMO PASSO:** Execute `python verificar_site.py --open` para abrir o site! Tudo funciona automaticamente.
 
 ---
 

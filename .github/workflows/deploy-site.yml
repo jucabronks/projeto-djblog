@@ -53,51 +53,40 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
     
-    - name: 🌐 Generate static site
+    - name: 🌐 Generate responsive static site
       env:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         DYNAMODB_TABLE_NAME: ${{ secrets.DYNAMODB_TABLE_NAME }}
       run: |
+        echo "🚀 Gerando site estático responsivo e otimizado para SEO..."
         python generate_static_site.py
         
-        # Criar estrutura do site
-        mkdir -p site/assets/css
-        mkdir -p site/assets/js
+        # Criar estrutura otimizada do site
+        mkdir -p site/assets/images
+        mkdir -p site/assets/icons
         
-        # Mover index.html para pasta site
+        # Mover HTML principal
         mv index.html site/
         
-        # Criar CSS básico
-        cat > site/assets/css/style.css << 'EOF'
-        /* Site de Notícias - CSS Responsivo */
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
+        # Criar robots.txt
+        echo "User-agent: *" > site/robots.txt
+        echo "Allow: /" >> site/robots.txt
+        echo "Sitemap: https://jucabronks.github.io/projeto-djblog/sitemap.xml" >> site/robots.txt
         
-        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          line-height: 1.6;
-          color: #333;
-          background-color: #f5f5f5;
-        }
+        # Criar sitemap.xml básico
+        echo '<?xml version="1.0" encoding="UTF-8"?>' > site/sitemap.xml
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> site/sitemap.xml
+        echo '  <url>' >> site/sitemap.xml
+        echo '    <loc>https://jucabronks.github.io/projeto-djblog/</loc>' >> site/sitemap.xml
+        echo "    <lastmod>$(date -u +%Y-%m-%d)</lastmod>" >> site/sitemap.xml
+        echo '    <changefreq>daily</changefreq>' >> site/sitemap.xml
+        echo '    <priority>1.0</priority>' >> site/sitemap.xml
+        echo '  </url>' >> site/sitemap.xml
+        echo '</urlset>' >> site/sitemap.xml
         
-        .container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 20px;
-        }
-        
-        header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 1rem 0;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .header-content {
-          display: flex;
+        echo "✅ Site estático responsivo gerado com sucesso!"
+        echo "📊 Estrutura:"
+        ls -la site/
           justify-content: space-between;
           align-items: center;
         }
