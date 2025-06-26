@@ -110,14 +110,35 @@ log_info "Verificando dependências Python..."
 # Criar ambiente virtual se não existir
 if [ ! -d "venv" ]; then
     log_info "Criando ambiente virtual Python..."
+    
+    # Detectar versão do Python
+    PYTHON_VERSION=$($PYTHON_CMD -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+    log_info "Versão Python detectada: $PYTHON_VERSION"
+    
     if command -v python3-venv &> /dev/null || $PYTHON_CMD -m venv --help &> /dev/null; then
         $PYTHON_CMD -m venv venv
         log_success "Ambiente virtual criado"
     else
-        log_warning "python3-venv não encontrado, instalando..."
+        log_warning "python$PYTHON_VERSION-venv não encontrado, instalando..."
         if [[ "$OSTYPE" == "linux-gnu"* ]] || [ "$WSL_ENVIRONMENT" = true ]; then
-            sudo apt install -y python3-venv python3-full
-            $PYTHON_CMD -m venv venv
+            # Tentar instalar pacote específico da versão primeiro
+            if sudo apt update && sudo apt install -y python$PYTHON_VERSION-venv python$PYTHON_VERSION-full; then
+                log_success "python$PYTHON_VERSION-venv instalado"
+            else
+                log_warning "Tentando pacotes genéricos..."
+                sudo apt install -y python3-venv python3-full python3-virtualenv
+            fi
+            
+            # Tentar criar ambiente virtual
+            if $PYTHON_CMD -m venv venv; then
+                log_success "Ambiente virtual criado"
+            elif command -v virtualenv &> /dev/null && virtualenv venv; then
+                log_success "Ambiente virtual criado com virtualenv"
+            else
+                log_error "Não foi possível criar ambiente virtual"
+                log_error "Execute: ./scripts/fix_ubuntu24_python312.sh"
+                exit 1
+            fi
         else
             log_error "Não foi possível criar ambiente virtual"
             exit 1

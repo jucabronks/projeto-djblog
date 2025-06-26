@@ -29,15 +29,48 @@ fi
 # 3. Criar ambiente virtual
 echo ""
 echo "3. Criando ambiente virtual..."
+
+# Detectar versão do Python para instalar pacote correto
+PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+echo "📍 Versão Python detectada: $PYTHON_VERSION"
+
 if [ ! -d "venv" ]; then
-    # Verificar se python3-venv está instalado
+    # Verificar se python3-venv está instalado para a versão específica
     if ! python3 -m venv --help &> /dev/null; then
-        echo "📦 Instalando python3-venv..."
-        sudo apt update && sudo apt install -y python3-venv python3-full
+        echo "📦 Instalando python$PYTHON_VERSION-venv..."
+        
+        # Tentar instalar pacote específico da versão primeiro
+        if sudo apt update && sudo apt install -y python$PYTHON_VERSION-venv python$PYTHON_VERSION-full python$PYTHON_VERSION-dev; then
+            echo "✅ python$PYTHON_VERSION-venv instalado"
+        else
+            echo "⚠️ Tentando instalar pacotes genéricos..."
+            sudo apt install -y python3-venv python3-full python3-dev
+        fi
     fi
     
-    python3 -m venv venv
-    echo "✅ Ambiente virtual criado"
+    # Criar ambiente virtual
+    python3 -m venv venv --clear
+    
+    if [ $? -eq 0 ] && [ -f "venv/bin/python" ]; then
+        echo "✅ Ambiente virtual criado"
+    else
+        echo "❌ Falha ao criar ambiente virtual"
+        echo "🔧 Tentando método alternativo..."
+        
+        # Método alternativo: virtualenv
+        if command -v virtualenv &> /dev/null; then
+            virtualenv venv
+        else
+            echo "📦 Instalando virtualenv..."
+            sudo apt install -y python3-virtualenv
+            virtualenv venv
+        fi
+        
+        if [ ! -f "venv/bin/python" ]; then
+            echo "❌ Não foi possível criar ambiente virtual"
+            exit 1
+        fi
+    fi
 else
     echo "✅ Ambiente virtual já existe"
 fi

@@ -26,12 +26,29 @@ fi
 echo ""
 echo "2. Verificando dependências do sistema..."
 
-# Verificar se python3-venv está disponível
+# Detectar versão do Python
+PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+echo "📍 Versão Python detectada: $PYTHON_VERSION"
+
+# Verificar se python3-venv está disponível para a versão específica
 if python3 -m venv --help &> /dev/null; then
-    echo "✅ python3-venv disponível"
+    echo "✅ python$PYTHON_VERSION-venv disponível"
 else
-    echo "📦 Instalando python3-venv..."
-    sudo apt update && sudo apt install -y python3-venv python3-full python3-dev
+    echo "📦 Instalando python$PYTHON_VERSION-venv..."
+    
+    # Tentar instalar pacote específico da versão
+    if sudo apt update && sudo apt install -y python$PYTHON_VERSION-venv python$PYTHON_VERSION-full python$PYTHON_VERSION-dev; then
+        echo "✅ python$PYTHON_VERSION-venv instalado"
+    else
+        echo "⚠️ Tentando instalar pacotes genéricos..."
+        sudo apt install -y python3-venv python3-full python3-dev python3-virtualenv
+        
+        # Se ainda não funcionar, tentar virtualenv
+        if ! python3 -m venv --help &> /dev/null; then
+            echo "📦 Instalando virtualenv como alternativa..."
+            sudo apt install -y virtualenv
+        fi
+    fi
 fi
 
 # Verificar se curl está disponível (para instalar pip se necessário)
@@ -45,12 +62,21 @@ fi
 # 4. Criar novo ambiente virtual
 echo ""
 echo "3. Criando novo ambiente virtual..."
-python3 -m venv venv --clear
 
-if [ $? -eq 0 ] && [ -f "venv/bin/python" ]; then
-    echo "✅ Ambiente virtual criado com sucesso"
+# Primeiro método: venv nativo
+if python3 -m venv venv --clear; then
+    echo "✅ Ambiente virtual criado com venv nativo"
+elif command -v virtualenv &> /dev/null && virtualenv venv; then
+    echo "✅ Ambiente virtual criado com virtualenv"
 else
-    echo "❌ Falha ao criar ambiente virtual"
+    echo "❌ Falha ao criar ambiente virtual com ambos os métodos"
+    exit 1
+fi
+
+if [ -f "venv/bin/python" ]; then
+    echo "✅ Ambiente virtual validado"
+else
+    echo "❌ Ambiente virtual não foi criado corretamente"
     exit 1
 fi
 
