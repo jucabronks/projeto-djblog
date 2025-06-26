@@ -1,8 +1,8 @@
-# 🚀 Guia Completo de Deploy - Projeto VM Serverless
+# 🇧🇷 Guia Completo de Deploy - Portal de Notícias Brasileiro
 
 ## 📋 **Resumo do Projeto**
 
-Sistema automatizado de agregação de notícias usando AWS Lambda, DynamoDB e EventBridge. **Custo: $3-5/mês** com **zero manutenção**.
+Portal automatizado de notícias brasileiras usando AWS Lambda, DynamoDB e GitHub Pages. **Custo: $3-5/mês** com **zero manutenção**.
 
 ## ✅ **Status da Migração DynamoDB**
 
@@ -21,6 +21,42 @@ Sistema automatizado de agregação de notícias usando AWS Lambda, DynamoDB e E
   - `scripts/diagnose_external_managed.sh` - Diagnóstico inteligente
 - ✅ **Taxa de sucesso dos testes quick: 100.0%** (11/11 passou) 🆙
 - ✅ **Taxa de sucesso dos testes completos: 80.0%** (12/15 passou) 🆙
+
+## 🏗️ **Sua Arquitetura Inteligente**
+
+### **🤖 Fluxo Automático Diário:**
+
+**21:00-21:30 (BRT)** - 🔍 **Agente Coletor Brasileiro**
+- Coleta notícias de sites brasileiros confiáveis (G1, UOL, Folha, Estado, etc.)
+- Valida anti-plágio e qualidade em português
+- Armazena no **Banco 1** (`djblog-noticias`)
+
+**21:35 (BRT)** - 🧠 **Agente Resumidor Nacional** 
+- Processa notícias automaticamente (SEM IA externa - processamento local)
+- Gera resumos relevantes e otimizados em português brasileiro
+- Armazena no **Banco 2** (`djblog-noticias-resumidas`)
+
+**06:40 (BRT)** - 📰 **Agente Publicador**
+- Publica automaticamente no site brasileiro
+- Site estático atualizado no GitHub Pages
+- WordPress sincronizado (opcional)
+
+### **📊 Bancos de Dados DynamoDB Brasileiros:**
+- **Banco 1:** Notícias brutas coletadas de fontes nacionais
+- **Banco 2:** Notícias processadas e otimizadas em português  
+- **Banco 3:** Configuração de fontes brasileiras confiáveis
+
+### **🇧🇷 Nichos Brasileiros Configurados:**
+- 🏥 **Saúde** (SUS, medicina, bem-estar)
+- ⚽ **Esportes** (futebol, Olimpíadas, esportes nacionais)  
+- 💻 **Tecnologia** (startups brasileiras, inovação, digital)
+- 💰 **Economia** (mercado brasileiro, PIB, inflação, investimentos)
+
+### **🌐 Estrutura do Site:**
+**✅ Atualmente: 1 site único** com todas as categorias
+**🔧 Disponível: Sites separados** por nicho (se preferir)
+
+**📖 Detalhes completos:** [`ARQUITETURA_COMPLETA.md`](ARQUITETURA_COMPLETA.md)
 
 **⚠️ PROBLEMAS NÃO-CRÍTICOS:**
 - Alguns testes unitários ainda referenciam mocks incompatíveis (legacy)
@@ -69,8 +105,7 @@ export ALARM_EMAIL=seu@email.com
 
 #### **Opcionais:**
 ```bash
-export OPENAI_API_KEY=sk-...  # Para resumos com IA
-export WP_URL=https://seu-site.com  # Para publicação
+export WP_URL=https://seu-site.com  # Para publicação WordPress (opcional)
 export WP_USER=admin
 export WP_APP_PASSWORD=senha-app
 ```
