@@ -16,10 +16,12 @@ BRT = timezone(timedelta(hours=-3))  # Horário de Brasília
 # Sexta: publica quinta
 # Sábado e domingo: não publica
 
+
 def get_periodo_publicacao(hoje=None):
     if hoje is None:
         hoje = datetime.now(BRT)
     return [(hoje - timedelta(days=1)).date()]
+
 
 def buscar_noticias(datas):
     if not datas:
@@ -29,11 +31,21 @@ def buscar_noticias(datas):
     col = db[COLLECTION_NAME]
     noticias = []
     for data in datas:
-        inicio = datetime.combine(data, datetime.min.time(), tzinfo=BRT).astimezone(timezone.utc)
-        fim = datetime.combine(data, datetime.max.time(), tzinfo=BRT).astimezone(timezone.utc)
-        cursor = col.find({"data_insercao": {"$gte": inicio, "$lte": fim}}).sort("data_insercao", -1)
+        inicio = datetime.combine(
+            data,
+            datetime.min.time(),
+            tzinfo=BRT).astimezone(
+            timezone.utc)
+        fim = datetime.combine(
+            data,
+            datetime.max.time(),
+            tzinfo=BRT).astimezone(
+            timezone.utc)
+        cursor = col.find({"data_insercao": {"$gte": inicio, "$lte": fim}}).sort(
+            "data_insercao", -1)
         noticias.extend(list(cursor))
     return noticias
+
 
 def gerar_html(noticias, datas):
     html = f"""
@@ -102,6 +114,7 @@ def gerar_html(noticias, datas):
         f.write(html)
     print(f"Arquivo {HTML_FILE} gerado com {len(noticias)} notícias.")
 
+
 def main():
     datas = get_periodo_publicacao()
     if not datas:
@@ -110,5 +123,6 @@ def main():
     noticias = buscar_noticias(datas)
     gerar_html(noticias, datas)
 
+
 if __name__ == "__main__":
-    main() 
+    main()

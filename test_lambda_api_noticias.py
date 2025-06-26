@@ -5,4 +5,4 @@ event = {}
 context = None
 
 response = lambda_handler(event, context)
-print(response) 
+print(response)

@@ -162,32 +162,34 @@ FONTES_TABLE_SCHEMA = {
     "BillingMode": "PAY_PER_REQUEST"
 }
 
+
 def create_tables_if_not_exist():
     """Cria as tabelas DynamoDB se elas não existirem"""
     import boto3
     from botocore.exceptions import ResourceExistsError
-    
+
     dynamodb = boto3.client('dynamodb')
-    
+
     tables_to_create = [
         NOTICIAS_TABLE_SCHEMA,
         NOTICIAS_RESUMIDAS_TABLE_SCHEMA,
         FONTES_TABLE_SCHEMA
     ]
-    
+
     for table_schema in tables_to_create:
         try:
-            response = dynamodb.create_table(**table_schema)
+            dynamodb.create_table(**table_schema)
             print(f"Tabela {table_schema['TableName']} criada com sucesso!")
-            
+
             # Aguarda a tabela ficar ativa
             waiter = dynamodb.get_waiter('table_exists')
             waiter.wait(TableName=table_schema['TableName'])
-            
+
         except ResourceExistsError:
             print(f"Tabela {table_schema['TableName']} já existe.")
         except Exception as e:
             print(f"Erro ao criar tabela {table_schema['TableName']}: {e}")
+
 
 if __name__ == "__main__":
     create_tables_if_not_exist()
