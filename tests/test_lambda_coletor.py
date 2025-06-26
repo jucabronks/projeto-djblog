@@ -273,7 +273,7 @@ class TestLambdaHandler:
         assert result["existentes"] == 2
         assert result["erros"] == 0
 
-        mock_validate.assert_called_once_with(["MONGO_URI"])
+        mock_validate.assert_called_once_with(["AWS_REGION", "DYNAMODB_TABLE_NAME"])
         mock_collector.collect_all_news.assert_called_once()
 
     @patch('lambda_coletor.validar_variaveis_obrigatorias')
@@ -312,7 +312,8 @@ class TestIntegration:
         """Testa fluxo completo de integração"""
         # Mock environment variables
         mock_environ.get.side_effect = lambda key, default=None: {
-            "MONGO_URI": "mongodb://test",
+            "AWS_REGION": "us-east-1",
+            "DYNAMODB_TABLE_NAME": "djblog-noticias",
             "NICHOS": "tecnologia,esportes"
         }.get(key, default)
 

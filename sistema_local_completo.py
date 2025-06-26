@@ -123,10 +123,7 @@ class SistemaLocalNoticias:
                 continue
 
             try:
-                self.log_evento(
-                    f"📰 Coletando de: {
-                        fonte['name']} ({
-                        fonte['nicho']})")
+                self.log_evento(f"📰 Coletando de: {fonte['name']} ({fonte['nicho']})")
                 feed = feedparser.parse(fonte["rss"])
 
                 if not feed.entries:

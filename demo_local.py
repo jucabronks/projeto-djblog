@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Demonstração Local do Sistema de Agregação de Notícias
-Simula o funcionamento sem precisar de AWS ou MongoDB
+Simula o funcionamento sem precisar de AWS ou DynamoDB
 """
 
 import feedparser
@@ -139,8 +139,7 @@ def mostrar_estatisticas(noticias):
 def salvar_demo(noticias):
     """Salva as notícias em arquivo JSON para demonstração"""
     if noticias:
-        arquivo = f"demo_noticias_{
-            datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        arquivo = f"demo_noticias_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         with open(arquivo, 'w', encoding='utf-8') as f:
             json.dump(noticias, f, ensure_ascii=False, indent=2)
         print(f"\n💾 Notícias salvas em: {arquivo}")
@@ -154,7 +153,7 @@ def main():
     print("=" * 70)
     print("Este script demonstra o funcionamento do sistema sem precisar de:")
     print("  - AWS (Lambda, EventBridge, SNS)")
-    print("  - MongoDB Atlas")
+    print("  - DynamoDB")
     print("  - Terraform")
     print("=" * 70)
 
@@ -179,7 +178,7 @@ def main():
         print(f"✅ Dados salvos em: {arquivo}")
 
     print("\n🚀 Próximos passos para implementação completa:")
-    print("  1. Configurar MongoDB Atlas (gratuito)")
+    print("  1. Configurar credenciais AWS")
     print("  2. Instalar AWS CLI e Terraform")
     print("  3. Configurar variáveis de ambiente")
     print("  4. Executar deploy completo")

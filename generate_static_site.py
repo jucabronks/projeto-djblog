@@ -1,10 +1,11 @@
 import os
+import boto3
 from datetime import datetime, timedelta, timezone
-from pymongo import MongoClient
+from boto3.dynamodb.conditions import Key, Attr
 
 # Configurações
-MONGO_URI = os.environ.get("MONGO_URI")
-COLLECTION_NAME = "noticias_coletadas"
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
+DYNAMODB_TABLE_NAME = os.environ.get("DYNAMODB_TABLE_NAME", "djblog-noticias")
 HTML_FILE = "index.html"
 BRT = timezone(timedelta(hours=-3))  # Horário de Brasília
 
@@ -26,9 +27,10 @@ def get_periodo_publicacao(hoje=None):
 def buscar_noticias(datas):
     if not datas:
         return []
-    client = MongoClient(MONGO_URI)
-    db = client.get_default_database()
-    col = db[COLLECTION_NAME]
+    
+    dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
+    table = dynamodb.Table(DYNAMODB_TABLE_NAME)
+    
     noticias = []
     for data in datas:
         inicio = datetime.combine(
@@ -41,9 +43,21 @@ def buscar_noticias(datas):
             datetime.max.time(),
             tzinfo=BRT).astimezone(
             timezone.utc)
-        cursor = col.find({"data_insercao": {"$gte": inicio, "$lte": fim}}).sort(
-            "data_insercao", -1)
-        noticias.extend(list(cursor))
+        
+        # Scan da tabela com filtro por data
+        response = table.scan(
+            FilterExpression=Attr('data_insercao').between(
+                inicio.isoformat(),
+                fim.isoformat()
+            )
+        )
+        
+        # Ordena por data de inserção (decrescente)
+        items = sorted(response.get('Items', []), 
+                      key=lambda x: x.get('data_insercao', ''), 
+                      reverse=True)
+        noticias.extend(items)
+    
     return noticias
 
 

@@ -120,7 +120,7 @@ def is_duplicate(noticia: Dict[str, Any], collection: Any, threshold: float = 0.
 
     Args:
         noticia: Notícia para verificar
-        collection: Coleção do MongoDB
+        collection: Coleção/tabela do DynamoDB
         threshold: Limiar de similaridade (0-1)
 
     Returns:

@@ -80,7 +80,7 @@ log "✅ Todos os pré-requisitos estão instalados"
 # Verificar variáveis de ambiente
 log "Verificando variáveis de ambiente..."
 
-required_vars=("AWS_ACCESS_KEY_ID" "AWS_SECRET_ACCESS_KEY" "MONGO_URI" "ALARM_EMAIL")
+required_vars=("AWS_ACCESS_KEY_ID" "AWS_SECRET_ACCESS_KEY" "AWS_REGION" "ALARM_EMAIL")
 missing_vars=()
 
 for var in "${required_vars[@]}"; do
@@ -98,7 +98,7 @@ if [ ${#missing_vars[@]} -ne 0 ]; then
     echo "Configure as variáveis de ambiente ou exporte-as:"
     echo "export AWS_ACCESS_KEY_ID=sua_access_key"
     echo "export AWS_SECRET_ACCESS_KEY=sua_secret_key"
-    echo "export MONGO_URI=sua_mongo_uri"
+    echo "export AWS_REGION=us-east-1"
     echo "export ALARM_EMAIL=seu@email.com"
     exit 1
 fi
@@ -158,8 +158,8 @@ aws_region = "us-east-1"
 project_name = "projeto-vm"
 environment = "dev"
 
-# MongoDB Atlas
-mongo_uri = "$MONGO_URI"
+# DynamoDB
+dynamodb_table_name = "djblog-noticias"
 
 # OpenAI (opcional)
 openai_api_key = "${OPENAI_API_KEY:-}"

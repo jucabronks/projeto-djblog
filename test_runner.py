@@ -98,11 +98,11 @@ class DJBlogTester:
                 return f"{self.python_cmd} {' '.join(args)}"
             else:
                 return command
+
+    def log(self, message: str, level: str = "INFO"):
         """Log com timestamp"""
         timestamp = datetime.now().strftime("%H:%M:%S")
         print(f"[{timestamp}] {level}: {message}")
-
-    def log(self, message: str, level: str = "INFO"):
         """Log com timestamp"""
         timestamp = datetime.now().strftime("%H:%M:%S")
         print(f"[{timestamp}] {level}: {message}")

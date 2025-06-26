@@ -120,18 +120,19 @@ variable "copys_api_key" {
 variable "coletas" {
   description = "Configuração das coletas por país"
   type = list(object({
-    pais             = string
-    cron             = string
-    timezone         = string
-    nicho            = string
-    mongo_uri        = string
-    openai_api_key   = string
-    dd_api_key       = string
-    dd_site          = string
-    dd_env           = string
-    max_news         = number
-    copys_api_user   = string
-    copys_api_key    = string
+    pais                   = string
+    cron                   = string
+    timezone               = string
+    nicho                  = string
+    dynamodb_table_name    = string
+    aws_region             = string
+    openai_api_key         = string
+    dd_api_key             = string
+    dd_site                = string
+    dd_env                 = string
+    max_news               = number
+    copys_api_user         = string
+    copys_api_key          = string
   }))
   default = []
 }
@@ -259,7 +260,7 @@ data "aws_caller_identity" "current" {}
 # }
 
 # =============================================================================
-# DATABASE MODULE (COMENTADO - USAR MONGODB ATLAS GRATUITO)
+# DATABASE MODULE (USANDO DYNAMODB SERVERLESS)
 # =============================================================================
 
 # module "database" {

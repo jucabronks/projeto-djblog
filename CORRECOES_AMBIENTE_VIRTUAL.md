@@ -149,7 +149,7 @@ venv/bin/python test_runner.py --quick
 - Terraform init/validate
 
 ### **⚠️ Pendentes (não afetam deploy):**
-- Alguns testes unitários ainda referenciam MongoDB (precisam atualização)
+- Alguns testes unitários legacy precisam de atualização de mocks
 - Validação Terraform precisa dos arquivos .zip das Lambdas
 
 ### **✅ Deploy Funcional:**
@@ -163,7 +163,7 @@ venv/bin/python test_runner.py --quick
 1. **`test_runner.py`** - Refatoração completa para ambiente virtual
 2. **`DEPLOY_INSTRUCTIONS.md`** - Documentação atualizada com status
 3. **`tests/test_lambda_coletor.py`** - Remoção de `NewsItem` (não existe mais)
-4. **`tests/test_utils.py`** - Remoção de funções MongoDB
+4. **`tests/test_utils.py`** - Remoção de funções legacy
 5. **`CORRECOES_AMBIENTE_VIRTUAL.md`** - Este arquivo de documentação
 
 ## 🚀 **Próximos Passos**

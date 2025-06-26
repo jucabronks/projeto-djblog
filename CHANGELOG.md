@@ -8,7 +8,7 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 - **Sistema de configuração robusto** com validação automática
 - **Logging estruturado** com formato detalhado e timestamps
 - **Tratamento de erros aprimorado** com retry inteligente
-- **Conexões MongoDB otimizadas** com parâmetros de performance
+- **Conexões DynamoDB otimizadas** com parâmetros de performance
 - **Índices automáticos** para melhor performance de consultas
 - **Sistema de retry** com exponential backoff
 - **Validação de URLs** antes de processar feeds RSS
@@ -30,11 +30,11 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 - **Testes**: Cobertura aumentada significativamente
 - **README.md**: Documentação atualizada e expandida
 - **Tratamento de erros**: Mais robusto e informativo
-- **Performance**: Otimizações em consultas MongoDB
+- **Performance**: Otimizações em consultas DynamoDB
 - **Segurança**: Melhor tratamento de variáveis sensíveis
 
 ### 🐛 Corrigido
-- **Conexões MongoDB**: Problemas de timeout e reconexão
+- **Conexões DynamoDB**: Problemas de timeout e reconexão
 - **Detecção de plágio**: Melhor performance e precisão
 - **Logging**: Formato inconsistente e falta de contexto
 - **Configuração**: Validação insuficiente de variáveis
@@ -42,7 +42,7 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 - **Documentação**: Informações desatualizadas
 
 ### 🚀 Performance
-- **Conexões MongoDB**: Pool de conexões otimizado
+- **Conexões DynamoDB**: Pool de conexões otimizado
 - **Consultas**: Índices automáticos para melhor performance
 - **Processamento**: Rate limiting para evitar sobrecarga
 - **Memória**: Melhor gerenciamento de recursos
@@ -81,7 +81,7 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 ### ✨ Adicionado
 - Sistema básico de agregação de notícias
 - Integração com AWS Lambda
-- Conexão com MongoDB Atlas
+- Conexão com DynamoDB
 - Agendamento via EventBridge
 - Detecção básica de plágio
 - Integração com OpenAI (opcional)

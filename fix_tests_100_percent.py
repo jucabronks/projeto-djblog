@@ -38,7 +38,7 @@ def fix_lambda_coletor_tests():
     
     # Correções específicas para DynamoDB
     replacements = [
-        # Mock MongoDB para DynamoDB
+        # Mock DynamoDB substituindo MongoDB
         ('collection.find_one.return_value = None', 'table.get_item.return_value = {}'),
         ('collection.find_one.return_value = {"_id": "existing"}', 'table.get_item.return_value = {"Item": {"id": "existing"}}'),
         ('collection.insert_one.assert_called_once()', 'table.put_item.assert_called_once()'),

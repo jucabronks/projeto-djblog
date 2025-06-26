@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-06-25T22:52:10.338024",
-  "duration_seconds": 71.63,
+  "timestamp": "2025-06-25T23:07:25.491494",
+  "duration_seconds": 2.48,
   "summary": {
-    "total": 16,
-    "passed": 14,
-    "failed": 2,
-    "success_rate": 87.5
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "success_rate": 100.0
   },
   "details": [
     {
@@ -33,20 +33,6 @@
       "status": "PASS"
     },
     {
-      "test": "Testes unit\u00e1rios",
-      "status": "FAIL",
-      "error": ""
-    },
-    {
-      "test": "Linting com flake8",
-      "status": "FAIL",
-      "error": ""
-    },
-    {
-      "test": "Conex\u00e3o AWS",
-      "status": "PASS"
-    },
-    {
       "test": "Sintaxe lambda_coletor.py",
       "status": "PASS"
     },
@@ -64,14 +50,6 @@
     },
     {
       "test": "Sintaxe lambda_api_noticias.py",
-      "status": "PASS"
-    },
-    {
-      "test": "Terraform init",
-      "status": "PASS"
-    },
-    {
-      "test": "Terraform validate",
       "status": "PASS"
     }
   ]

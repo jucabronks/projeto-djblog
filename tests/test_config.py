@@ -9,7 +9,7 @@ class TestConfig:
 
     def test_default_values(self, monkeypatch):
         """Testa valores padrão das configurações"""
-        monkeypatch.setenv("MONGO_URI", "mongodb://test")
+        monkeypatch.setenv("AWS_REGION", "us-east-1")
         monkeypatch.setenv("DD_ENV", "test")
         importlib.reload(importlib.import_module("config"))
         from config import get_config
@@ -23,7 +23,7 @@ class TestConfig:
 
     def test_nichos_default(self, monkeypatch):
         """Testa nichos padrão"""
-        monkeypatch.setenv("MONGO_URI", "mongodb://test")
+        monkeypatch.setenv("AWS_REGION", "us-east-1")
         monkeypatch.setenv("NICHOS", "tecnologia,esportes")
         importlib.reload(importlib.import_module("config"))
         from config import get_config
@@ -34,7 +34,7 @@ class TestConfig:
 
     def test_categorias_wp(self, monkeypatch):
         """Testa mapeamento de categorias WordPress"""
-        monkeypatch.setenv("MONGO_URI", "mongodb://test")
+        monkeypatch.setenv("AWS_REGION", "us-east-1")
 
         importlib.reload(importlib.import_module("config"))
         from config import get_config
@@ -83,7 +83,7 @@ class TestConfig:
 
     def test_wordpress_configuration(self, monkeypatch):
         """Testa configuração do WordPress"""
-        monkeypatch.setenv("MONGO_URI", "mongodb://test")
+        monkeypatch.setenv("AWS_REGION", "us-east-1")
         monkeypatch.setenv("WP_URL", "https://test.com/wp-json/wp/v2")
         monkeypatch.setenv("WP_USER", "admin")
         monkeypatch.setenv("WP_APP_PASSWORD", "password")
@@ -99,7 +99,7 @@ class TestConfig:
 
     def test_openai_configuration(self, monkeypatch):
         """Testa configuração da OpenAI"""
-        monkeypatch.setenv("MONGO_URI", "mongodb://test")
+        monkeypatch.setenv("AWS_REGION", "us-east-1")
         monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
 
         importlib.reload(importlib.import_module("config"))
@@ -111,7 +111,7 @@ class TestConfig:
 
     def test_copyscape_configuration(self, monkeypatch):
         """Testa configuração do Copyscape"""
-        monkeypatch.setenv("MONGO_URI", "mongodb://test")
+        monkeypatch.setenv("AWS_REGION", "us-east-1")
         monkeypatch.setenv("COPYS_API_USER", "user")
         monkeypatch.setenv("COPYS_API_KEY", "key")
 

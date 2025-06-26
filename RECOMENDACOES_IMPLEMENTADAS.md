@@ -93,7 +93,7 @@
 ## 🛠️ **Implementação Técnica**
 
 ### **Arquivos Modificados**
-1. ✅ `scripts/seed_mongodb.py` - Fontes expandidas
+1. ✅ `scripts/seed_dynamodb.py` - Fontes expandidas
 2. ✅ `terraform/aws/main.tf` - Nichos e categorias WordPress
 3. ✅ `README.md` - Documentação atualizada
 4. ✅ `scripts/test_fontes.py` - Script de teste criado
@@ -110,7 +110,7 @@
 ### **1. Deploy das Expansões**
 ```bash
 # Popular novas fontes
-python scripts/seed_mongodb.py
+python scripts/seed_dynamodb.py
 
 # Deploy atualizado
 bash scripts/deploy_complete.sh

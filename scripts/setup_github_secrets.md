@@ -19,10 +19,15 @@ Name: AWS_SECRET_ACCESS_KEY
 Value: ... (sua AWS Secret Key)
 ```
 
-#### **MongoDB Atlas**
+#### **DynamoDB (AWS)**
 ```
-Name: MONGO_URI
-Value: mongodb+srv://projeto-vm-user:senha-forte-123!@projeto-vm-cluster.xxxxx.mongodb.net/?retryWrites=true&w=majority
+Name: AWS_REGION
+Value: us-east-1
+```
+
+```
+Name: DYNAMODB_TABLE_NAME
+Value: djblog-noticias
 ```
 
 #### **WordPress**
