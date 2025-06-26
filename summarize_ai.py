@@ -14,11 +14,11 @@ print(resumo)
 """
 
 import openai
-import os
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
+
 
 def resumir_com_ia(texto, api_key):
     """Resume texto usando OpenAI GPT-3.5-turbo"""
@@ -34,6 +34,7 @@ def resumir_com_ia(texto, api_key):
         logger.error(f"Erro ao resumir com IA: {e}")
         return texto[:200] + ("..." if len(texto) > 200 else "")
 
+
 def traduzir_com_ia(texto, api_key, idioma_destino):
     """Traduz texto usando OpenAI GPT-3.5-turbo"""
     try:
@@ -48,6 +49,7 @@ def traduzir_com_ia(texto, api_key, idioma_destino):
         logger.error(f"Erro ao traduzir com IA: {e}")
         return texto
 
+
 def resumir_texto(texto):
     """Resume texto de forma simples (fallback)"""
     try:
@@ -56,8 +58,9 @@ def resumir_texto(texto):
         logger.error(f"Erro ao resumir texto: {e}")
         return texto
 
+
 # Exemplo de uso
 if __name__ == "__main__":
     texto = "O ChatGPT é um modelo de linguagem natural desenvolvido pela OpenAI. Ele pode responder perguntas, gerar textos e ajudar em tarefas de automação. Sua aplicação é ampla em diversos setores."
     api_key = "SUA_CHAVE_OPENAI"
-    # print(resumir_com_ia(texto, api_key))  # Descomente após inserir sua chave 
+    # print(resumir_com_ia(texto, api_key))  # Descomente após inserir sua chave

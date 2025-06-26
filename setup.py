@@ -47,4 +47,4 @@ setup(
             "projeto-blog=scripts.deploy_complete:main",
         ],
     },
-) 
+)
