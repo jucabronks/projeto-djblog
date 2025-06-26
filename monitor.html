@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Monitor do Sistema</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .status-card {
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid #ddd;
+        }
+        .status-up {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        .status-down {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .status-unknown {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .refresh-btn:hover {
+            background: #5a6fd8;
+        }
+        .timestamp {
+            text-align: center;
+            color: #666;
+            margin-top: 1rem;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Monitor do Sistema</h1>
+            <p>Status em tempo real do DJBlog</p>
+            <button class="refresh-btn" onclick="loadHealth()">🔄 Atualizar</button>
+        </div>
+        
+        <div id="health-status">
+            <p>📡 Carregando dados...</p>
+        </div>
+        
+        <div class="timestamp">
+            <p>🕒 Última atualização: <span id="last-update">--</span></p>
+        </div>
+    </div>
+
+    <script>
+        async function loadHealth() {
+            try {
+                const response = await fetch('./health.json');
+                const data = await response.json();
+                displayHealth(data);
+            } catch (error) {
+                document.getElementById('health-status').innerHTML = `
+                    <div class="status-card status-down">
+                        <h3>❌ Erro ao carregar dados</h3>
+                        <p>Não foi possível carregar o relatório de saúde.</p>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayHealth(data) {
+            let html = '<div class="status-grid">';
+            
+            // Status dos websites
+            if (data.websites) {
+                for (const [url, status] of Object.entries(data.websites)) {
+                    const statusClass = status.status === 'UP' ? 'status-up' : 'status-down';
+                    const emoji = status.status === 'UP' ? '✅' : '❌';
+                    html += `
+                        <div class="status-card ${statusClass}">
+                            <h3>${emoji} Website</h3>
+                            <p><strong>URL:</strong> ${url}</p>
+                            <p><strong>Status:</strong> ${status.status}</p>
+                            ${status.response_time ? `<p><strong>Tempo:</strong> ${status.response_time.toFixed(2)}s</p>` : ''}
+                        </div>
+                    `;
+                }
+            }
+            
+            // Status do DynamoDB
+            if (data.dynamodb) {
+                const statusClass = data.dynamodb.status === 'UP' ? 'status-up' : 'status-down';
+                const emoji = data.dynamodb.status === 'UP' ? '✅' : '❌';
+                html += `
+                    <div class="status-card ${statusClass}">
+                        <h3>${emoji} DynamoDB</h3>
+                        <p><strong>Status:</strong> ${data.dynamodb.status}</p>
+                        ${data.dynamodb.table_name ? `<p><strong>Tabela:</strong> ${data.dynamodb.table_name}</p>` : ''}
+                    </div>
+                `;
+            }
+            
+            // Status das Lambda Functions
+            if (data.lambda_functions && typeof data.lambda_functions === 'object') {
+                for (const [funcName, status] of Object.entries(data.lambda_functions)) {
+                    if (typeof status === 'object' && status.status) {
+                        const statusClass = status.status === 'UP' ? 'status-up' : 'status-down';
+                        const emoji = status.status === 'UP' ? '✅' : '❌';
+                        html += `
+                            <div class="status-card ${statusClass}">
+                                <h3>${emoji} ${funcName}</h3>
+                                <p><strong>Status:</strong> ${status.status}</p>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            
+            html += '</div>';
+            document.getElementById('health-status').innerHTML = html;
+            document.getElementById('last-update').textContent = new Date(data.timestamp).toLocaleString('pt-BR');
+        }
+        
+        // Carregar dados inicialmente
+        loadHealth();
+        
+        // Atualizar a cada 5 minutos
+        setInterval(loadHealth, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

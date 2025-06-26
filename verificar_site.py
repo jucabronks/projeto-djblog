@@ -34,9 +34,9 @@ def check_github_pages():
     """Verifica se o GitHub Pages está funcionando"""
     # Tenta determinar o URL do GitHub Pages automaticamente
     github_urls = [
-        "https://dgajr.github.io/projeto-djblog",
-        "https://dgajr.github.io/projeto-djblog/",
-        "https://github.com/dgajr/projeto-djblog"  # Fallback para repo
+        "https://jucabronks.github.io/projeto-djblog",
+        "https://jucabronks.github.io/projeto-djblog/",
+        "https://github.com/jucabronks/projeto-djblog"  # Fallback para repo
     ]
     
     for url in github_urls:
