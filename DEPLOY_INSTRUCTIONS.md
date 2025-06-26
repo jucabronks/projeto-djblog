@@ -212,6 +212,34 @@ timeout     = 300  # Timeout em segundos
 
 ## 🛠️ **Troubleshooting**
 
+### **Erro "ensurepip is not available" no Ubuntu 24.04:**
+
+**✅ Solução Específica** - Problema comum com Python 3.12 no Ubuntu 24.04!
+
+1. **Execute o script de correção específica**:
+   ```bash
+   chmod +x scripts/fix_ubuntu24_python312.sh
+   ./scripts/fix_ubuntu24_python312.sh
+   ```
+
+2. **Ou corrija manualmente**:
+   ```bash
+   # Instalar python3.12-venv específico
+   sudo apt update
+   sudo apt install python3.12-venv python3.12-full python3.12-dev
+   
+   # Remover ambiente virtual problemático
+   rm -rf venv
+   
+   # Criar novo ambiente virtual
+   python3 -m venv venv
+   ```
+
+3. **Depois execute o deploy normalmente**:
+   ```bash
+   ./scripts/deploy_local.sh
+   ```
+
 ### **Erro "externally-managed-environment" no Ubuntu 22.04+/Debian:**
 
 **✅ Solução Automática** - Os scripts agora usam ambiente virtual Python automaticamente!
