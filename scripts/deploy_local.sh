@@ -115,33 +115,71 @@ if [ ! -d "venv" ]; then
     PYTHON_VERSION=$($PYTHON_CMD -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
     log_info "Versão Python detectada: $PYTHON_VERSION"
     
-    if command -v python3-venv &> /dev/null || $PYTHON_CMD -m venv --help &> /dev/null; then
-        $PYTHON_CMD -m venv venv
-        log_success "Ambiente virtual criado"
-    else
-        log_warning "python$PYTHON_VERSION-venv não encontrado, instalando..."
-        if [[ "$OSTYPE" == "linux-gnu"* ]] || [ "$WSL_ENVIRONMENT" = true ]; then
-            # Tentar instalar pacote específico da versão primeiro
-            if sudo apt update && sudo apt install -y python$PYTHON_VERSION-venv python$PYTHON_VERSION-full; then
-                log_success "python$PYTHON_VERSION-venv instalado"
-            else
-                log_warning "Tentando pacotes genéricos..."
-                sudo apt install -y python3-venv python3-full python3-virtualenv
+    # Verificar se é um ambiente moderno que pode ter restrições
+    NEEDS_SECURE_SETUP=false
+    
+    # Ubuntu 22.04+ ou Python 3.12+
+    if [[ -f "/etc/os-release" ]]; then
+        OS_INFO=$(cat /etc/os-release | grep PRETTY_NAME | cut -d'"' -f2 || echo "")
+        if [[ "$OS_INFO" == *"Ubuntu"* ]]; then
+            VERSION=$(echo "$OS_INFO" | grep -o '[0-9][0-9]\.[0-9][0-9]' | head -1)
+            if [[ "$VERSION" =~ ^2[2-9]\. ]] || [[ "$VERSION" =~ ^[3-9][0-9]\. ]]; then
+                NEEDS_SECURE_SETUP=true
             fi
-            
-            # Tentar criar ambiente virtual
-            if $PYTHON_CMD -m venv venv; then
-                log_success "Ambiente virtual criado"
-            elif command -v virtualenv &> /dev/null && virtualenv venv; then
-                log_success "Ambiente virtual criado com virtualenv"
+        fi
+    fi
+    
+    if [[ "$PYTHON_VERSION" =~ ^3\.1[2-9]$ ]] || [[ "$PYTHON_VERSION" =~ ^3\.[2-9][0-9]$ ]]; then
+        NEEDS_SECURE_SETUP=true
+    fi
+    
+    # Se precisa de configuração segura, usar script especializado
+    if [ "$NEEDS_SECURE_SETUP" = true ]; then
+        log_warning "Detectado ambiente moderno (Ubuntu 22.04+ ou Python 3.12+)"
+        log_info "Usando configuração segura para evitar 'externally-managed-environment'..."
+        
+        if [ -f "scripts/setup_secure_venv.sh" ]; then
+            chmod +x scripts/setup_secure_venv.sh
+            if ./scripts/setup_secure_venv.sh; then
+                log_success "Ambiente virtual configurado de forma segura"
             else
-                log_error "Não foi possível criar ambiente virtual"
-                log_error "Execute: ./scripts/fix_ubuntu24_python312.sh"
+                log_error "Falha na configuração segura do ambiente virtual"
                 exit 1
             fi
         else
-            log_error "Não foi possível criar ambiente virtual"
+            log_error "Script setup_secure_venv.sh não encontrado"
             exit 1
+        fi
+    else
+        # Configuração padrão para ambientes mais antigos
+        if command -v python3-venv &> /dev/null || $PYTHON_CMD -m venv --help &> /dev/null; then
+            $PYTHON_CMD -m venv venv
+            log_success "Ambiente virtual criado"
+        else
+            log_warning "python$PYTHON_VERSION-venv não encontrado, instalando..."
+            if [[ "$OSTYPE" == "linux-gnu"* ]] || [ "$WSL_ENVIRONMENT" = true ]; then
+                # Tentar instalar pacote específico da versão primeiro
+                if sudo apt update && sudo apt install -y python$PYTHON_VERSION-venv python$PYTHON_VERSION-full; then
+                    log_success "python$PYTHON_VERSION-venv instalado"
+                else
+                    log_warning "Tentando pacotes genéricos..."
+                    sudo apt install -y python3-venv python3-full python3-virtualenv
+                fi
+                
+                # Tentar criar ambiente virtual
+                if $PYTHON_CMD -m venv venv; then
+                    log_success "Ambiente virtual criado"
+                elif command -v virtualenv &> /dev/null && virtualenv venv; then
+                    log_success "Ambiente virtual criado com virtualenv"
+                else
+                    log_error "Não foi possível criar ambiente virtual"
+                    log_error "Execute: ./scripts/setup_secure_venv.sh"
+                    exit 1
+                fi
+            else
+                log_error "Não foi possível criar ambiente virtual"
+                exit 1
+            fi
         fi
     fi
 fi
@@ -179,17 +217,20 @@ if ! $VENV_PYTHON -m pip --version &> /dev/null; then
 fi
 
 # Verificar se boto3 está instalado no ambiente virtual
-if ! $VENV_PYTHON -c "import boto3" &> /dev/null; then
-    log_info "Instalando dependências no ambiente virtual..."
-    
-    if $VENV_PYTHON -m pip install -r requirements.txt; then
-        log_success "Dependências instaladas no ambiente virtual"
-    else
-        log_error "Falha ao instalar dependências. Verifique o requirements.txt"
-        exit 1
-    fi
+log_info "Verificando e instalando dependências no ambiente virtual..."
+
+# Sempre instalar/atualizar dependências para garantir que estão atualizadas
+if $VENV_PYTHON -m pip install -r requirements.txt; then
+    log_success "Dependências instaladas/atualizadas no ambiente virtual"
 else
-    log_success "Dependências já instaladas no ambiente virtual"
+    log_error "Falha ao instalar dependências. Verifique o requirements.txt"
+    exit 1
+fi
+
+# Verificar se boto3 está funcionando
+if ! $VENV_PYTHON -c "import boto3" &> /dev/null; then
+    log_error "boto3 não está funcionando no ambiente virtual"
+    exit 1
 fi
 
 $VENV_PYTHON test_runner.py

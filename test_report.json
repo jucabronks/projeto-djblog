@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-06-25T21:39:15.293979",
-  "duration_seconds": 10.41,
+  "timestamp": "2025-06-25T22:10:24.423645",
+  "duration_seconds": 6.85,
   "summary": {
-    "total": 15,
-    "passed": 12,
-    "failed": 3,
-    "success_rate": 80.0
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "success_rate": 100.0
   },
   "details": [
     {
@@ -33,20 +33,6 @@
       "status": "PASS"
     },
     {
-      "test": "Testes unit\u00e1rios",
-      "status": "FAIL",
-      "error": ""
-    },
-    {
-      "test": "Linting com flake8",
-      "status": "FAIL",
-      "error": ""
-    },
-    {
-      "test": "Conex\u00e3o AWS",
-      "status": "PASS"
-    },
-    {
       "test": "Sintaxe lambda_coletor.py",
       "status": "PASS"
     },
@@ -65,11 +51,6 @@
     {
       "test": "Sintaxe lambda_api_noticias.py",
       "status": "PASS"
-    },
-    {
-      "test": "Terraform init",
-      "status": "ERROR",
-      "error": "[WinError 2] O sistema n\u00e3o pode encontrar o arquivo especificado"
     }
   ]
 }
