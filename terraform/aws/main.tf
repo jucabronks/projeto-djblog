@@ -332,10 +332,10 @@ data "aws_caller_identity" "current" {}
 # LAMBDA DE COLETA DE NOTÍCIAS
 # =============================================================================
 resource "aws_lambda_function" "coletor" {
-  function_name = "coletor-noticias"
-  s3_bucket     = "projeto-vm-terraform-state-317304475005"
-  s3_key        = "lambdas/lambda_package_optimized.zip"
-  handler       = "lambda_coletor.lambda_handler"
+  function_name    = "coletor-noticias"
+  filename         = "../../lambda_coletor.zip"
+  source_code_hash = filebase64sha256("../../lambda_coletor.zip")
+  handler          = "lambda_coletor.lambda_handler"
   runtime       = "python3.11"
   timeout       = 300
   memory_size   = 512
@@ -353,7 +353,6 @@ resource "aws_lambda_function" "coletor" {
       COPYS_API_KEY     = var.copys_api_key
     }
   }
-  source_code_hash = filebase64sha256("../../lambda_package_optimized.zip")
 }
 
 resource "aws_lambda_function" "publicador" {
@@ -410,8 +409,8 @@ resource "aws_lambda_function" "api_noticias" {
   handler       = "lambda_api_noticias.lambda_handler"
   runtime       = "python3.11"
   role          = aws_iam_role.lambda_coletor_role.arn
-  filename      = "../lambda_api_noticias.zip"
-  source_code_hash = filebase64sha256("../lambda_api_noticias.zip")
+  filename      = "../../lambda_api_noticias.zip"
+  source_code_hash = filebase64sha256("../../lambda_api_noticias.zip")
   timeout       = 10
   environment {
     variables = {

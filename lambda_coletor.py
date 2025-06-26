@@ -28,7 +28,6 @@ from utils import (
     checar_plagio_local,
     get_dynamodb_table,
     validar_url,
-    validar_variaveis_obrigatorias,
     sanitize_text,
     generate_content_hash,
     rate_limit_delay,
