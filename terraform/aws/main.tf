@@ -3,7 +3,7 @@
 # =============================================================================
 
 terraform {
-  required_version = ">= 1.12.0"
+  required_version = ">= 1.0.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -11,13 +11,13 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket         = "projeto-vm-terraform-state-317304475005"  # Será substituído pelo script
-    key            = "aws/dev/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "terraform-locks"
-  }
+  # backend "s3" {
+  #   bucket         = "projeto-vm-terraform-state-317304475005"  # Será substituído pelo script
+  #   key            = "aws/dev/terraform.tfstate"
+  #   region         = "us-east-1"
+  #   encrypt        = true
+  #   dynamodb_table = "terraform-locks"
+  # }
 }
 
 # =============================================================================
@@ -57,10 +57,6 @@ variable "environment" {
   description = "Environment (dev, staging, prod)"
   type        = string
   default     = "dev"
-  validation {
-    condition     = contains(["dev", "staging", "prod"], var.environment)
-    error_message = "Environment must be dev, staging, or prod."
-  }
 }
 
 variable "openai_api_key" {
