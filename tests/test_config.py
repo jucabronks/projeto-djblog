@@ -53,9 +53,11 @@ class TestConfig:
 
         importlib.reload(importlib.import_module("config"))
         from config import validate_required_vars
-        # Com DynamoDB, a função não levanta mais exceção, apenas retorna variáveis faltando
+        # Com DynamoDB, a função não levanta mais exceção, apenas retorna
+        # variáveis faltando
         missing = validate_required_vars()
-        # Se não há variáveis obrigatórias configuradas como essenciais, retorna lista vazia
+        # Se não há variáveis obrigatórias configuradas como essenciais,
+        # retorna lista vazia
         assert isinstance(missing, list)
 
         monkeypatch.setenv("AWS_REGION", "us-east-1")

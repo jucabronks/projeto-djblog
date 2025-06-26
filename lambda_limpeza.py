@@ -44,7 +44,7 @@ def lambda_handler(event, context):
         return {
             'statusCode': 200,
             'body': {
-                'message': f'Limpeza executada com sucesso',
+                'message': 'Limpeza executada com sucesso',
                 'deleted_count': deleted_count
             }
         }

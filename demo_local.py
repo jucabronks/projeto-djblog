@@ -139,7 +139,9 @@ def mostrar_estatisticas(noticias):
 def salvar_demo(noticias):
     """Salva as notícias em arquivo JSON para demonstração"""
     if noticias:
-        arquivo = f"demo_noticias_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        arquivo = (
+            f"demo_noticias_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
         with open(arquivo, 'w', encoding='utf-8') as f:
             json.dump(noticias, f, ensure_ascii=False, indent=2)
         print(f"\n💾 Notícias salvas em: {arquivo}")

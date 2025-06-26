@@ -40,11 +40,11 @@ def buscar_noticias(datas):
     """Busca notícias do DynamoDB com fallback para notícias demo"""
     if not datas:
         return []
-    
+
     try:
         dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
         table = dynamodb.Table(DYNAMODB_TABLE_NAME)
-        
+
         noticias = []
         for data in datas:
             inicio = datetime.combine(
@@ -55,7 +55,7 @@ def buscar_noticias(datas):
                 data,
                 datetime.max.time(),
                 tzinfo=BRT).astimezone(timezone.utc)
-            
+
             try:
                 # Scan da tabela com filtro por data
                 response = table.scan(
@@ -65,32 +65,32 @@ def buscar_noticias(datas):
                     ),
                     Limit=50  # Limite para performance
                 )
-                
+
                 items = response.get('Items', [])
                 noticias.extend(items)
-                
+
             except Exception as e:
                 print(f"Erro ao buscar notícias para {data}: {e}")
                 continue
-        
+
         # Se não encontrou notícias, retorna dados reais (sem DynamoDB)
         if not noticias:
             print("📰 DynamoDB não disponível, gerando notícias demo...")
             return gerar_noticias_demo()
-        
+
         # Ordena por data de inserção (decrescente) e remove duplicatas
         noticias_unicas = {}
         for noticia in noticias:
             titulo = noticia.get('titulo', '')
             if titulo and titulo not in noticias_unicas:
                 noticias_unicas[titulo] = noticia
-        
-        noticias_ordenadas = sorted(noticias_unicas.values(), 
-                                  key=lambda x: x.get('data_insercao', ''), 
+
+        noticias_ordenadas = sorted(noticias_unicas.values(),
+                                  key=lambda x: x.get('data_insercao', ''),
                                   reverse=True)
-        
+
         return noticias_ordenadas[:20]  # Máximo 20 notícias para performance
-        
+
     except Exception as e:
         print(f"Erro ao conectar com DynamoDB: {e}")
         print("📰 Usando notícias demo...")
@@ -118,7 +118,7 @@ def gerar_schema_org(noticias):
             "itemListElement": []
         }
     }
-    
+
     for i, noticia in enumerate(noticias[:10]):  # Top 10 para schema
         item = {
             "@type": "NewsArticle",
@@ -137,7 +137,7 @@ def gerar_schema_org(noticias):
             }
         }
         schema["mainEntity"]["itemListElement"].append(item)
-    
+
     return json.dumps(schema, ensure_ascii=False, indent=2)
 
 
@@ -417,39 +417,39 @@ body {
     .header h1 {
         font-size: 2rem;
     }
-    
+
     .header p {
         font-size: 1rem;
     }
-    
+
     .container {
         padding: 0 1rem;
     }
-    
+
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
-    
+
     .news-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
-    
+
     .news-header {
         padding: 1rem;
     }
-    
+
     .news-content {
         padding: 0 1rem 1rem;
     }
-    
+
     .news-footer {
         flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
     }
-    
+
     .footer-links {
         flex-direction: column;
         gap: 1rem;
@@ -460,19 +460,19 @@ body {
     .header {
         padding: 1.5rem 0;
     }
-    
+
     .header h1 {
         font-size: 1.75rem;
     }
-    
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .stat-card {
         padding: 1rem;
     }
-    
+
     .stat-number {
         font-size: 2rem;
     }
@@ -486,7 +486,7 @@ body {
         color: black !important;
         background: white !important;
     }
-    
+
     .news-card {
         box-shadow: none;
         border: 1px solid #ccc;
@@ -551,14 +551,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-        
+
         try {
             observer.observe({entryTypes: ['largest-contentful-paint', 'first-input']});
         } catch (e) {
             // Fallback para navegadores mais antigos
         }
     }
-    
+
     // Lazy Loading para imagens (se houver)
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -571,12 +571,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-        
+
         document.querySelectorAll('img[data-src]').forEach(img => {
             imageObserver.observe(img);
         });
     }
-    
+
     // Animação suave para cards
     const cards = document.querySelectorAll('.news-card');
     if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }, { threshold: 0.1 });
-        
+
         cards.forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cardObserver.observe(card);
         });
     }
-    
+
     // Atualização de timestamp em tempo real
     function updateTimestamp() {
         const timestampEl = document.getElementById('current-timestamp');
@@ -605,7 +605,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const options = {
                 timeZone: 'America/Sao_Paulo',
                 day: '2-digit',
-                month: '2-digit', 
+                month: '2-digit',
                 year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
@@ -614,17 +614,17 @@ document.addEventListener('DOMContentLoaded', function() {
             timestampEl.textContent = now.toLocaleString('pt-BR', options);
         }
     }
-    
+
     updateTimestamp();
     setInterval(updateTimestamp, 1000);
-    
+
     // Service Worker para cache (se suportado)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch(() => {
             // Service worker não disponível
         });
     }
-    
+
     // Analytics de performance simples
     window.addEventListener('load', function() {
         const loadTime = performance.now();
@@ -633,7 +633,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statsEl.textContent = Math.round(loadTime) + 'ms';
         }
     });
-    
+
     // Scroll suave para âncoras
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -647,15 +647,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Detecção de tema escuro
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.body.classList.add('dark-theme');
     }
-    
+
     // Listener para mudanças de tema
     if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e = (
+            (
+        )
+            > {
+        )
             if (e.matches) {
                 document.body.classList.add('dark-theme');
             } else {
@@ -678,7 +682,11 @@ function shareNews(title, url) {
             alert('Link copiado para a área de transferência!');
         }).catch(() => {
             // Fallback final: abrir em nova aba
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
+            window.open(`https://twitter.com/intent/tweet?text= (
+                ${encodeURIComponent(title)}&url= (
+                    ${encodeURIComponent(url)}`, '_blank');
+                )
+            )
         });
     }
 }
@@ -687,37 +695,45 @@ function shareNews(title, url) {
 
 def gerar_html(noticias, datas):
     """Gera HTML responsivo, otimizado para SEO e seguindo normas do Google"""
-    
+
     # Estatísticas para o site
     total_noticias = len(noticias)
     categorias = list(set([n.get('nicho', 'Geral') for n in noticias]))
     fontes = list(set([n.get('fonte', 'Externa') for n in noticias]))
-    
+
     # Data atual para meta tags
     agora = datetime.now(BRT)
     data_formatada = agora.strftime('%Y-%m-%d')
     timestamp_formatado = agora.strftime('%d/%m/%Y às %H:%M')
-    
+
     # Schema.org structured data
     schema_json = gerar_schema_org(noticias)
-    
-    html = f"""<!DOCTYPE html>
+
+    html = """<!DOCTYPE html>"
 <html lang="{SITE_CONFIG['language']}" prefix="og: http://ogp.me/ns#">
 <head>
     <!-- Meta tags essenciais -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name= (
+        "viewport" content= (
+            "width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        )
+    )
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
+
     <!-- SEO Meta Tags -->
     <title>{SITE_CONFIG['title']}</title>
     <meta name="description" content="{SITE_CONFIG['description']}">
     <meta name="keywords" content="{', '.join(SITE_CONFIG['keywords'])}">
     <meta name="author" content="{SITE_CONFIG['author']}">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name= (
+        "robots" content= (
+            "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+        )
+    )
     <meta name="googlebot" content="index, follow">
     <link rel="canonical" href="{SITE_CONFIG['url']}">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{SITE_CONFIG['url']}">
@@ -726,44 +742,50 @@ def gerar_html(noticias, datas):
     <meta property="og:image" content="{SITE_CONFIG['image']}">
     <meta property="og:site_name" content="DJBlog">
     <meta property="og:locale" content="pt_BR">
-    
+
     <!-- Twitter Card -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{SITE_CONFIG['url']}">
     <meta property="twitter:title" content="{SITE_CONFIG['title']}">
-    <meta property="twitter:description" content="{SITE_CONFIG['description']}">
+    <meta property= (
+        "twitter:description" content="{SITE_CONFIG['description']}">
+    )
     <meta property="twitter:image" content="{SITE_CONFIG['image']}">
-    
+
     <!-- Additional Meta Tags -->
     <meta name="theme-color" content="#1a365d">
     <meta name="msapplication-TileColor" content="#1a365d">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="format-detection" content="telephone=no">
-    
+
     <!-- Favicons (placeholder) -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    
+
     <!-- DNS Prefetch para performance -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//www.google-analytics.com">
-    
+
     <!-- CSS Responsivo Incorporado -->
     <style>
 {gerar_css_responsivo()}
     </style>
-    
+
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
 {schema_json}
     </script>
-    
+
     <!-- Google Analytics (placeholder) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script> -->
+    <!-- <script async src= (
+        "https://www.googletagmanager.com/gtag/js?id= (
+            GA_MEASUREMENT_ID"></script> -->
+        )
+    )
     <!-- <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){{dataLayer.push(arguments);}}
@@ -778,7 +800,9 @@ def gerar_html(noticias, datas):
             <h1>{SITE_CONFIG['title']}</h1>
             <p>{SITE_CONFIG['description']}</p>
             <div style="margin-top: 1rem; opacity: 0.8;">
-                <small>Última atualização: <span id="current-timestamp">{timestamp_formatado}</span> (BRT)</small>
+                <small>Última atualização: <span id= (
+                    "current-timestamp">{timestamp_formatado}</span> (BRT)</small>
+                )
             </div>
         </div>
     </header>
@@ -786,7 +810,9 @@ def gerar_html(noticias, datas):
     <!-- Seção de Estatísticas -->
     <section class="stats-section">
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 1rem; color: var(--primary-color);">
+            <h2 style= (
+                "text-align: center; margin-bottom: 1rem; color: var(--primary-color);">
+            )
                 📊 Estatísticas em Tempo Real
             </h2>
             <div class="stats-grid">
@@ -803,7 +829,9 @@ def gerar_html(noticias, datas):
                     <div class="stat-label">Fontes</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number"><span id="load-time">--</span></div>
+                    <div class= (
+                        "stat-number"><span id="load-time">--</span></div>
+                    )
                     <div class="stat-label">Tempo de Carregamento</div>
                 </div>
             </div>
@@ -813,13 +841,21 @@ def gerar_html(noticias, datas):
     <!-- Seção Principal de Notícias -->
     <main class="news-section">
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">
+            <h2 style= (
+                "text-align: center; margin-bottom: 2rem; color: var(--primary-color);">
+            )
                 📰 Últimas Notícias
             </h2>
-            
-            {f'<p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">Período: {", ".join([d.strftime("%d/%m/%Y") for d in datas])}</p>' if datas else ''}
-            
-            {f'''<div class="news-grid">''' if noticias else '<div style="text-align: center; padding: 3rem 0;"><h3>🔍 Nenhuma notícia encontrada</h3><p>Aguarde a próxima coleta automática ou verifique a conexão com o banco de dados.</p></div>'}"""
+
+            {f'<p style= ('
+                "text-align: center; color: var(--text-light); margin-bottom: 2rem;">Período: {", ".join([d.strftime("%d/%m/%Y") for d in datas])}</p>' if datas else ''}'
+            )
+
+            {'''<div class= ('
+                "news-grid">''' if noticias else '<div style= (
+                    "text-align: center; padding: 3rem 0;"><h3>🔍 Nenhuma notícia encontrada</h3><p>Aguarde a próxima coleta automática ou verifique a conexão com o banco de dados.</p></div>'}"""'
+                )
+            )
 
     # Gerar cards de notícias
     if noticias:
@@ -827,32 +863,50 @@ def gerar_html(noticias, datas):
             data_pub = noticia.get("data_insercao", "")
             if isinstance(data_pub, str):
                 try:
-                    data_obj = datetime.fromisoformat(data_pub.replace('Z', '+00:00'))
-                    data_str = data_obj.astimezone(BRT).strftime('%d/%m/%Y %H:%M')
-                except:
+                    data_obj = (
+                        datetime.fromisoformat(data_pub.replace('Z', '+00:00'))
+                    )
+                    data_str = (
+                        data_obj.astimezone(BRT).strftime('%d/%m/%Y %H:%M')
+                    )
+                except Exception:
                     data_str = data_pub[:10] if len(data_pub) > 10 else data_pub
             else:
                 data_str = str(data_pub)
-            
+
             titulo = noticia.get('titulo', 'Sem título')[:100]  # Limitação SEO
-            resumo = noticia.get('resumo', 'Resumo não disponível')[:200]  # Limitação SEO
+            resumo = (
+                noticia.get('resumo', 'Resumo não disponível')[:200]  # Limitação SEO
+            )
             fonte = noticia.get('fonte', 'Fonte Externa')
             nicho = noticia.get('nicho', 'Geral')
             link = noticia.get('link', '#')
-            
+
             # Hash único para cada notícia (evita duplicação)
             noticia_id = hashlib.md5(titulo.encode()).hexdigest()[:8]
-            
-            html += f"""
+
+            html += """
                 <article class="news-card" id="news-{noticia_id}">
                     <div class="news-header">
                         <div class="news-meta">
-                            <time class="news-date" datetime="{data_pub}">{data_str}</time>
+                            <time class= (
+                                "news-date" datetime= (
+                                    "{data_pub}">{data_str}</time>
+                                )
+                            )
                             <span class="news-category">{nicho}</span>
                         </div>
                         <h3 class="news-title">
-                            <a href="{link}" target="_blank" rel="noopener noreferrer" 
-                               title="{titulo}" style="text-decoration: none; color: inherit;">
+                            <a href= (
+                                "{link}" target= (
+                                    "_blank" rel="noopener noreferrer"
+                                )
+                            )
+                               title= (
+                                   "{titulo}" style= (
+                                       "text-decoration: none; color: inherit;">
+                                   )
+                               )
                                 {titulo}
                             </a>
                         </h3>
@@ -861,18 +915,24 @@ def gerar_html(noticias, datas):
                         <p class="news-summary">{resumo}</p>
                         <div class="news-footer">
                             <span class="news-source">📡 {fonte}</span>
-                            <a href="{link}" class="news-link" target="_blank" rel="noopener noreferrer"
-                               onclick="gtag('event', 'click', {{'event_category': 'external_link', 'event_label': '{fonte}'}});">
+                            <a href= (
+                                "{link}" class= (
+                                    "news-link" target="_blank" rel="noopener noreferrer"
+                                )
+                            )
+                               onclick= (
+                                   "gtag('event', 'click', {{'event_category': 'external_link', 'event_label': '{fonte}'}});">
+                               )
                                 Ler mais
                             </a>
                         </div>
                     </div>
                 </article>"""
-        
+
         html += "\n            </div>"  # Fecha news-grid
-    
+
     # Footer
-    html += f"""
+    html += """
         </div>
     </main>
 
@@ -881,9 +941,9 @@ def gerar_html(noticias, datas):
         <div class="container">
             <div class="footer-content">
                 <h3>🤖 DJBlog - Sistema Automatizado</h3>
-                <p>Agregação inteligente de notícias com tecnologia de ponta. 
+                <p>Agregação inteligente de notícias com tecnologia de ponta.
                    Conteúdo atualizado automaticamente, sem intervenção humana.</p>
-                
+
                 <div class="footer-links">
                     <a href="#tecnologia">Tecnologia</a>
                     <a href="#saude">Saúde</a>
@@ -892,11 +952,15 @@ def gerar_html(noticias, datas):
                     <a href="/sobre">Sobre</a>
                     <a href="/privacidade">Privacidade</a>
                 </div>
-                
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2);">
+
+                <div style= (
+                    "margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2);">
+                )
                     <p>&copy; {agora.year} DJBlog. Sistema automatizado de notícias.</p>
-                    <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">
-                        Gerado automaticamente em {data_formatada} | 
+                    <p style= (
+                        "font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">
+                    )
+                        Gerado automaticamente em {data_formatada} |
                         Próxima atualização: Diária às 07:00 UTC
                     </p>
                 </div>
@@ -908,23 +972,27 @@ def gerar_html(noticias, datas):
     <script>
 {gerar_javascript()}
     </script>
-    
+
     <!-- AdSense (placeholder) -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX" crossorigin="anonymous"></script> -->
+    <!-- <script async src= (
+        "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client= (
+            ca-pub-XXXXXXXXX" crossorigin="anonymous"></script> -->
+        )
+    )
 </body>
 </html>"""
 
     # Salvar arquivo
     with open(HTML_FILE, "w", encoding="utf-8") as f:
         f.write(html)
-    
+
     print(f"✅ Arquivo {HTML_FILE} gerado com sucesso!")
-    print(f"📊 Estatísticas:")
+    print("📊 Estatísticas:")
     print(f"   • {total_noticias} notícias processadas")
     print(f"   • {len(categorias)} categorias: {', '.join(categorias[:5])}")
     print(f"   • {len(fontes)} fontes diferentes")
-    print(f"   • Otimizado para SEO e Core Web Vitals")
-    print(f"   • 100% responsivo e acessível")
+    print("   • Otimizado para SEO e Core Web Vitals")
+    print("   • 100% responsivo e acessível")
 
 
 def gerar_noticias_demo():
@@ -945,7 +1013,7 @@ def gerar_noticias_demo():
             'resumo': 'Site responsivo e otimizado para SEO sendo gerado automaticamente via GitHub Actions. Design moderno com foco em performance e acessibilidade.',
             'url': 'https://jucabronks.github.io/projeto-djblog',
             'fonte': 'GitHub Actions',
-            'categoria': 'tecnologia', 
+            'categoria': 'tecnologia',
             'data_publicacao': (agora - timedelta(hours=1)).isoformat(),
             'data_insercao': (agora - timedelta(hours=1)).isoformat()
         },
@@ -955,7 +1023,7 @@ def gerar_noticias_demo():
             'url': f'{SITE_CONFIG["url"]}/arquitetura',
             'fonte': 'AWS Infrastructure',
             'categoria': 'economia',
-            'data_publicacao': (agora - timedelta(hours=2)).isoformat(), 
+            'data_publicacao': (agora - timedelta(hours=2)).isoformat(),
             'data_insercao': (agora - timedelta(hours=2)).isoformat()
         },
         {
@@ -982,13 +1050,13 @@ def gerar_noticias_demo():
 def main():
     """Função principal"""
     print("🚀 Iniciando geração do site estático...")
-    
+
     datas = get_periodo_publicacao()
     print(f"📅 Buscando notícias para: {len(datas)} dias")
-    
+
     noticias = buscar_noticias(datas)
     print(f"📰 {len(noticias)} notícias encontradas")
-    
+
     gerar_html(noticias, datas)
     print("🎉 Site estático gerado com sucesso!")
 

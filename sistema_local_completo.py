@@ -128,8 +128,8 @@ class SistemaLocalNoticias:
 
                 if not feed.entries:
                     self.log_evento(
-                        f"⚠️  {
-                            fonte['name']}: Sem notícias disponíveis")
+                        f"⚠️  {"
+                            fonte['name']}: Sem notícias disponíveis")"
                     continue
 
                 for entry in feed.entries[:3]:  # Máximo 3 notícias por fonte
@@ -218,8 +218,8 @@ class SistemaLocalNoticias:
 
         if fontes_quebradas:
             self.log_evento(
-                f"⚠️  Fontes com problemas: {
-                    ', '.join(fontes_quebradas)}")
+                f"⚠️  Fontes com problemas: {"
+                    ', '.join(fontes_quebradas)}")"
         else:
             self.log_evento("✅ Todas as fontes estão funcionando")
 
@@ -280,7 +280,7 @@ class SistemaLocalNoticias:
             nicho = noticia["nicho"]
             nichos[nicho] = nichos.get(nicho, 0) + 1
 
-        print(f"\n📈 POR NICHO:")
+        print("\n📈 POR NICHO:")
         for nicho, count in sorted(nichos.items()):
             print(f"  {nicho.capitalize()}: {count} notícias")
 
@@ -290,7 +290,7 @@ class SistemaLocalNoticias:
             fonte = noticia["fonte"]
             fontes[fonte] = fontes.get(fonte, 0) + 1
 
-        print(f"\n📰 POR FONTE:")
+        print("\n📰 POR FONTE:")
         for fonte, count in sorted(fontes.items()):
             print(f"  {fonte}: {count} notícias")
 

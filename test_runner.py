@@ -44,7 +44,9 @@ class DJBlogTester:
         """Retorna comando Python correto para o ambiente"""
         if self.venv_path:
             if platform.system() == "Windows":
-                python_path = os.path.join(self.venv_path, "Scripts", "python.exe")
+                python_path = (
+                    os.path.join(self.venv_path, "Scripts", "python.exe")
+                )
             else:
                 python_path = os.path.join(self.venv_path, "bin", "python")
 
@@ -100,9 +102,6 @@ class DJBlogTester:
                 return command
 
     def log(self, message: str, level: str = "INFO"):
-        """Log com timestamp"""
-        timestamp = datetime.now().strftime("%H:%M:%S")
-        print(f"[{timestamp}] {level}: {message}")
         """Log com timestamp"""
         timestamp = datetime.now().strftime("%H:%M:%S")
         print(f"[{timestamp}] {level}: {message}")
@@ -400,8 +399,8 @@ Opções:
 
     # Flags para pular certos testes
     quick_mode = "--quick" in sys.argv
-    "--no-aws" in sys.argv
-    "--no-terraform" in sys.argv
+    no_aws = "--no-aws" in sys.argv
+    no_terraform = "--no-terraform" in sys.argv
 
     if quick_mode:
         success = (tester.test_environment() and

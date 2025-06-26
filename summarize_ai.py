@@ -24,7 +24,9 @@ def resumir_com_ia(texto, api_key):
     """Resume texto usando OpenAI GPT-3.5-turbo"""
     try:
         client = openai.OpenAI(api_key=api_key)
-        prompt = f"Resuma o texto a seguir em 3 frases objetivas e curtas:\n\n{texto}"
+        prompt = (
+            f"Resuma o texto a seguir em 3 frases objetivas e curtas:\n\n{texto}"
+        )
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}]
@@ -39,7 +41,9 @@ def traduzir_com_ia(texto, api_key, idioma_destino):
     """Traduz texto usando OpenAI GPT-3.5-turbo"""
     try:
         client = openai.OpenAI(api_key=api_key)
-        prompt = f"Traduza o texto a seguir para o idioma {idioma_destino} de forma natural e jornalística, mantendo o sentido original.\n\nTexto:\n{texto}"
+        prompt = (
+            f"Traduza o texto a seguir para o idioma {idioma_destino} de forma natural e jornalística, mantendo o sentido original.\n\nTexto:\n{texto}"
+        )
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}]
@@ -61,6 +65,8 @@ def resumir_texto(texto):
 
 # Exemplo de uso
 if __name__ == "__main__":
-    texto = "O ChatGPT é um modelo de linguagem natural desenvolvido pela OpenAI. Ele pode responder perguntas, gerar textos e ajudar em tarefas de automação. Sua aplicação é ampla em diversos setores."
+    texto = (
+        "O ChatGPT é um modelo de linguagem natural desenvolvido pela OpenAI. Ele pode responder perguntas, gerar textos e ajudar em tarefas de automação. Sua aplicação é ampla em diversos setores."
+    )
     api_key = "SUA_CHAVE_OPENAI"
-    # print(resumir_com_ia(texto, api_key))  # Descomente após inserir sua chave
+    # print(resumir_com_ia(texto, api_key)) # Descomente após inserir sua chave

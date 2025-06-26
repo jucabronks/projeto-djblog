@@ -35,7 +35,9 @@ class TestNewsCollector:
         mock_feed.bozo = False
         mock_parse.return_value = mock_feed
 
-        result = self.collector.validate_rss_feed("https://example.com/rss", "Test Source")
+        result = (
+            self.collector.validate_rss_feed("https://example.com/rss", "Test Source")
+        )
         assert result is True
 
     @patch('lambda_coletor.validar_url')
@@ -56,7 +58,9 @@ class TestNewsCollector:
         mock_feed.entries = []
         mock_parse.return_value = mock_feed
 
-        result = self.collector.validate_rss_feed("https://example.com/rss", "Test Source")
+        result = (
+            self.collector.validate_rss_feed("https://example.com/rss", "Test Source")
+        )
         assert result is False
 
     @patch('lambda_coletor.validar_url')
@@ -70,7 +74,9 @@ class TestNewsCollector:
         mock_feed.bozo = True
         mock_parse.return_value = mock_feed
 
-        result = self.collector.validate_rss_feed("https://example.com/rss", "Test Source")
+        result = (
+            self.collector.validate_rss_feed("https://example.com/rss", "Test Source")
+        )
         assert result is False
 
     def test_process_news_item_success(self):
@@ -293,7 +299,9 @@ class TestLambdaHandler:
     def test_lambda_handler_collector_error(self, mock_collector_class, mock_validate):
         """Testa handler com erro no coletor"""
         mock_collector = Mock()
-        mock_collector.collect_all_news.side_effect = Exception("Collection failed")
+        mock_collector.collect_all_news.side_effect = (
+            Exception("Collection failed")
+        )
         mock_collector_class.return_value = mock_collector
 
         # Criar mock adequado para o context do Lambda

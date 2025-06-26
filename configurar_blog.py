@@ -60,16 +60,16 @@ def get_blog_suggestions():
 def show_suggestions():
     """Mostra as sugestões de nomes"""
     suggestions = get_blog_suggestions()
-    
+
     print("📰 SUGESTÕES DE NOMES:")
     print()
-    
+
     for num, config in suggestions.items():
         print(f"{num}. 🌟 **{config['nome']}**")
         print(f"   💬 {config['slogan']}")
         print(f"   🌐 {config['dominio_sugerido']}")
         print()
-    
+
     print("6. ✍️ **Personalizado** (você escolhe)")
     print()
 
@@ -92,14 +92,16 @@ def get_custom_config():
     """Obtém configuração personalizada do usuário"""
     print("\n✍️ CONFIGURAÇÃO PERSONALIZADA:")
     print("=" * 30)
-    
+
     nome = input("📰 Nome do blog: ").strip()
     slogan = input("💬 Slogan: ").strip()
     descricao = input("📝 Descrição (opcional): ").strip()
-    
+
     if not descricao:
-        descricao = f"Blog de notícias automatizado com inteligência artificial - {nome}"
-    
+        descricao = (
+            f"Blog de notícias automatizado com inteligência artificial - {nome}"
+        )
+
     return {
         "nome": nome,
         "slogan": slogan,
@@ -111,7 +113,7 @@ def get_custom_config():
 
 def update_config_file(blog_config):
     """Atualiza o arquivo config.py"""
-    config_content = f'''"""
+    config_content = '''"""'
 Configurações do DJBlog - {blog_config['nome']}
 Gerado automaticamente em {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
@@ -144,11 +146,11 @@ def get_config():
         "wp_user": os.environ.get("WP_USER", ""),
         "wp_app_password": os.environ.get("WP_APP_PASSWORD", "")
     }}
-'''
-    
+''''
+
     with open('config.py', 'w', encoding='utf-8') as f:
         f.write(config_content)
-    
+
     print(f"✅ config.py atualizado com {blog_config['nome']}")
 
 
@@ -157,7 +159,7 @@ def update_generate_static_site(blog_config):
     # Lê o arquivo atual
     with open('generate_static_site.py', 'r', encoding='utf-8') as f:
         content = f.read()
-    
+
     # Substitui o título e metadados
     content = re.sub(
         r'<title>.*?</title>',
@@ -165,13 +167,13 @@ def update_generate_static_site(blog_config):
         content,
         flags=re.DOTALL
     )
-    
+
     content = re.sub(
         r'<meta name="description" content=".*?">',
         f'<meta name="description" content="{blog_config["descricao"]}">',
         content
     )
-    
+
     # Atualiza o H1 principal
     content = re.sub(
         r'<h1[^>]*>.*?</h1>',
@@ -179,11 +181,11 @@ def update_generate_static_site(blog_config):
         content,
         flags=re.DOTALL
     )
-    
+
     with open('generate_static_site.py', 'w', encoding='utf-8') as f:
         f.write(content)
-    
-    print(f"✅ generate_static_site.py atualizado")
+
+    print("✅ generate_static_site.py atualizado")
 
 
 def update_readme(blog_config):
@@ -191,13 +193,13 @@ def update_readme(blog_config):
     # Lê o arquivo atual
     with open('README.md', 'r', encoding='utf-8') as f:
         content = f.read()
-    
+
     # Substitui o título
     new_title = f"# 🚀 {blog_config['nome']} - Agregador de Notícias Serverless"
     content = re.sub(r'^# 🚀.*', new_title, content, flags=re.MULTILINE)
-    
+
     # Adiciona descrição do blog
-    blog_section = f'''
+    blog_section = ''''
 
 ## 📰 **Sobre o {blog_config['nome']}**
 
@@ -213,8 +215,8 @@ def update_readme(blog_config):
 - 🚀 **Serverless:** Custo $3-5/mês, zero manutenção
 - 🎯 **SEO Otimizado:** Seguindo normas do Google
 
-'''
-    
+''''
+
     # Insere após o cabeçalho principal
     content = re.sub(
         r'(# 🚀.*?\n\n)',
@@ -222,16 +224,16 @@ def update_readme(blog_config):
         content,
         flags=re.DOTALL
     )
-    
+
     with open('README.md', 'w', encoding='utf-8') as f:
         f.write(content)
-    
-    print(f"✅ README.md atualizado")
+
+    print("✅ README.md atualizado")
 
 
 def create_blog_info_file(blog_config):
     """Cria arquivo com informações do blog"""
-    info_content = f"""# 📰 {blog_config['nome']} - Informações do Blog
+    info_content = """# 📰 {blog_config['nome']} - Informações do Blog"
 
 ## 🎯 **Identidade**
 - **Nome:** {blog_config['nome']}
@@ -260,51 +262,51 @@ def create_blog_info_file(blog_config):
 ---
 *Configurado automaticamente em {datetime.now().strftime('%d/%m/%Y às %H:%M')}*
 """
-    
+
     with open('BLOG_INFO.md', 'w', encoding='utf-8') as f:
         f.write(info_content)
-    
-    print(f"✅ BLOG_INFO.md criado")
+
+    print("✅ BLOG_INFO.md criado")
 
 
 def main():
     print_header()
-    
+
     # Mostra sugestões
     show_suggestions()
-    
+
     # Obtém escolha do usuário
     choice = get_user_choice()
-    
+
     # Configura baseado na escolha
     if choice == 6:
         blog_config = get_custom_config()
     else:
         suggestions = get_blog_suggestions()
         blog_config = suggestions[choice]
-    
+
     # Confirma a escolha
-    print(f"\n🎯 CONFIGURAÇÃO ESCOLHIDA:")
+    print("\n🎯 CONFIGURAÇÃO ESCOLHIDA:")
     print(f"📰 Nome: {blog_config['nome']}")
     print(f"💬 Slogan: {blog_config['slogan']}")
     print(f"🌐 Domínio: {blog_config['dominio_sugerido']}")
     print()
-    
+
     confirm = input("Confirma esta configuração? (s/N): ").strip().lower()
     if confirm not in ['s', 'sim', 'y', 'yes']:
         print("❌ Configuração cancelada.")
         return
-    
+
     # Atualiza os arquivos
-    print(f"\n🔧 ATUALIZANDO ARQUIVOS...")
+    print("\n🔧 ATUALIZANDO ARQUIVOS...")
     print("=" * 30)
-    
+
     try:
         update_config_file(blog_config)
         update_generate_static_site(blog_config)
         update_readme(blog_config)
         create_blog_info_file(blog_config)
-        
+
         print("\n🎉 CONFIGURAÇÃO CONCLUÍDA!")
         print("=" * 40)
         print(f"✅ Seu blog '{blog_config['nome']}' está configurado!")
@@ -315,11 +317,11 @@ def main():
         print("3. Acesse: https://jucabronks.github.io/projeto-djblog")
         print()
         print("💡 Para verificar: python verificar_site.py --open")
-        
+
     except Exception as e:
         print(f"❌ Erro ao atualizar arquivos: {e}")
         return False
-    
+
     return True
 
 

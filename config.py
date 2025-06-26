@@ -83,12 +83,16 @@ class Config:
         )
 
         # Content
-        nichos_str = os.environ.get("NICHOS", "saude,esportes,tecnologia,economia")
+        nichos_str = (
+            os.environ.get("NICHOS", "saude,esportes,tecnologia,economia")
+        )
         self.content = ContentConfig(
             nichos=[n.strip() for n in nichos_str.split(",") if n.strip()],
             pais=os.environ.get("PAIS", "Brasil"),
             max_news_per_source=int(os.environ.get("MAX_NEWS_PER_SOURCE", 3)),
-            threshold_caracteres=int(os.environ.get("THRESHOLD_CARACTERES", 250)),
+            threshold_caracteres= (
+                int(os.environ.get("THRESHOLD_CARACTERES", 250))
+            ),
             language=os.environ.get("LANGUAGE", "pt-BR")
         )
 
@@ -133,7 +137,9 @@ class Config:
             errors.append("THRESHOLD_CARACTERES deve ser maior que 0")
 
         if errors:
-            error_msg = "Erros de configuração:\n" + "\n".join(f"- {error}" for error in errors)
+            error_msg = (
+                "Erros de configuração:\n" + "\n".join(f"- {error}" for error in errors)
+            )
             logger.error(error_msg)
             raise ValueError(error_msg)
 

@@ -20,7 +20,9 @@ def setup_logging(level: str = "INFO") -> logging.Logger:
     """Configura logging centralizado com formato estruturado"""
     logging.basicConfig(
         level=getattr(logging, level.upper()),
-        format='%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s',
+        format= (
+            '%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s'
+        ),
         datefmt='%Y-%m-%d %H:%M:%S'
     )
     return logging.getLogger(__name__)
@@ -37,7 +39,9 @@ def validar_variaveis_obrigatorias(nomes: List[str]) -> None:
             faltando.append(nome)
 
     if faltando:
-        error_msg = f"Variáveis de ambiente obrigatórias não definidas: {', '.join(faltando)}"
+        error_msg = (
+            f"Variáveis de ambiente obrigatórias não definidas: {', '.join(faltando)}"
+        )
         logger.error(error_msg)
         raise ValueError(error_msg)
 

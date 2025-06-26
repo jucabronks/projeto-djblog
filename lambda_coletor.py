@@ -124,7 +124,9 @@ class NewsCollector:
 
             # Valida dados obrigatórios
             if not title or not link:
-                logger.warning(f"Dados insuficientes: título='{title}', link='{link}'")
+                logger.warning(f"Dados insuficientes: título= ("
+                    '{title}', link='{link}'")"
+                )
                 return False
 
             # Gera resumo se necessário

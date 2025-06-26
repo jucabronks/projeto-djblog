@@ -24,37 +24,38 @@ def get_github_repo_info():
     success, output, error = run_git_command("git remote get-url origin")
     if not success:
         return None, None
-    
+
     # Extrair owner e repo da URL
-    # Formatos: https://github.com/owner/repo.git ou git@github.com:owner/repo.git
+    # Formatos: https://github.com/owner/repo.git ou
+    # git@github.com:owner/repo.git
     url = output.replace('.git', '')
     if 'github.com/' in url:
         parts = url.split('github.com/')[-1].split('/')
         if len(parts) >= 2:
             return parts[0], parts[1]
-    
+
     return None, None
 
 
 def create_github_pages_config():
     """Cria configuração do GitHub Pages"""
     print("🔧 Configurando GitHub Pages...")
-    
+
     # Verificar se já existe configuração
     if os.path.exists('.github/workflows/deploy-site.yml'):
         print("✅ Workflow do GitHub Actions já existe!")
     else:
         print("❌ Workflow não encontrado. Execute este script após criar o arquivo!")
         return False
-    
+
     # Verificar repositório
     owner, repo = get_github_repo_info()
     if not owner or not repo:
         print("❌ Não foi possível identificar o repositório GitHub")
         return False
-    
+
     print(f"📋 Repositório identificado: {owner}/{repo}")
-    
+
     # Criar arquivo de configuração para GitHub Pages
     github_pages_config = {
         "source": {
@@ -62,11 +63,11 @@ def create_github_pages_config():
             "path": "/"
         }
     }
-    
+
     # Salvar configurações
     with open('.github-pages-config.json', 'w') as f:
         json.dump(github_pages_config, f, indent=2)
-    
+
     print("✅ Configuração do GitHub Pages criada!")
     return True
 
@@ -77,15 +78,15 @@ def setup_secrets_instructions():
     if not owner or not repo:
         print("❌ Não foi possível identificar o repositório")
         return
-    
+
     secrets_needed = [
         "AWS_ACCESS_KEY_ID",
-        "AWS_SECRET_ACCESS_KEY", 
+        "AWS_SECRET_ACCESS_KEY",
         "AWS_REGION",
         "DYNAMODB_TABLE_NAME"
     ]
-    
-    instructions = f"""
+
+    instructions = """
 🔐 CONFIGURAÇÃO DE SECRETS DO GITHUB
 
 Para o site funcionar automaticamente, configure os seguintes secrets:
@@ -97,7 +98,7 @@ Para o site funcionar automaticamente, configure os seguintes secrets:
 1. AWS_ACCESS_KEY_ID
    Value: sua_access_key_da_aws
 
-2. AWS_SECRET_ACCESS_KEY  
+2. AWS_SECRET_ACCESS_KEY
    Value: sua_secret_key_da_aws
 
 3. AWS_REGION
@@ -126,17 +127,17 @@ Para o site funcionar automaticamente, configure os seguintes secrets:
 - Logs de deploy em: https://github.com/{owner}/{repo}/actions
 
 """
-    
+
     with open('GITHUB_PAGES_SETUP.md', 'w', encoding='utf-8') as f:
         f.write(instructions)
-    
+
     print("📄 Instruções salvas em: GITHUB_PAGES_SETUP.md")
     print("\n" + instructions)
 
 
 def create_health_check_page():
     """Cria página de monitoramento automático"""
-    html_content = """<!DOCTYPE html>
+    html_content = """<!DOCTYPE html>"
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -216,13 +217,15 @@ def create_health_check_page():
         <div class="header">
             <h1>🔍 Monitor do Sistema</h1>
             <p>Status em tempo real do DJBlog</p>
-            <button class="refresh-btn" onclick="loadHealth()">🔄 Atualizar</button>
+            <button class= (
+                "refresh-btn" onclick="loadHealth()">🔄 Atualizar</button>
+            )
         </div>
-        
+
         <div id="health-status">
             <p>📡 Carregando dados...</p>
         </div>
-        
+
         <div class="timestamp">
             <p>🕒 Última atualização: <span id="last-update">--</span></p>
         </div>
@@ -244,14 +247,16 @@ def create_health_check_page():
                 `;
             }
         }
-        
+
         function displayHealth(data) {
             let html = '<div class="status-grid">';
-            
+
             // Status dos websites
             if (data.websites) {
                 for (const [url, status] of Object.entries(data.websites)) {
-                    const statusClass = status.status === 'UP' ? 'status-up' : 'status-down';
+                    const statusClass = (
+                        status.status === 'UP' ? 'status-up' : 'status-down';
+                    )
                     const emoji = status.status === 'UP' ? '✅' : '❌';
                     html += `
                         <div class="status-card ${statusClass}">
@@ -263,10 +268,14 @@ def create_health_check_page():
                     `;
                 }
             }
-            
+
             // Status do DynamoDB
             if (data.dynamodb) {
-                const statusClass = data.dynamodb.status === 'UP' ? 'status-up' : 'status-down';
+                const statusClass = (
+                    data.dynamodb.status = (
+                        == 'UP' ? 'status-up' : 'status-down';
+                    )
+                )
                 const emoji = data.dynamodb.status === 'UP' ? '✅' : '❌';
                 html += `
                     <div class="status-card ${statusClass}">
@@ -276,12 +285,18 @@ def create_health_check_page():
                     </div>
                 `;
             }
-            
+
             // Status das Lambda Functions
-            if (data.lambda_functions && typeof data.lambda_functions === 'object') {
+            if (data.lambda_functions && typeof data.lambda_functions = (
+                == 'object') {
+            )
                 for (const [funcName, status] of Object.entries(data.lambda_functions)) {
                     if (typeof status === 'object' && status.status) {
-                        const statusClass = status.status === 'UP' ? 'status-up' : 'status-down';
+                        const statusClass = (
+                            status.status = (
+                                == 'UP' ? 'status-up' : 'status-down';
+                            )
+                        )
                         const emoji = status.status === 'UP' ? '✅' : '❌';
                         html += `
                             <div class="status-card ${statusClass}">
@@ -292,24 +307,26 @@ def create_health_check_page():
                     }
                 }
             }
-            
+
             html += '</div>';
             document.getElementById('health-status').innerHTML = html;
-            document.getElementById('last-update').textContent = new Date(data.timestamp).toLocaleString('pt-BR');
+            document.getElementById('last-update').textContent = (
+                new Date(data.timestamp).toLocaleString('pt-BR');
+            )
         }
-        
+
         // Carregar dados inicialmente
         loadHealth();
-        
+
         // Atualizar a cada 5 minutos
         setInterval(loadHealth, 5 * 60 * 1000);
     </script>
 </body>
 </html>"""
-    
+
     with open('monitor.html', 'w', encoding='utf-8') as f:
         f.write(html_content)
-    
+
     print("📊 Página de monitoramento criada: monitor.html")
 
 
@@ -317,26 +334,26 @@ def main():
     """Função principal"""
     print("🚀 CONFIGURADOR AUTOMÁTICO DO GITHUB PAGES")
     print("=" * 50)
-    
+
     try:
         # Configurar GitHub Pages
         if create_github_pages_config():
             print("✅ GitHub Pages configurado!")
-        
+
         # Criar instruções
         setup_secrets_instructions()
-        
+
         # Criar página de monitoramento
         create_health_check_page()
-        
+
         print("\n🎯 PRÓXIMOS PASSOS:")
         print("1. Configure os secrets conforme instruções em GITHUB_PAGES_SETUP.md")
         print("2. Faça push do código para GitHub")
         print("3. Configure GitHub Pages para usar GitHub Actions")
         print("4. O site será atualizado automaticamente!")
-        
+
         return 0
-        
+
     except Exception as e:
         print(f"💥 ERRO: {e}")
         return 1

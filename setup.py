@@ -7,14 +7,18 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 with open("requirements.txt", "r", encoding="utf-8") as fh:
-    requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
+    requirements = (
+        [line.strip() for line in fh if line.strip() and not line.startswith("#")]
+    )
 
 setup(
     name="projeto-blog",
     version="1.0.0",
     author="Dev Team",
     author_email="dev@example.com",
-    description="Sistema automatizado de agregação de notícias usando AWS Lambda",
+    description= (
+        "Sistema automatizado de agregação de notícias usando AWS Lambda",
+    )
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/seu-usuario/projeto-blog",

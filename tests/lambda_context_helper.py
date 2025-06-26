@@ -7,7 +7,9 @@ from unittest.mock import Mock
 def create_lambda_context_mock():
     """Cria mock completo do contexto Lambda"""
     mock_context = Mock()
-    mock_context.invoked_function_arn = "arn:aws:lambda:us-east-1:123456789012:function:test"
+    mock_context.invoked_function_arn = (
+        "arn:aws:lambda:us-east-1:123456789012:function:test"
+    )
     mock_context.function_name = "test-function"
     mock_context.function_version = "$LATEST"
     mock_context.log_group_name = "/aws/lambda/test-function"

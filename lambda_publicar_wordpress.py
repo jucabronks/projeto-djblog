@@ -63,7 +63,9 @@ class WordPressPublisher:
 
             # Busca notícias aprovadas e não publicadas
             response = table.scan(
-                FilterExpression=Attr('aprovado').eq(True) & Attr('publicado').eq(False),
+                FilterExpression=(
+                    Attr('aprovado').eq(True) & Attr('publicado').eq(False)
+                ),
                 Limit=limit
             )
 
@@ -71,7 +73,10 @@ class WordPressPublisher:
             logger.info(f"Encontradas {len(noticias)} notícias para publicar")
 
             # Ordena por data de inserção (mais recentes primeiro)
-            noticias.sort(key=lambda x: x.get('data_insercao', 0), reverse=True)
+            noticias.sort(
+                key=lambda x: x.get('data_insercao', 0), 
+                reverse=True
+            )
 
             return noticias
 
@@ -125,7 +130,7 @@ class WordPressPublisher:
         Returns:
             Conteúdo HTML formatado
         """
-        content = f"""
+        content = """
         <div class="noticia-content">
             <h2>{noticia['titulo']}</h2>
 
@@ -138,7 +143,11 @@ class WordPressPublisher:
             </div>
 
             <div class="fonte">
-                <p><strong>Fonte:</strong> <a href="{noticia['link']}" target="_blank" rel="noopener">{noticia['fonte']}</a></p>
+                <p><strong>Fonte:</strong> <a href= (
+                    "{noticia['link']}" target= (
+                        "_blank" rel="noopener">{noticia['fonte']}</a></p>
+                    )
+                )
             </div>
 
             <div class="metadata">
@@ -214,7 +223,9 @@ class WordPressPublisher:
                 table.update_item(
                     Key={
                         'id': noticia['id']},
-                    UpdateExpression='SET publicado = :pub, wp_post_id = :pid, wp_post_url = :url, data_publicacao = :data',
+                    UpdateExpression=(
+                        'SET publicado = :pub, wp_post_id = :pid, wp_post_url = :url, data_publicacao = :data'
+                    ),
                     ExpressionAttributeValues={
                         ':pub': True,
                         ':pid': post_id,
