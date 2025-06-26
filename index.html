@@ -1,513 +1,325 @@
 <!DOCTYPE html>
 <html lang="pt-BR" prefix="og: http://ogp.me/ns#">
 <head>
-    <!-- Meta tags essenciais -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
-    <!-- SEO Meta Tags -->
-    <title>DJBlog - Notícias Automatizadas e Atualizadas</title>
-    <meta name="description" content="Sistema inteligente de agregação de notícias. Conteúdo automatizado, categorizado e atualizado diariamente com foco em qualidade e relevância.">
-    <meta name="keywords" content="notícias, tecnologia, saúde, economia, esportes, automação, IA, Brasil">
-    <meta name="author" content="DJBlog Sistema Automatizado">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <meta name="googlebot" content="index, follow">
-    <link rel="canonical" href="https://jucabronks.github.io/projeto-djblog">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJBlog - Notícias Automatizadas</title>
+    <meta name="description" content="Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada">
+    <meta name="author" content="DJBlog System">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jucabronks.github.io/projeto-djblog">
-    <meta property="og:title" content="DJBlog - Notícias Automatizadas e Atualizadas">
-    <meta property="og:description" content="Sistema inteligente de agregação de notícias. Conteúdo automatizado, categorizado e atualizado diariamente com foco em qualidade e relevância.">
-    <meta property="og:image" content="https://jucabronks.github.io/projeto-djblog/og-image.jpg">
-    <meta property="og:site_name" content="DJBlog">
-    <meta property="og:locale" content="pt_BR">
+    <meta property="og:title" content="DJBlog - Notícias Automatizadas">
+    <meta property="og:description" content="Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada">
     
-    <!-- Twitter Card -->
+    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://jucabronks.github.io/projeto-djblog">
-    <meta property="twitter:title" content="DJBlog - Notícias Automatizadas e Atualizadas">
-    <meta property="twitter:description" content="Sistema inteligente de agregação de notícias. Conteúdo automatizado, categorizado e atualizado diariamente com foco em qualidade e relevância.">
-    <meta property="twitter:image" content="https://jucabronks.github.io/projeto-djblog/og-image.jpg">
+    <meta property="twitter:title" content="DJBlog - Notícias Automatizadas">
+    <meta property="twitter:description" content="Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada">
     
-    <!-- Additional Meta Tags -->
-    <meta name="theme-color" content="#1a365d">
-    <meta name="msapplication-TileColor" content="#1a365d">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="format-detection" content="telephone=no">
-    
-    <!-- Favicons (placeholder) -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    
-    <!-- DNS Prefetch para performance -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//www.google-analytics.com">
-    
-    <!-- CSS Responsivo Incorporado -->
     <style>
-
-/* 🎨 DJBlog - CSS Responsivo e Otimizado para SEO */
-:root {
-    --primary-color: #1a365d;
-    --secondary-color: #2d5a7b;
-    --accent-color: #3182ce;
-    --text-color: #2d3748;
-    --text-light: #718096;
-    --bg-color: #f8fafc;
-    --white: #ffffff;
-    --border-color: #e2e8f0;
-    --success-color: #38a169;
-    --warning-color: #d69e2e;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --border-radius: 8px;
-    --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: var(--font-system);
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--bg-color);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Header */
-.header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: var(--white);
-    padding: 2rem 0;
-    text-align: center;
-    box-shadow: var(--shadow);
-}
-
-.header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.5px;
-}
-
-.header p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Container Principal */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-/* Seção de Estatísticas */
-.stats-section {
-    background: var(--white);
-    padding: 3rem 0;
-    margin: 2rem 0;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.stat-card {
-    text-align: center;
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--accent-color);
-    margin-bottom: 0.5rem;
-}
-
-.stat-label {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Grid de Notícias */
-.news-section {
-    padding: 2rem 0;
-}
-
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-/* Card de Notícia */
-.news-card {
-    background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid var(--border-color);
-}
-
-.news-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.news-header {
-    padding: 1.5rem 1.5rem 1rem;
-}
-
-.news-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
-    color: var(--text-light);
-}
-
-.news-date {
-    font-weight: 500;
-}
-
-.news-category {
-    background: var(--accent-color);
-    color: var(--white);
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.news-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.4;
-    margin-bottom: 1rem;
-    color: var(--text-color);
-}
-
-.news-title:hover {
-    color: var(--accent-color);
-}
-
-.news-content {
-    padding: 0 1.5rem 1.5rem;
-}
-
-.news-summary {
-    color: var(--text-light);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-}
-
-.news-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-}
-
-.news-source {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    font-weight: 500;
-}
-
-.news-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--accent-color);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-}
-
-.news-link:hover {
-    color: var(--primary-color);
-}
-
-.news-link::after {
-    content: "→";
-    transition: transform 0.3s ease;
-}
-
-.news-link:hover::after {
-    transform: translateX(2px);
-}
-
-/* Footer */
-.footer {
-    background: var(--primary-color);
-    color: var(--white);
-    text-align: center;
-    padding: 3rem 0;
-    margin-top: 4rem;
-}
-
-.footer-content {
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin: 1.5rem 0;
-    flex-wrap: wrap;
-}
-
-.footer-links a {
-    color: var(--white);
-    text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
-
-.footer-links a:hover {
-    opacity: 1;
-}
-
-/* Loading Animation */
-.loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255,255,255,.3);
-    border-radius: 50%;
-    border-top-color: var(--white);
-    animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header h1 {
-        font-size: 2rem;
-    }
-    
-    .header p {
-        font-size: 1rem;
-    }
-    
-    .container {
-        padding: 0 1rem;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-    
-    .news-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .news-header {
-        padding: 1rem;
-    }
-    
-    .news-content {
-        padding: 0 1rem 1rem;
-    }
-    
-    .news-footer {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    
-    .footer-links {
-        flex-direction: column;
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .header {
-        padding: 1.5rem 0;
-    }
-    
-    .header h1 {
-        font-size: 1.75rem;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .stat-card {
-        padding: 1rem;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-    }
-}
-
-/* Print Styles */
-@media print {
-    .header,
-    .footer,
-    .news-link {
-        color: black !important;
-        background: white !important;
-    }
-    
-    .news-card {
-        box-shadow: none;
-        border: 1px solid #ccc;
-        break-inside: avoid;
-    }
-}
-
-/* High Contrast Mode */
-@media (prefers-contrast: high) {
-    :root {
-        --primary-color: #000000;
-        --secondary-color: #333333;
-        --accent-color: #0066cc;
-        --text-color: #000000;
-        --bg-color: #ffffff;
-        --border-color: #666666;
-    }
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary-color: #1a202c;
-        --secondary-color: #2d3748;
-        --accent-color: #63b3ed;
-        --text-color: #e2e8f0;
-        --text-light: #a0aec0;
-        --bg-color: #0f1419;
-        --white: #1a202c;
-        --border-color: #4a5568;
-    }
-}
-
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --bg-color: #ffffff;
+            --bg-secondary: #f8fafc;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* Stats */
+        .stats {
+            background: var(--bg-secondary);
+            padding: 2rem 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        /* News Section */
+        .news-section {
+            padding: 3rem 0;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .news-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .news-date {
+            color: var(--text-light);
+        }
+        
+        .news-category {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .news-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .news-title a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        
+        .news-title a:hover {
+            color: var(--primary-color);
+        }
+        
+        .news-content {
+            padding: 1.5rem;
+        }
+        
+        .news-summary {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .news-source {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .news-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .news-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--text-color);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            text-align: center;
+        }
+        
+        .footer h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .footer p {
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+        }
+        
+        .footer-links a:hover {
+            opacity: 1;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        /* Utility classes */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
-    
-    <!-- Schema.org Structured Data -->
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "DJBlog - Notícias Automatizadas e Atualizadas",
-  "description": "Sistema inteligente de agregação de notícias. Conteúdo automatizado, categorizado e atualizado diariamente com foco em qualidade e relevância.",
-  "url": "https://jucabronks.github.io/projeto-djblog",
-  "author": {
-    "@type": "Organization",
-    "name": "DJBlog Sistema Automatizado"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "DJBlog Sistema Automatizado"
-  },
-  "mainEntity": {
-    "@type": "ItemList",
-    "itemListElement": []
-  }
-}
-    </script>
-    
-    <!-- Google Analytics (placeholder) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script> -->
-    <!-- <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-    </script> -->
 </head>
 <body>
-    <!-- Header Principal -->
+    <!-- Header -->
     <header class="header">
         <div class="container">
-            <h1>DJBlog - Notícias Automatizadas e Atualizadas</h1>
-            <p>Sistema inteligente de agregação de notícias. Conteúdo automatizado, categorizado e atualizado diariamente com foco em qualidade e relevância.</p>
-            <div style="margin-top: 1rem; opacity: 0.8;">
-                <small>Última atualização: <span id="current-timestamp">25/06/2025 às 23:22</span> (BRT)</small>
-            </div>
+            <h1>🤖 DJBlog - Notícias Automatizadas</h1>
+            <p>Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada</p>
         </div>
     </header>
 
-    <!-- Seção de Estatísticas -->
-    <section class="stats-section">
+    <!-- Estatísticas -->
+    <section class="stats">
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 1rem; color: var(--primary-color);">
-                📊 Estatísticas em Tempo Real
-            </h2>
+            <h2 class="text-center mb-2">📊 Estatísticas do Sistema</h2>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Notícias Ativas</div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Notícias Agregadas</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Categorias</div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Nichos Cobertos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Fontes</div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Fontes Monitoradas</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number"><span id="load-time">--</span></div>
-                    <div class="stat-label">Tempo de Carregamento</div>
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Coleta Automática</div>
                 </div>
             </div>
         </div>
@@ -516,13 +328,80 @@ body {
     <!-- Seção Principal de Notícias -->
     <main class="news-section">
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">
-                📰 Últimas Notícias
-            </h2>
+            <h2 class="text-center mb-2">📰 Últimas Notícias</h2>
+            <p class="text-center" style="color: var(--text-light); margin-bottom: 2rem;">
+                Última atualização: 26/06/2025 às 09:48
+            </p>
             
-            <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">Período: 25/06/2025, 24/06/2025, 23/06/2025, 22/06/2025, 21/06/2025, 20/06/2025, 19/06/2025</p>
-            
-            <div style="text-align: center; padding: 3rem 0;"><h3>🔍 Nenhuma notícia encontrada</h3><p>Aguarde a próxima coleta automática ou verifique a conexão com o banco de dados.</p></div>
+            <div class="news-grid">
+
+                <article class="news-card" id="news-d58f8b42">
+                    <div class="news-header">
+                        <div class="news-meta">
+                            <time class="news-date" datetime="2025-06-26T09:48:23.973242">26/06/2025 09:48</time>
+                            <span class="news-category">Tecnologia</span>
+                        </div>
+                        <h3 class="news-title">
+                            <a href="https://example.com/tech-brasil" target="_blank" rel="noopener noreferrer" title="Tecnologia brasileira cresce 15% no primeiro trimestre">
+                                Tecnologia brasileira cresce 15% no primeiro trimestre
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="news-content">
+                        <p class="news-summary">Setor de tecnologia nacional apresenta crescimento significativo impulsionado por startups e investimentos em inovação.</p>
+                        <div class="news-footer">
+                            <span class="news-source">📡 TechBrasil</span>
+                            <a href="https://example.com/tech-brasil" class="news-link" target="_blank" rel="noopener noreferrer">
+                                Ler mais
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="news-card" id="news-50ba09c0">
+                    <div class="news-header">
+                        <div class="news-meta">
+                            <time class="news-date" datetime="2025-06-26T09:48:23.973242">26/06/2025 09:48</time>
+                            <span class="news-category">Saúde</span>
+                        </div>
+                        <h3 class="news-title">
+                            <a href="https://example.com/saude-descoberta" target="_blank" rel="noopener noreferrer" title="Nova descoberta médica promete revolucionar tratamentos">
+                                Nova descoberta médica promete revolucionar tratamentos
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="news-content">
+                        <p class="news-summary">Pesquisadores brasileiros desenvolvem técnica inovadora que pode transformar o tratamento de doenças crônicas.</p>
+                        <div class="news-footer">
+                            <span class="news-source">📡 Saúde & Ciência</span>
+                            <a href="https://example.com/saude-descoberta" class="news-link" target="_blank" rel="noopener noreferrer">
+                                Ler mais
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="news-card" id="news-5d032a07">
+                    <div class="news-header">
+                        <div class="news-meta">
+                            <time class="news-date" datetime="2025-06-26T09:48:23.973242">26/06/2025 09:48</time>
+                            <span class="news-category">Economia</span>
+                        </div>
+                        <h3 class="news-title">
+                            <a href="https://example.com/economia-recuperacao" target="_blank" rel="noopener noreferrer" title="Economia brasileira mostra sinais de recuperação">
+                                Economia brasileira mostra sinais de recuperação
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="news-content">
+                        <p class="news-summary">Indicadores econômicos apontam para melhoria gradual com crescimento do PIB e redução do desemprego.</p>
+                        <div class="news-footer">
+                            <span class="news-source">📡 Economia Brasil</span>
+                            <a href="https://example.com/economia-recuperacao" class="news-link" target="_blank" rel="noopener noreferrer">
+                                Ler mais
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
         </div>
     </main>
 
@@ -531,7 +410,7 @@ body {
         <div class="container">
             <div class="footer-content">
                 <h3>🤖 DJBlog - Sistema Automatizado</h3>
-                <p>Agregação inteligente de notícias com tecnologia de ponta. 
+                <p>Agregação inteligente de notícias com tecnologia de ponta.<br>
                    Conteúdo atualizado automaticamente, sem intervenção humana.</p>
                 
                 <div class="footer-links">
@@ -539,173 +418,40 @@ body {
                     <a href="#saude">Saúde</a>
                     <a href="#economia">Economia</a>
                     <a href="#esportes">Esportes</a>
-                    <a href="/sobre">Sobre</a>
-                    <a href="/privacidade">Privacidade</a>
                 </div>
                 
                 <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2);">
-                    <p>&copy; 2025 DJBlog. Sistema automatizado de notícias.</p>
-                    <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">
-                        Gerado automaticamente em 2025-06-25 | 
-                        Próxima atualização: Diária às 07:00 UTC
+                    <p style="opacity: 0.6; font-size: 0.9rem;">
+                        © 2025 DJBlog System | Gerado automaticamente | 
+                        <a href="https://github.com/jucabronks/projeto-djblog" target="_blank" style="color: #60a5fa;">
+                            Código no GitHub
+                        </a>
                     </p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript Responsivo -->
     <script>
-
-// 🚀 DJBlog - JavaScript Otimizado e Responsivo
-document.addEventListener('DOMContentLoaded', function() {
-    // Performance Observer para Core Web Vitals
-    if ('PerformanceObserver' in window) {
-        const observer = new PerformanceObserver((list) => {
-            for (const entry of list.getEntries()) {
-                if (entry.entryType === 'largest-contentful-paint') {
-                    console.log('LCP:', entry.startTime);
-                }
-                if (entry.entryType === 'first-input') {
-                    console.log('FID:', entry.processingStart - entry.startTime);
-                }
-            }
+        // Analytics simples
+        console.log('DJBlog loaded successfully');
+        
+        // Marcar tempo de carregamento
+        window.addEventListener('load', function() {
+            const loadTime = window.performance.timing.loadEventEnd - window.performance.timing.navigationStart;
+            console.log('Load time:', loadTime + 'ms');
         });
         
-        try {
-            observer.observe({entryTypes: ['largest-contentful-paint', 'first-input']});
-        } catch (e) {
-            // Fallback para navegadores mais antigos
-        }
-    }
-    
-    // Lazy Loading para imagens (se houver)
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
-                    imageObserver.unobserve(img);
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
-        
-        document.querySelectorAll('img[data-src]').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-    
-    // Animação suave para cards
-    const cards = document.querySelectorAll('.news-card');
-    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const cardObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            cardObserver.observe(card);
-        });
-    }
-    
-    // Atualização de timestamp em tempo real
-    function updateTimestamp() {
-        const timestampEl = document.getElementById('current-timestamp');
-        if (timestampEl) {
-            const now = new Date();
-            const options = {
-                timeZone: 'America/Sao_Paulo',
-                day: '2-digit',
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            };
-            timestampEl.textContent = now.toLocaleString('pt-BR', options);
-        }
-    }
-    
-    updateTimestamp();
-    setInterval(updateTimestamp, 1000);
-    
-    // Service Worker para cache (se suportado)
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(() => {
-            // Service worker não disponível
-        });
-    }
-    
-    // Analytics de performance simples
-    window.addEventListener('load', function() {
-        const loadTime = performance.now();
-        const statsEl = document.getElementById('load-time');
-        if (statsEl) {
-            statsEl.textContent = Math.round(loadTime) + 'ms';
-        }
-    });
-    
-    // Scroll suave para âncoras
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-    
-    // Detecção de tema escuro
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark-theme');
-    }
-    
-    // Listener para mudanças de tema
-    if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (e.matches) {
-                document.body.classList.add('dark-theme');
-            } else {
-                document.body.classList.remove('dark-theme');
-            }
-        });
-    }
-});
-
-// Função para compartilhamento (se Web Share API estiver disponível)
-function shareNews(title, url) {
-    if (navigator.share) {
-        navigator.share({
-            title: title,
-            url: url
-        }).catch(err => console.log('Erro ao compartilhar:', err));
-    } else {
-        // Fallback: copiar para clipboard
-        navigator.clipboard.writeText(url).then(() => {
-            alert('Link copiado para a área de transferência!');
-        }).catch(() => {
-            // Fallback final: abrir em nova aba
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
-        });
-    }
-}
-
     </script>
-    
-    <!-- AdSense (placeholder) -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX" crossorigin="anonymous"></script> -->
 </body>
 </html>
