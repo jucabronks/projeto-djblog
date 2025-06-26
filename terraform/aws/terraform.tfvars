@@ -57,16 +57,18 @@ tags = {
 
 coletas = [
   {
-    pais           = "brasil"
-    cron           = "cron(0,10,20,30 23 * * ? *)"
-    timezone       = "America/Sao_Paulo"
-    nicho          = "tecnologia"
-    openai_api_key = ""
-    dd_api_key     = ""
-    dd_site        = ""
-    dd_env         = ""
-    max_news       = 3
-    copys_api_user = ""
-    copys_api_key  = ""
+    pais                = "brasil"
+    cron                = "cron(0,10,20,30 23 * * ? *)"
+    timezone            = "America/Sao_Paulo"
+    nicho               = "tecnologia"
+    dynamodb_table_name = "projeto-vm-noticias"
+    aws_region          = "us-east-1"
+    openai_api_key      = ""
+    dd_api_key          = ""
+    dd_site             = ""
+    dd_env              = ""
+    max_news            = 3
+    copys_api_user      = ""
+    copys_api_key       = ""
   }
 ] 
