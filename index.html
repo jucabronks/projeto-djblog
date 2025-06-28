@@ -1,457 +1,1957 @@
 <!DOCTYPE html>
-<html lang="pt-BR" prefix="og: http://ogp.me/ns#">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DJBlog - Notícias Automatizadas</title>
-    <meta name="description" content="Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada">
-    <meta name="author" content="DJBlog System">
+    <title>Notícias Ontem - As principais notícias do Brasil</title>
+    <meta name="description" content="Fique por dentro das principais notícias do Brasil. Informação atualizada e confiável direto para você.">
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://jucabronks.github.io/projeto-djblog">
-    <meta property="og:title" content="DJBlog - Notícias Automatizadas">
-    <meta property="og:description" content="Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>">
     
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://jucabronks.github.io/projeto-djblog">
-    <meta property="twitter:title" content="DJBlog - Notícias Automatizadas">
-    <meta property="twitter:description" content="Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiTm90w61jaWFzIE9udGVtIiwic2hvcnRfbmFtZSI6Ik5vdGljaWFzIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMxZTQwYWYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCc+8J+Tsgo8L3N2Zz4iLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Notícias Ontem">
+    
+    <!-- Preload crítico -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <style>
-        :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e40af;
-            --accent-color: #3b82f6;
-            --text-color: #1f2937;
-            --text-light: #6b7280;
-            --bg-color: #ffffff;
-            --bg-secondary: #f8fafc;
-            --border-color: #e5e7eb;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-            --border-radius: 8px;
-            --border-radius-lg: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
+
+        :root {
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary: #0f172a;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-news: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
-        
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        /* Utility Classes */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 1rem;
         }
-        
+
+        .text-center { text-align: center; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--gradient);
             color: white;
-            padding: 2rem 0;
-            text-align: center;
+            padding: 4rem 0 3rem;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="white" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
         .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f0f9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        .header p {
-            font-size: 1.1rem;
+
+        .header .subtitle {
+            font-size: 1.25rem;
             opacity: 0.9;
+            margin-bottom: 2rem;
+            font-weight: 300;
         }
-        
-        /* Stats */
-        .stats {
-            background: var(--bg-secondary);
-            padding: 2rem 0;
+
+        .header .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 0;
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
-            margin-top: 1rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow);
             text-align: center;
         }
-        
-        .stat-number {
+
+        .stat-item h3 {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
         }
-        
-        .stat-label {
-            color: var(--text-light);
+
+        .stat-item p {
+            opacity: 0.8;
             font-size: 0.9rem;
         }
-        
-        /* News Section */
-        .news-section {
-            padding: 3rem 0;
+
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+            background: var(--bg-alt);
         }
-        
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--gradient-news);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* News Grid */
         .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin-bottom: 3rem;
         }
-        
+
         .news-card {
             background: white;
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow);
+            border-radius: 16px;
             overflow: hidden;
-            transition: var(--transition);
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
         }
-        
+
         .news-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
         }
-        
+
         .news-header {
             padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
         }
-        
+
         .news-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
-            font-size: 0.85rem;
         }
-        
-        .news-date {
-            color: var(--text-light);
-        }
-        
-        .news-category {
-            background: var(--primary-color);
+
+        .source-badge {
+            background: var(--gradient-news);
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
-        
+
+        .timestamp {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
         .news-title {
             font-size: 1.25rem;
             font-weight: 600;
             line-height: 1.4;
+            color: var(--text);
+            margin-bottom: 0.75rem;
         }
-        
-        .news-title a {
-            color: var(--text-color);
-            text-decoration: none;
-        }
-        
-        .news-title a:hover {
-            color: var(--primary-color);
-        }
-        
-        .news-content {
-            padding: 1.5rem;
-        }
-        
+
         .news-summary {
             color: var(--text-light);
-            margin-bottom: 1.5rem;
             line-height: 1.6;
-        }
-        
-        .news-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .news-source {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-        
-        .news-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        
-        .news-link:hover {
-            text-decoration: underline;
-        }
-        
-        /* Footer */
-        .footer {
-            background: var(--text-color);
-            color: white;
-            padding: 3rem 0 2rem;
-            margin-top: 4rem;
-        }
-        
-        .footer-content {
-            text-align: center;
-        }
-        
-        .footer h3 {
             margin-bottom: 1rem;
         }
-        
-        .footer p {
-            margin-bottom: 2rem;
-            opacity: 0.8;
+
+        .news-content {
+            padding: 0 1.5rem 1.5rem;
         }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-bottom: 2rem;
+
+        .news-list {
+            list-style: none;
         }
-        
-        .footer-links a {
+
+        .news-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s;
+        }
+
+        .news-item:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 8px;
+            margin: 0 -0.5rem;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-item-title {
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .news-item-summary {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        /* Load More Button */
+        .load-more {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .btn-load-more {
+            background: var(--gradient-news);
             color: white;
-            text-decoration: none;
-            opacity: 0.8;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
         }
-        
-        .footer-links a:hover {
-            opacity: 1;
+
+        .btn-load-more:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .news-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-        
-        /* Utility classes */
-        .text-center {
+
+        /* Footer */
+        .footer {
+            background: var(--secondary);
+            color: white;
+            padding: 3rem 0 2rem;
             text-align: center;
         }
-        
-        .mb-2 {
+
+        .footer-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-content p {
+            opacity: 0.8;
             margin-bottom: 2rem;
         }
-        
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .tech-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* Loading Animation */
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
         }
-        
+
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header {
+                padding: 3rem 0 2rem;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 800px;
+            max-height: 80vh;
+            width: 90%;
+            margin: 20px;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: white;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-alt);
+            color: var(--text);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+            padding-right: 3rem;
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-summary {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .modal-news-list {
+            list-style: none;
+        }
+
+        .modal-news-item {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .modal-news-item:hover {
+            background: var(--bg-alt);
+            border-color: var(--primary-light);
+        }
+
+        .modal-news-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-news-item-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-news-item-summary {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Clickable News Items */
+        .news-item {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .news-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            margin: 0 -0.5rem;
+            padding: 0.75rem 0.5rem;
+            transform: translateX(5px);
+        }
+
+        .news-card {
+            cursor: pointer;
+        }
+
+        .news-title {
+            cursor: pointer;
+        }
+
+        .news-title:hover {
+            color: var(--primary);
+        }
+
+        /* Tabs Navigation */
+        .tabs-container {
+            margin-bottom: 3rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-light) transparent;
+        }
+
+        .tabs-nav::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .tabs-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .tabs-nav::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 2px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-news);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-counter {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .tab-btn:not(.active) .tab-counter {
+            background: var(--bg-alt);
+            color: var(--text-light);
+        }
+
+        /* Advanced Features */
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        .filters-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .sort-select {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            min-width: 150px;
+        }
+
+        .bookmark-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .bookmark-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .bookmark-btn.bookmarked {
+            background: var(--accent);
+            color: white;
+        }
+
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-news);
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--gradient-news);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --bg: #0f172a;
+            --bg-alt: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--bg-alt);
+            color: var(--text);
+        }
+
+        body.dark-mode .search-box {
+            background: var(--bg-alt);
+            color: var(--text);
+        }
+
+        /* Performance indicators */
+        .connection-status {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .connection-status.online {
+            background: var(--success);
+            color: white;
+        }
+
+        .connection-status.offline {
+            background: #ef4444;
+            color: white;
+        }
+
+        .lazy-load {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .lazy-load.loaded {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar" aria-label="Menu principal">
+        <div class="container nav-flex">
+            <a href="#" class="logo" aria-label="Página inicial">
+                <span class="logo-icon">📰</span>
+                <span class="logo-text">Notícias Ontem</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#tab-todos" onclick="switchTab('todos')" tabindex="0">Início</a></li>
+                <li><a href="#tab-politica" onclick="switchTab('politica')" tabindex="0">Política</a></li>
+                <li><a href="#tab-economia" onclick="switchTab('economia')" tabindex="0">Economia</a></li>
+                <li><a href="#tab-tecnologia" onclick="switchTab('tecnologia')" tabindex="0">Tecnologia</a></li>
+                <li><a href="#tab-esportes" onclick="switchTab('esportes')" tabindex="0">Esportes</a></li>
+                <li><a href="#tab-saude" onclick="switchTab('saude')" tabindex="0">Saúde</a></li>
+                <li><a href="#tab-cultura" onclick="switchTab('cultura')" tabindex="0">Cultura</a></li>
+                <li><a href="#tab-internacional" onclick="switchTab('internacional')" tabindex="0">Internacional</a></li>
+                <li><a href="#tab-privacidade" onclick="switchTab('privacidade')" tabindex="0">Política de Privacidade</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header modernizado -->
     <header class="header">
         <div class="container">
-            <h1>🤖 DJBlog - Notícias Automatizadas</h1>
-            <p>Sistema inteligente de agregação de notícias brasileiras com tecnologia avançada</p>
+            <div class="header-content text-center">
+                <h1>📰 Notícias Ontem</h1>
+                <p class="subtitle">As principais notícias do Brasil, atualizadas automaticamente</p>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>Atualização em tempo real</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Estatísticas -->
-    <section class="stats">
+    <!-- Stats Bar -->
+    <section class="stats-bar">
         <div class="container">
-            <h2 class="text-center mb-2">📊 Estatísticas do Sistema</h2>
             <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Notícias Agregadas</div>
+                <div class="stat-item">
+                    <h3 id="total-news">---</h3>
+                    <p>Notícias coletadas</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Nichos Cobertos</div>
+                <div class="stat-item">
+                    <h3 id="sources-count">---</h3>
+                    <p>Fontes monitoradas</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Fontes Monitoradas</div>
+                <div class="stat-item">
+                    <h3 id="last-update">---</h3>
+                    <p>Última atualização</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Coleta Automática</div>
+                <div class="stat-item">
+                    <h3>🚀</h3>
+                    <p>Sistema automático</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Seção Principal de Notícias -->
-    <main class="news-section">
-        <div class="container">
-            <h2 class="text-center mb-2">📰 Últimas Notícias</h2>
-            <p class="text-center" style="color: var(--text-light); margin-bottom: 2rem;">
-                Última atualização: 26/06/2025 às 09:48
-            </p>
-            
-            <div class="news-grid">
+    <!-- Main Content Modernizado -->
+    <main class="main-content">
+        <div class="container main-flex">
+            <!-- Sidebar -->
+            <aside class="sidebar" aria-label="Barra lateral">
+                <section class="sidebar-section destaque">
+                    <h3>Destaques</h3>
+                    <ul id="sidebar-destaques"></ul>
+                </section>
+                <section class="sidebar-section categorias">
+                    <h3>Categorias</h3>
+                    <ul>
+                        <li><a href="#tab-todos" onclick="switchTab('todos')">Todas</a></li>
+                        <li><a href="#tab-politica" onclick="switchTab('politica')">Política</a></li>
+                        <li><a href="#tab-economia" onclick="switchTab('economia')">Economia</a></li>
+                        <li><a href="#tab-tecnologia" onclick="switchTab('tecnologia')">Tecnologia</a></li>
+                        <li><a href="#tab-esportes" onclick="switchTab('esportes')">Esportes</a></li>
+                        <li><a href="#tab-saude" onclick="switchTab('saude')">Saúde</a></li>
+                        <li><a href="#tab-cultura" onclick="switchTab('cultura')">Cultura</a></li>
+                        <li><a href="#tab-internacional" onclick="switchTab('internacional')">Internacional</a></li>
+                    </ul>
+                </section>
+                <section class="sidebar-section social">
+                    <h3>Siga-nos</h3>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><span>📸</span></a>
+                        <a href="#" aria-label="Twitter"><span>🐦</span></a>
+                        <a href="#" aria-label="Facebook"><span>📘</span></a>
+                    </div>
+                </section>
+            </aside>
 
-                <article class="news-card" id="news-d58f8b42">
-                    <div class="news-header">
-                        <div class="news-meta">
-                            <time class="news-date" datetime="2025-06-26T09:48:23.973242">26/06/2025 09:48</time>
-                            <span class="news-category">Tecnologia</span>
-                        </div>
-                        <h3 class="news-title">
-                            <a href="https://example.com/tech-brasil" target="_blank" rel="noopener noreferrer" title="Tecnologia brasileira cresce 15% no primeiro trimestre">
-                                Tecnologia brasileira cresce 15% no primeiro trimestre
-                            </a>
-                        </h3>
+            <!-- Conteúdo principal -->
+            <section class="main-news-area">
+                <h2 class="section-title">Últimas Notícias</h2>
+                <!-- Tabs Navigation -->
+                <div class="tabs-container">
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" onclick="switchTab('todos')" data-tab="todos">
+                            🗞️ Todas <span class="tab-counter" id="count-todos">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('politica')" data-tab="politica">
+                            🏛️ Política <span class="tab-counter" id="count-politica">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('economia')" data-tab="economia">
+                            💰 Economia <span class="tab-counter" id="count-economia">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('tecnologia')" data-tab="tecnologia">
+                            💻 Tecnologia <span class="tab-counter" id="count-tecnologia">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('esportes')" data-tab="esportes">
+                            ⚽ Esportes <span class="tab-counter" id="count-esportes">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('saude')" data-tab="saude">
+                            🏥 Saúde <span class="tab-counter" id="count-saude">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('cultura')" data-tab="cultura">
+                            🎭 Cultura <span class="tab-counter" id="count-cultura">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('internacional')" data-tab="internacional">
+                            🌍 Internacional <span class="tab-counter" id="count-internacional">0</span>
+                        </button>
                     </div>
-                    <div class="news-content">
-                        <p class="news-summary">Setor de tecnologia nacional apresenta crescimento significativo impulsionado por startups e investimentos em inovação.</p>
-                        <div class="news-footer">
-                            <span class="news-source">📡 TechBrasil</span>
-                            <a href="https://example.com/tech-brasil" class="news-link" target="_blank" rel="noopener noreferrer">
-                                Ler mais
-                            </a>
-                        </div>
-                    </div>
-                </article>
-                <article class="news-card" id="news-50ba09c0">
-                    <div class="news-header">
-                        <div class="news-meta">
-                            <time class="news-date" datetime="2025-06-26T09:48:23.973242">26/06/2025 09:48</time>
-                            <span class="news-category">Saúde</span>
-                        </div>
-                        <h3 class="news-title">
-                            <a href="https://example.com/saude-descoberta" target="_blank" rel="noopener noreferrer" title="Nova descoberta médica promete revolucionar tratamentos">
-                                Nova descoberta médica promete revolucionar tratamentos
-                            </a>
-                        </h3>
-                    </div>
-                    <div class="news-content">
-                        <p class="news-summary">Pesquisadores brasileiros desenvolvem técnica inovadora que pode transformar o tratamento de doenças crônicas.</p>
-                        <div class="news-footer">
-                            <span class="news-source">📡 Saúde & Ciência</span>
-                            <a href="https://example.com/saude-descoberta" class="news-link" target="_blank" rel="noopener noreferrer">
-                                Ler mais
-                            </a>
-                        </div>
-                    </div>
-                </article>
-                <article class="news-card" id="news-5d032a07">
-                    <div class="news-header">
-                        <div class="news-meta">
-                            <time class="news-date" datetime="2025-06-26T09:48:23.973242">26/06/2025 09:48</time>
-                            <span class="news-category">Economia</span>
-                        </div>
-                        <h3 class="news-title">
-                            <a href="https://example.com/economia-recuperacao" target="_blank" rel="noopener noreferrer" title="Economia brasileira mostra sinais de recuperação">
-                                Economia brasileira mostra sinais de recuperação
-                            </a>
-                        </h3>
-                    </div>
-                    <div class="news-content">
-                        <p class="news-summary">Indicadores econômicos apontam para melhoria gradual com crescimento do PIB e redução do desemprego.</p>
-                        <div class="news-footer">
-                            <span class="news-source">📡 Economia Brasil</span>
-                            <a href="https://example.com/economia-recuperacao" class="news-link" target="_blank" rel="noopener noreferrer">
-                                Ler mais
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            </div>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="search-container">
+                    <div class="search-icon">🔍</div>
+                    <input type="text" class="search-box" placeholder="Buscar notícias..." id="searchInput" oninput="searchNews()">
+                </div>
+
+                <div class="filters-container">
+                    <button class="filter-btn active" onclick="filterByTime('all')" data-filter="all">Todas</button>
+                    <button class="filter-btn" onclick="filterByTime('1h')" data-filter="1h">Última hora</button>
+                    <button class="filter-btn" onclick="filterByTime('24h')" data-filter="24h">Últimas 24h</button>
+                    <button class="filter-btn" onclick="filterByTime('7d')" data-filter="7d">Última semana</button>
+                    <select class="sort-select" onchange="sortNews(this.value)">
+                        <option value="newest">Mais recentes</option>
+                        <option value="oldest">Mais antigas</option>
+                        <option value="popular">Mais populares</option>
+                        <option value="source">Por fonte</option>
+                    </select>
+                </div>
+
+                <!-- Tab Contents -->
+                <div id="tab-todos" class="tab-content active">
+                    <div id="news-container-todos" class="news-grid"></div>
+                </div>
+                <div id="tab-politica" class="tab-content">
+                    <div id="news-container-politica" class="news-grid"></div>
+                </div>
+                <div id="tab-economia" class="tab-content">
+                    <div id="news-container-economia" class="news-grid"></div>
+                </div>
+                <div id="tab-tecnologia" class="tab-content">
+                    <div id="news-container-tecnologia" class="news-grid"></div>
+                </div>
+                <div id="tab-esportes" class="tab-content">
+                    <div id="news-container-esportes" class="news-grid"></div>
+                </div>
+                <div id="tab-saude" class="tab-content">
+                    <div id="news-container-saude" class="news-grid"></div>
+                </div>
+                <div id="tab-cultura" class="tab-content">
+                    <div id="news-container-cultura" class="news-grid"></div>
+                </div>
+                <div id="tab-internacional" class="tab-content">
+                    <div id="news-container-internacional" class="news-grid"></div>
+                </div>
+
+                <!-- Aba de Política de Privacidade -->
+                <div id="tab-privacidade" class="tab-content" style="max-width: 800px; margin: 0 auto;">
+                    <section style="background: #fff; border-radius: 16px; box-shadow: var(--shadow); padding: 2.5rem 2rem; margin-top: 2rem;">
+                        <h2 class="section-title" style="margin-bottom: 1.5rem;">Política de Privacidade</h2>
+                        <p style="margin-bottom: 1.2rem; color: var(--text-light); font-size: 1.1rem;">Sua privacidade é importante para nós. Esta política explica como coletamos, usamos e protegemos suas informações ao utilizar o site <strong>Notícias Ontem</strong>.</p>
+                        <ul style="margin-bottom: 1.2rem; color: var(--text-light); font-size: 1.05rem; padding-left: 1.2rem;">
+                            <li><strong>Coleta de Dados:</strong> Não coletamos dados pessoais identificáveis dos usuários. Utilizamos apenas cookies essenciais para funcionamento e estatísticas anônimas de acesso.</li>
+                            <li><strong>Uso das Informações:</strong> As informações coletadas são usadas exclusivamente para melhorar a experiência do usuário e garantir o funcionamento do site.</li>
+                            <li><strong>Compartilhamento:</strong> Não compartilhamos dados pessoais com terceiros.</li>
+                            <li><strong>Segurança:</strong> Adotamos medidas de segurança para proteger suas informações.</li>
+                            <li><strong>Links Externos:</strong> Nosso site pode conter links para outros sites. Não nos responsabilizamos pelas práticas de privacidade desses sites.</li>
+                            <li><strong>Alterações:</strong> Esta política pode ser atualizada periodicamente. Recomendamos que você a revise regularmente.</li>
+                        </ul>
+                        <p style="color: var(--text-light); font-size: 1.05rem;">Ao utilizar nosso site, você concorda com esta política de privacidade. Em caso de dúvidas, entre em contato conosco.</p>
+                    </section>
+                </div>
+
+                <div class="load-more">
+                    <button class="btn-load-more" onclick="loadMoreNews()">
+                        <span id="load-text">Carregar mais notícias</span>
+                        <div id="load-spinner" class="loading" style="display: none;"></div>
+                    </button>
+                </div>
+            </section>
         </div>
     </main>
+
+    <!-- Modal -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-meta">
+                    <span id="modal-source" class="source-badge"></span>
+                    <span id="modal-timestamp" class="timestamp"></span>
+                </div>
+                <h2 id="modal-title" class="modal-title"></h2>
+            </div>
+            <div class="modal-body">
+                <p id="modal-summary" class="modal-summary"></p>
+                <ul id="modal-news-list" class="modal-news-list"></ul>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <h3>🤖 DJBlog - Sistema Automatizado</h3>
-                <p>Agregação inteligente de notícias com tecnologia de ponta.<br>
-                   Conteúdo atualizado automaticamente, sem intervenção humana.</p>
+                <h3>🤖 Tecnologia Avançada</h3>
+                <p>Sistema automatizado de coleta e agregação de notícias brasileiras</p>
                 
-                <div class="footer-links">
-                    <a href="#tecnologia">Tecnologia</a>
-                    <a href="#saude">Saúde</a>
-                    <a href="#economia">Economia</a>
-                    <a href="#esportes">Esportes</a>
+                <div class="tech-stack">
+                    <span class="tech-badge">AWS Lambda</span>
+                    <span class="tech-badge">CloudFront</span>
+                    <span class="tech-badge">Cloudflare</span>
+                    <span class="tech-badge">HTTPS</span>
+                    <span class="tech-badge">Responsivo</span>
                 </div>
-                
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2);">
-                    <p style="opacity: 0.6; font-size: 0.9rem;">
-                        © 2025 DJBlog System | Gerado automaticamente | 
-                        <a href="https://github.com/jucabronks/projeto-djblog" target="_blank" style="color: #60a5fa;">
-                            Código no GitHub
-                        </a>
-                    </p>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Notícias Ontem. Sistema automatizado de notícias.</p>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Reading Progress Bar -->
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <!-- Connection Status -->
+    <div class="connection-status online" id="connection-status">🟢 Online</div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Alternar modo escuro">🌙</button>
+
     <script>
-        // Analytics simples
-        console.log('DJBlog loaded successfully');
-        
-        // Marcar tempo de carregamento
-        window.addEventListener('load', function() {
-            const loadTime = window.performance.timing.loadEventEnd - window.performance.timing.navigationStart;
-            console.log('Load time:', loadTime + 'ms');
-        });
-        
-        // Smooth scroll para links internos
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+        // Dados simulados para demonstração - organizados por categoria
+        const newsByCategory = {
+            politica: [
+                {
+                    source: "Portal G1",
+                    timestamp: "1 hora atrás",
+                    title: "Congresso Nacional debate nova lei de transparência",
+                    summary: "Proposta visa aumentar a transparência dos gastos públicos e facilitar o acesso à informação pelos cidadãos.",
+                    category: "politica",
+                    items: [
+                        {
+                            title: "Senado aprova projeto em primeira votação",
+                            summary: "Texto recebeu 54 votos favoráveis e 12 contrários na sessão desta manhã."
+                        },
+                        {
+                            title: "Governo federal apoia a iniciativa",
+                            summary: "Palácio do Planalto considera a medida fundamental para a democracia."
+                        },
+                        {
+                            title: "Sociedade civil celebra aprovação",
+                            summary: "ONGs e entidades de classe manifestam apoio à nova legislação."
+                        }
+                    ]
+                },
+                {
+                    source: "UOL Política",
+                    timestamp: "3 horas atrás",
+                    title: "Eleições municipais: TSE define regras para 2025",
+                    summary: "Tribunal Superior Eleitoral publica novas diretrizes para as eleições municipais do próximo ano.",
+                    category: "politica",
+                    items: [
+                        {
+                            title: "Prazo para registro de candidatos é definido",
+                            summary: "Partidos terão até agosto para registrar candidatos a prefeito e vereador."
+                        },
+                        {
+                            title: "Novas regras para propaganda eleitoral",
+                            summary: "TSE estabelece limites para propaganda em redes sociais e mídia tradicional."
+                        }
+                    ]
                 }
-            });
+            ],
+            economia: [
+                {
+                    source: "Valor Econômico",
+                    timestamp: "30 minutos atrás",
+                    title: "PIB brasileiro cresce 2,8% no primeiro trimestre",
+                    summary: "Economia nacional supera expectativas com crescimento robusto impulsionado pelo setor de serviços.",
+                    category: "economia",
+                    items: [
+                        {
+                            title: "Setor de serviços lidera crescimento",
+                            summary: "Área de serviços registra expansão de 3,2% no período analisado."
+                        },
+                        {
+                            title: "Indústria mantém estabilidade",
+                            summary: "Setor industrial apresenta leve crescimento de 0,8% no trimestre."
+                        },
+                        {
+                            title: "Agronegócio bate recordes",
+                            summary: "Exportações agrícolas superam US$ 30 bilhões no primeiro trimestre."
+                        }
+                    ]
+                },
+                {
+                    source: "InfoMoney",
+                    timestamp: "2 horas atrás",
+                    title: "Mercado financeiro projeta inflação estável",
+                    summary: "Analistas revisam para baixo as projeções inflacionárias para o restante do ano.",
+                    category: "economia",
+                    items: [
+                        {
+                            title: "IPCA deve fechar o ano em 4,2%",
+                            summary: "Meta de inflação permanece dentro da faixa estabelecida pelo governo."
+                        },
+                        {
+                            title: "Dólar opera em queda",
+                            summary: "Moeda americana recua 1,5% frente ao real nesta sessão."
+                        }
+                    ]
+                }
+            ],
+            tecnologia: [
+                {
+                    source: "TechCrunch Brasil",
+                    timestamp: "45 minutos atrás",
+                    title: "Inteligência Artificial revoluciona setor de saúde",
+                    summary: "Novas aplicações de IA prometem transformar diagnósticos médicos e tratamentos personalizados.",
+                    category: "tecnologia",
+                    items: [
+                        {
+                            title: "IA detecta câncer com 95% de precisão",
+                            summary: "Sistema desenvolvido por startup brasileira supera médicos especialistas."
+                        },
+                        {
+                            title: "Hospitais adotam assistentes virtuais",
+                            summary: "Chatbots inteligentes agilizam atendimento e triagem de pacientes."
+                        },
+                        {
+                            title: "Investimentos em HealthTech crescem 180%",
+                            summary: "Setor recebe R$ 2,3 bilhões em investimentos no primeiro semestre."
+                        }
+                    ]
+                },
+                {
+                    source: "Olhar Digital",
+                    timestamp: "1 hora atrás",
+                    title: "5G atinge 70% do território nacional",
+                    summary: "Expansão da rede 5G acelera transformação digital e conecta mais brasileiros.",
+                    category: "tecnologia",
+                    items: [
+                        {
+                            title: "Velocidade média cresce 400%",
+                            summary: "Usuários registram velocidades de até 1 Gbps em testes práticos."
+                        },
+                        {
+                            title: "Cidades inteligentes ganham impulso",
+                            summary: "IoT e 5G transformam gestão urbana em 50 municípios brasileiros."
+                        }
+                    ]
+                }
+            ],
+            esportes: [
+                {
+                    source: "Globo Esporte",
+                    timestamp: "20 minutos atrás",
+                    title: "Brasil conquista medalha de ouro no Mundial de Atletismo",
+                    summary: "Atleta brasileiro quebra recorde sul-americano e faz história na competição internacional.",
+                    category: "esportes",
+                    items: [
+                        {
+                            title: "Novo recorde nos 400m rasos",
+                            summary: "Marca de 44s32 supera o antigo recorde por 3 centésimos."
+                        },
+                        {
+                            title: "Comemoração toma conta das redes",
+                            summary: "Hashtag #OuroParaOBrasil vira trending topic no Twitter."
+                        }
+                    ]
+                },
+                {
+                    source: "ESPN Brasil",
+                    timestamp: "1 hora atrás",
+                    title: "Brasileirão 2025: rodada define líderes",
+                    summary: "Partidas decisivas agitam o final de semana com mudanças na classificação.",
+                    category: "esportes",
+                    items: [
+                        {
+                            title: "Flamengo assume liderança isolada",
+                            summary: "Vitória por 3x1 garante três pontos de vantagem sobre o vice-líder."
+                        },
+                        {
+                            title: "Palmeiras tropeça em casa",
+                            summary: "Empate em 1x1 afasta o clube paulista da briga pelo título."
+                        }
+                    ]
+                }
+            ],
+            saude: [
+                {
+                    source: "Ministério da Saúde",
+                    timestamp: "2 horas atrás",
+                    title: "Nova vacina contra dengue disponível no SUS",
+                    summary: "Imunizante inovador promete reduzir casos graves da doença em todo o país.",
+                    category: "saude",
+                    items: [
+                        {
+                            title: "Eficácia de 84% em testes clínicos",
+                            summary: "Estudos mostram proteção significativa contra os quatro sorotipos."
+                        },
+                        {
+                            title: "Campanha nacional inicia em julho",
+                            summary: "Prioridade para regiões com maior incidência da doença."
+                        }
+                    ]
+                }
+            ],
+            cultura: [
+                {
+                    source: "Folha de S.Paulo",
+                    timestamp: "3 horas atrás",
+                    title: "Festival de Cinema Brasileiro bate recordes",
+                    summary: "Maior evento cinematográfico do país recebe público recorde e lança novos talentos.",
+                    category: "cultura",
+                    items: [
+                        {
+                            title: "150 mil pessoas visitam festival",
+                            summary: "Número supera em 30% a edição anterior do evento."
+                        },
+                        {
+                            title: "Filme nacional ganha prêmio principal",
+                            summary: "Produção independente sobre Amazônia emociona jurados."
+                        }
+                    ]
+                }
+            ],
+            internacional: [
+                {
+                    source: "BBC Brasil",
+                    timestamp: "1 hora atrás",
+                    title: "Acordo comercial Brasil-UE é renovado",
+                    summary: "Negociações históricas garantem facilitação do comércio entre os blocos econômicos.",
+                    category: "internacional",
+                    items: [
+                        {
+                            title: "Tarifas reduzidas em 80% dos produtos",
+                            summary: "Medida beneficia exportadores brasileiros e consumidores europeus."
+                        },
+                        {
+                            title: "Sustentabilidade é prioridade no acordo",
+                            summary: "Cláusulas ambientais garantem proteção da Amazônia."
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Combinar todas as notícias para a aba "Todos"
+        const allNews = [
+            ...newsByCategory.politica,
+            ...newsByCategory.economia,
+            ...newsByCategory.tecnologia,
+            ...newsByCategory.esportes,
+            ...newsByCategory.saude,
+            ...newsByCategory.cultura,
+            ...newsByCategory.internacional
+        ].sort((a, b) => {
+            // Ordenar por timestamp (simulado)
+            const timeA = a.timestamp.includes('minuto') ? parseInt(a.timestamp) : 
+                         a.timestamp.includes('hora') ? parseInt(a.timestamp) * 60 : 
+                         parseInt(a.timestamp) * 1440;
+            const timeB = b.timestamp.includes('minuto') ? parseInt(b.timestamp) : 
+                         b.timestamp.includes('hora') ? parseInt(b.timestamp) * 60 : 
+                         parseInt(b.timestamp) * 1440;
+            return timeA - timeB;
         });
+
+        let currentTab = 'todos';
+        let newsLoaded = {};
+        const newsPerPage = 4;
+
+        function formatTime(hoursAgo) {
+            const now = new Date();
+            now.setHours(now.getHours() - hoursAgo);
+            return now.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit', 
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function switchTab(tabName) {
+            // Remover active de todos os botões
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Remover active de todos os conteúdos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Ativar botão e conteúdo específico
+            if (document.querySelector(`[data-tab="${tabName}"]`)) {
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            }
+            if (document.getElementById(`tab-${tabName}`)) {
+                document.getElementById(`tab-${tabName}`).classList.add('active');
+            }
+
+            currentTab = tabName;
+
+            // Carregar notícias se ainda não carregou (exceto privacidade)
+            if (tabName !== 'privacidade' && !newsLoaded[tabName]) {
+                loadNewsForTab(tabName);
+                newsLoaded[tabName] = true;
+            }
+        }
+
+        function getNewsForTab(tabName) {
+            if (tabName === 'todos') {
+                return allNews;
+            }
+            return newsByCategory[tabName] || [];
+        }
+
+
+        function createNewsCard(news, index, tabName) {
+            // Imagem de destaque (placeholder)
+            const imageUrl = `https://source.unsplash.com/400x220/?news,${encodeURIComponent(news.category || 'brasil')}`;
+            // Tags (categoria)
+            const tag = `<span class="news-tag">${news.category ? news.category.charAt(0).toUpperCase() + news.category.slice(1) : ''}</span>`;
+            // Botão de favorito (não funcional ainda)
+            const bookmarkBtn = `<button class="bookmark-btn" title="Favoritar notícia" tabindex="0" aria-label="Favoritar notícia"><span>★</span></button>`;
+            const newsItemsHtml = news.items.map((item, itemIndex) => `
+                <li class="news-item" onclick="openModal('${tabName}', ${index}, ${itemIndex})">
+                    <div class="news-item-title">${item.title}</div>
+                    <div class="news-item-summary">${item.summary}</div>
+                </li>
+            `).join('');
+
+            return `
+                <article class="news-card" onclick="openModal('${tabName}', ${index})" tabindex="0" aria-label="Abrir notícia: ${news.title}">
+                    <div class="news-image-area">
+                        <img src="${imageUrl}" alt="Imagem ilustrativa da notícia" class="news-image" loading="lazy" />
+                        ${tag}
+                        ${bookmarkBtn}
+                    </div>
+                    <div class="news-header">
+                        <div class="news-meta">
+                            <span class="source-badge">${news.source}</span>
+                            <span class="timestamp">🕒 ${news.timestamp}</span>
+                        </div>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-summary">${news.summary}</p>
+                    </div>
+                    <div class="news-content">
+                        <ul class="news-list">
+                            ${newsItemsHtml}
+                        </ul>
+                    </div>
+                </article>
+            `;
+        }
+
+        /* --- NOVOS ESTILOS PARA NAVBAR, SIDEBAR E CARDS --- */
+    .top-navbar {
+        background: var(--bg);
+        box-shadow: 0 2px 8px rgba(30,64,175,0.06);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .nav-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+    }
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--primary);
+        text-decoration: none;
+    }
+    .logo-icon {
+        font-size: 2rem;
+    }
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+    }
+    .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a:focus {
+        background: var(--primary-light);
+        color: #fff;
+        outline: none;
+    }
+
+    .main-flex {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+    }
+    .sidebar {
+        width: 270px;
+        background: var(--bg-alt);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 2rem 1.5rem;
+        position: sticky;
+        top: 90px;
+        min-height: 400px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    .sidebar-section {
+        margin-bottom: 2.5rem;
+    }
+    .sidebar-section h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--primary);
+    }
+    .sidebar-section ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    .sidebar-section ul li {
+        margin-bottom: 0.7rem;
+    }
+    .sidebar-section ul li a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.2s;
+    }
+    .sidebar-section ul li a:hover, .sidebar-section ul li a:focus {
+        color: var(--primary);
+        outline: none;
+    }
+    .sidebar .social-links {
+        display: flex;
+        gap: 1rem;
+        font-size: 1.5rem;
+    }
+    .sidebar .social-links a {
+        color: var(--primary-light);
+        background: #fff;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(30,64,175,0.08);
+        transition: background 0.2s, color 0.2s;
+    }
+    .sidebar .social-links a:hover, .sidebar .social-links a:focus {
+        background: var(--primary-light);
+        color: #fff;
+        outline: none;
+    }
+
+    .main-news-area {
+        flex: 1 1 0%;
+        min-width: 0;
+    }
+
+    .news-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 420px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(30,64,175,0.10), 0 1.5px 6px 0 rgba(30,64,175,0.04);
+        transition: box-shadow 0.3s, transform 0.2s;
+        overflow: hidden;
+        margin-bottom: 2.2rem;
+    }
+    .news-image-area {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        background: #e5e7eb;
+        border-radius: 18px 18px 0 0;
+    }
+    .news-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 18px 18px 0 0;
+        transition: transform 0.35s cubic-bezier(.4,1.7,.7,1.1);
+        box-shadow: 0 2px 8px rgba(30,64,175,0.08);
+    }
+    .news-card:hover {
+        box-shadow: 0 8px 32px 0 rgba(30,64,175,0.18), 0 2px 8px 0 rgba(30,64,175,0.08);
+        transform: translateY(-4px) scale(1.012);
+    }
+    .news-card:focus-within {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    .news-card:hover .news-image {
+        transform: scale(1.04);
+    }
+    .news-tag {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: linear-gradient(90deg, var(--primary-light), var(--primary));
+        color: #fff;
+        padding: 0.3rem 0.9rem;
+        border-radius: 14px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        z-index: 2;
+        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
+        text-shadow: 0 1px 2px rgba(30,64,175,0.10);
+    }
+    .bookmark-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: #fff;
+        border: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
+        transition: background 0.2s, color 0.2s, transform 0.2s;
+        z-index: 2;
+        border: 1.5px solid #e5e7eb;
+    }
+    .bookmark-btn:hover, .bookmark-btn:focus {
+        background: var(--accent);
+        color: #fff;
+        outline: none;
+        transform: scale(1.13);
+        border-color: var(--primary-light);
+    }
+    /* Sidebar aprimorada */
+    .sidebar-section {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1.5px solid #e5e7eb;
+    }
+    .sidebar-section:last-child {
+        border-bottom: none;
+    }
+    .sidebar-section h3 {
+        font-size: 1.13rem;
+        font-weight: 800;
+        margin-bottom: 1.1rem;
+        color: var(--primary);
+        letter-spacing: 0.01em;
+    }
+    /* Navbar aprimorada */
+    .top-navbar {
+        background: linear-gradient(90deg, #fff 80%, var(--primary-light) 100%);
+        box-shadow: 0 2px 12px rgba(30,64,175,0.07);
+        border-bottom: 1.5px solid #e5e7eb;
+    }
+    .nav-links a {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 1.05rem;
+        padding: 0.5rem 1.1rem;
+        border-radius: 10px;
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .nav-links a:hover, .nav-links a:focus {
+        background: var(--primary);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
+        outline: none;
+    }
+    /* Hierarquia visual dos cards */
+    .news-header {
+        padding: 1.2rem 1.5rem 0.5rem 1.5rem;
+        flex: 0 0 auto;
+    }
+    .news-meta {
+        display: flex;
+        gap: 1.1rem;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.97rem;
+        color: var(--text-light);
+    }
+    .source-badge {
+        background: var(--primary-light);
+        color: #fff;
+        border-radius: 8px;
+        padding: 0.18rem 0.7rem;
+        font-size: 0.93rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+    .timestamp {
+        color: var(--text-light);
+        font-size: 0.93rem;
+        font-weight: 500;
+    }
+    .news-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin: 0.2rem 0 0.5rem 0;
+        color: var(--primary);
+        line-height: 1.25;
+        transition: color 0.2s;
+    }
+    .news-card:hover .news-title {
+        color: var(--accent);
+    }
+    .news-summary {
+        color: var(--text-light);
+        font-size: 1.05rem;
+        margin-bottom: 0.7rem;
+        font-weight: 500;
+    }
+    .news-content {
+        padding: 0 1.5rem 1.2rem 1.5rem;
+        flex: 1 1 auto;
+    }
+    .news-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .news-item {
+        padding: 0.7rem 0.5rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        background: #f8fafc;
+        transition: background 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+    .news-item:hover, .news-item:focus {
+        background: var(--primary-light);
+        color: #fff;
+        outline: none;
+        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
+    }
+    /* Responsividade aprimorada */
+    @media (max-width: 600px) {
+        .news-card {
+            min-height: 260px;
+            border-radius: 12px;
+        }
+        .news-image-area {
+            height: 110px;
+            border-radius: 12px 12px 0 0;
+        }
+        .news-image {
+            border-radius: 12px 12px 0 0;
+        }
+        .news-header, .news-content {
+            padding-left: 0.7rem;
+            padding-right: 0.7rem;
+        }
+    }
+
+    @media (max-width: 1100px) {
+        .main-flex {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 2rem;
+            position: static;
+            min-height: unset;
+            max-height: unset;
+        }
+    }
+    @media (max-width: 900px) {
+        .nav-links {
+            gap: 0.7rem;
+        }
+        .sidebar {
+            padding: 1.2rem 0.7rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .main-flex {
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .sidebar {
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        .main-news-area {
+            width: 100%;
+        }
+        .top-navbar {
+            padding: 0.2rem 0;
+        }
+        .nav-flex {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+    @media (max-width: 600px) {
+        .news-image-area {
+            height: 140px;
+        }
+        .news-card {
+            min-height: 320px;
+        }
+    }
+
+        // Função para renderizar notícias com busca e filtros
+        function loadNewsForTab(tabName) {
+            const container = document.getElementById(`news-container-${tabName}`);
+            let newsData = getNewsForTab(tabName);
+
+            // Aplicar busca
+            const searchValue = (window.currentSearch || '').toLowerCase();
+            if (searchValue) {
+                newsData = newsData.filter(news =>
+                    news.title.toLowerCase().includes(searchValue) ||
+                    news.summary.toLowerCase().includes(searchValue) ||
+                    news.items.some(item =>
+                        item.title.toLowerCase().includes(searchValue) ||
+                        item.summary.toLowerCase().includes(searchValue)
+                    )
+                );
+            }
+
+            // Aplicar filtro de tempo
+            if (window.currentTimeFilter && window.currentTimeFilter !== 'all') {
+                const now = new Date();
+                newsData = newsData.filter(news => {
+                    if (window.currentTimeFilter === '1h') {
+                        return news.timestamp.includes('minuto') || news.timestamp.includes('1 hora');
+                    } else if (window.currentTimeFilter === '24h') {
+                        return news.timestamp.includes('hora') || news.timestamp.includes('minuto');
+                    } else if (window.currentTimeFilter === '7d') {
+                        // Simulação: tudo que não for mais de 7 dias
+                        return !news.timestamp.includes('semana') && !news.timestamp.includes('mês');
+                    }
+                    return true;
+                });
+            }
+
+            // Aplicar ordenação
+            if (window.currentSort === 'oldest') {
+                newsData = [...newsData].reverse();
+            } else if (window.currentSort === 'source') {
+                newsData = [...newsData].sort((a, b) => a.source.localeCompare(b.source));
+            }
+            // (popularidade é fictício)
+
+            container.innerHTML = '';
+            newsData.forEach((news, index) => {
+                container.innerHTML += createNewsCard(news, index, tabName);
+            });
+        }
+        // Busca instantânea
+        window.currentSearch = '';
+        function searchNews() {
+            window.currentSearch = document.getElementById('searchInput').value;
+            loadNewsForTab(currentTab);
+        }
+
+        // Filtros de tempo
+        window.currentTimeFilter = 'all';
+        function filterByTime(time) {
+            window.currentTimeFilter = time;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-filter') === time) btn.classList.add('active');
+            });
+            loadNewsForTab(currentTab);
+        }
+
+        // Ordenação
+        window.currentSort = 'newest';
+        function sortNews(sortType) {
+            window.currentSort = sortType;
+            loadNewsForTab(currentTab);
+        }
+
+        function openModal(tabName, newsIndex, itemIndex = null) {
+            const newsData = getNewsForTab(tabName);
+            const news = newsData[newsIndex];
+            const modal = document.getElementById('newsModal');
+            
+            // Preencher dados do modal
+            document.getElementById('modal-source').textContent = news.source;
+            document.getElementById('modal-timestamp').innerHTML = `🕒 ${news.timestamp}`;
+            document.getElementById('modal-title').textContent = news.title;
+            document.getElementById('modal-summary').textContent = news.summary;
+            
+            // Preencher lista de notícias
+            const modalNewsList = document.getElementById('modal-news-list');
+            modalNewsList.innerHTML = news.items.map(item => `
+                <li class="modal-news-item">
+                    <div class="modal-news-item-title">${item.title}</div>
+                    <div class="modal-news-item-summary">${item.summary}</div>
+                </li>
+            `).join('');
+            
+            // Mostrar modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Se clicou em item específico, destacar
+            if (itemIndex !== null) {
+                setTimeout(() => {
+                    const items = modalNewsList.children;
+                    if (items[itemIndex]) {
+                        items[itemIndex].style.background = 'var(--bg-alt)';
+                        items[itemIndex].style.border = '2px solid var(--primary)';
+                        items[itemIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 100);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('newsModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateTabCounters() {
+            // Atualizar contadores nas abas
+            document.getElementById('count-todos').textContent = allNews.length;
+            document.getElementById('count-politica').textContent = newsByCategory.politica.length;
+            document.getElementById('count-economia').textContent = newsByCategory.economia.length;
+            document.getElementById('count-tecnologia').textContent = newsByCategory.tecnologia.length;
+            document.getElementById('count-esportes').textContent = newsByCategory.esportes.length;
+            document.getElementById('count-saude').textContent = newsByCategory.saude.length;
+            document.getElementById('count-cultura').textContent = newsByCategory.cultura.length;
+            document.getElementById('count-internacional').textContent = newsByCategory.internacional.length;
+        }
+
+        // Fechar modal clicando fora
+        document.getElementById('newsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        function loadMoreNews() {
+            // Esta função pode ser expandida para carregar mais notícias via API
+            const button = document.querySelector('.btn-load-more');
+            button.style.display = 'none'; // Por enquanto, esconder o botão
+        }
+
+        function updateStats() {
+            document.getElementById('total-news').textContent = allNews.length.toLocaleString();
+            document.getElementById('sources-count').textContent = '15+';
+            document.getElementById('last-update').textContent = formatTime(0.5).split(' ')[1];
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            updateTabCounters();
+            
+            // Carregar notícias da aba inicial (todos)
+            loadNewsForTab('todos');
+            newsLoaded['todos'] = true;
+            
+            // Esconder botão de carregar mais por enquanto
+            document.querySelector('.btn-load-more').style.display = 'none';
+            
+            // Atualizar estatísticas a cada 30 segundos
+            setInterval(updateStats, 30000);
+        });
+
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+
+            // Atualizar status de conexão para offline se em modo escuro
+            const connectionStatus = document.getElementById('connection-status');
+            if (body.classList.contains('dark-mode')) {
+                connectionStatus.classList.remove('online');
+                connectionStatus.classList.add('offline');
+                connectionStatus.textContent = '🔴 Offline (modo escuro)';
+            } else {
+                connectionStatus.classList.remove('offline');
+                connectionStatus.classList.add('online');
+                connectionStatus.textContent = '🟢 Online';
+            }
+        }
     </script>
 </body>
 </html>
