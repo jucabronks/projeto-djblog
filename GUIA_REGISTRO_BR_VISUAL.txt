@@ -1,0 +1,70 @@
+🎯 CONFIGURAÇÃO DNS - REGISTRO.BR (ATUALIZADA)
+================================================
+
+📋 BASEADO NAS REGRAS OFICIAIS:
+- A: Endereço IPv4 
+- CNAME: Nome alternativo (apenas para subdomínios)
+- NÃO aceita "@" e "*"
+- NÃO aceita SRV
+
+🔧 CONFIGURAÇÃO NECESSÁRIA:
+==========================
+
+╔══════════════════════════════════════════════════════════╗
+║                    REGISTRO 1 - RAIZ                      ║
+╠══════════════════════════════════════════════════════════╣
+║ Nome: [DEIXAR VAZIO]                                       ║
+║ Tipo: A                                                    ║
+║ Valor: 3.167.54.44                                        ║
+║ TTL: 3600                                                  ║
+║                                                            ║
+║ ✅ Isso fará noticiasontem.com.br funcionar               ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║                    REGISTRO 2 - WWW                       ║
+╠══════════════════════════════════════════════════════════╣
+║ Nome: www                                                  ║
+║ Tipo: CNAME                                                ║
+║ Valor: d3q2d002qno2yn.cloudfront.net                      ║
+║ TTL: 3600                                                  ║
+║                                                            ║
+║ ✅ Isso fará www.noticiasontem.com.br funcionar           ║
+╚══════════════════════════════════════════════════════════╝
+
+🚀 PASSO A PASSO NO PAINEL:
+==========================
+
+1️⃣ ACESSE: https://painel.registro.br
+2️⃣ LOGIN: CPF e senha
+3️⃣ MENU: "Meus Domínios"
+4️⃣ CLIQUE: "noticiasontem.com.br"
+5️⃣ PROCURE: "DNS" ou "Zona de DNS"
+6️⃣ ADICIONE: Os 2 registros acima
+7️⃣ SALVE: As alterações
+
+⚠️  IMPORTANTE NO PREENCHIMENTO:
+===============================
+• Campo "Nome" VAZIO = domínio raiz
+• Se não aceitar vazio, use "noticiasontem.com.br"
+• Não use "@" (não é aceito)
+• Tipo A obrigatório para domínio raiz
+• CNAME só para subdomínios (www)
+
+🧪 APÓS CONFIGURAR:
+==================
+1. Aguarde 10-15 minutos
+2. Execute: ipconfig /flushdns
+3. Teste: https://noticiasontem.com.br
+4. Teste: https://www.noticiasontem.com.br
+
+✅ STATUS ATUAL AWS:
+===================
+• S3: ✅ Funcionando
+• CloudFront: ✅ Funcionando (https://d3q2d002qno2yn.cloudfront.net)
+• Site: ✅ Carregando normalmente
+• DNS: 🔄 Aguardando configuração no Registro.br
+
+💰 CUSTO: ~$0.01/mês (muito abaixo do limite)
+
+Data: 26/06/2025 21:02:14

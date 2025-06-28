@@ -1,0 +1,32 @@
+🎯 PREENCHIMENTO DOS CAMPOS - REGISTRO DNS
+=========================================
+
+✅ PROGRESSO ATUAL:
+- ✅ Tipo: CNAME (correto!)
+- ⏳ Nome: (próximo campo)
+- ⏳ Nome do servidor: (próximo campo)
+
+📝 PREENCHA OS CAMPOS RESTANTES:
+===============================
+
+CAMPO "NOME":
+-------------
+Digite: @ 
+(ou deixe VAZIO - representa o domínio principal)
+
+CAMPO "NOME DO SERVIDOR":
+------------------------
+Digite: d3q2d002qno2yn.cloudfront.net
+
+⚠️ IMPORTANTE:
+- NÃO digite www no campo Nome
+- NÃO digite http:// no Nome do servidor
+- É exatamente: d3q2d002qno2yn.cloudfront.net
+
+💾 DEPOIS DE PREENCHER:
+======================
+1. Confira se está correto
+2. Clique "Salvar" ou "Adicionar"
+3. Vamos criar o segundo registro para "www"
+
+🎯 PRÓXIMO: Preencher "Nome" e "Nome do servidor"

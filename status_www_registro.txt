@@ -1,0 +1,29 @@
+🎉 PERFEITO! SEGUNDO REGISTRO WWW
+=================================
+
+✅ PROGRESSO ATUAL:
+- ✅ REGISTRO 1: @ → d3q2d002qno2yn.cloudfront.net (feito!)
+- ✅ REGISTRO 2: www → (em andamento)
+
+📝 CAMPOS PARA O REGISTRO WWW:
+=============================
+
+✅ NOME: www (correto!)
+⏳ TIPO: CNAME (selecione este)
+⏳ NOME DO SERVIDOR: d3q2d002qno2yn.cloudfront.net
+
+🎯 PRÓXIMOS PASSOS:
+==================
+1. Tipo: Selecione CNAME
+2. Nome do servidor: d3q2d002qno2yn.cloudfront.net
+3. Salvar este segundo registro
+
+💾 APÓS SALVAR:
+===============
+- DNS estará configurado completamente
+- Aguardar 5-15 minutos para propagação
+- Site funcionará em:
+  ✅ noticiasontem.com.br
+  ✅ www.noticiasontem.com.br
+
+🎯 CONTINUE: Selecione CNAME e preencha o servidor!

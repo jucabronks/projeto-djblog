@@ -1,0 +1,77 @@
+🚀 CLOUDFLARE - CONFIGURAR REGISTROS PRINCIPAIS
+==============================================
+
+📊 STATUS ATUAL DETECTADO:
+=========================
+✅ Registros CNAME SSL presentes
+❌ Faltam registros A/CNAME principais
+❌ Nameservers NS antigos (Registro.br)
+
+🎯 REGISTROS PARA ADICIONAR AGORA:
+=================================
+
+1️⃣ REGISTRO A (DOMÍNIO RAIZ):
+   Type: A
+   Name: noticiasontem.com.br (ou deixe vazio se aparecer "@")
+   Content: 3.167.54.44
+   Proxy status: 🟠 Proxied (LARANJA/ATIVADO)
+   TTL: Auto
+
+2️⃣ REGISTRO CNAME (WWW):
+   Type: CNAME
+   Name: www
+   Content: noticiasontem.com.br
+   Proxy status: 🟠 Proxied (LARANJA/ATIVADO)
+   TTL: Auto
+
+3️⃣ DELETAR REGISTROS NS ANTIGOS:
+   • DELETE: NS | noticiasontem.com.br | a.auto.dns.br
+   • DELETE: NS | noticiasontem.com.br | b.auto.dns.br
+
+🚀 PASSO A PASSO:
+================
+
+ETAPA 1 - DELETAR NS ANTIGOS:
+• Clique em "Editar" nos registros NS
+• Delete os 2 registros do Registro.br
+• Isso vai resolver o conflito
+
+ETAPA 2 - ADICIONAR REGISTRO A:
+• Clique "Add record"
+• Type: A
+• Name: noticiasontem.com.br (ou @)
+• Content: 3.167.54.44
+• Proxy: 🟠 ATIVADO (laranja)
+• Save
+
+ETAPA 3 - ADICIONAR REGISTRO WWW:
+• Clique "Add record"
+• Type: CNAME
+• Name: www
+• Content: noticiasontem.com.br
+• Proxy: 🟠 ATIVADO (laranja)
+• Save
+
+⚠️ IMPORTANTE:
+==============
+• Para registros A e WWW: USE PROXY ATIVADO (laranja)
+• Para registros SSL (_): mantenha DNS only (cinza)
+• IP 3.167.54.44 é o CloudFront
+
+✅ RESULTADO ESPERADO:
+=====================
+Após adicionar, você terá:
+• noticiasontem.com.br funcionando
+• www.noticiasontem.com.br funcionando
+• SSL validando automaticamente
+• Cloudflare ativo 100%
+
+🔥 ORDEM DE EXECUÇÃO:
+====================
+1. Delete registros NS antigos
+2. Adicione registro A (raiz)
+3. Adicione registro CNAME (www)
+4. Aguarde propagação (5-30 min)
+5. SSL validará automaticamente
+
+Data: 27/06/2025 13:20:00

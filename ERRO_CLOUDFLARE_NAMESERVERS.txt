@@ -1,0 +1,52 @@
+🔧 CLOUDFLARE - CONFIGURAR NAMESERVERS
+==========================================
+
+🚨 PROBLEMA DETECTADO: "Servidores de nomes inválidos"
+=====================================================
+
+Isso significa que o domínio noticiasontem.com.br não está 
+usando os nameservers do Cloudflare corretamente.
+
+🎯 SOLUÇÃO PASSO A PASSO:
+========================
+
+1️⃣ OBTER NAMESERVERS DO CLOUDFLARE:
+   • Vá para: https://dash.cloudflare.com
+   • Clique em "noticiasontem.com.br"
+   • Procure pela aba "DNS" ou "Overview"
+   • Deve mostrar algo como:
+     - xxxxx.ns.cloudflare.com
+     - yyyyy.ns.cloudflare.com
+
+2️⃣ CONFIGURAR NO REGISTRO.BR:
+   • Vá para: https://painel.registro.br
+   • Faça login com CPF e senha
+   • Clique em "Meus Domínios"
+   • Clique em "noticiasontem.com.br"
+   • Procure "DNS" ou "Servidores de Nome"
+   • SUBSTITUA os atuais pelos do Cloudflare
+
+3️⃣ NAMESERVERS ATUAIS (REMOVER):
+   Provavelmente são:
+   • a.auto.dns.br
+   • b.auto.dns.br
+
+4️⃣ NAMESERVERS CLOUDFLARE (ADICIONAR):
+   Substitua pelos que aparecem no painel Cloudflare
+   (algo como xxx.ns.cloudflare.com)
+
+⏰ APÓS ALTERAR:
+===============
+• Aguarde 2-24 horas para propagação
+• Status no Cloudflare mudará para "Ativo"
+• DNS funcionará corretamente
+• SSL será validado automaticamente
+
+🚀 INSTRUÇÕES DETALHADAS:
+========================
+1. Primeiro: Encontre os nameservers no Cloudflare
+2. Depois: Configure no Registro.br
+3. Aguarde propagação
+4. Volte aqui para continuar configuração SSL
+
+Data: 27/06/2025 12:56:00

@@ -1,0 +1,44 @@
+
+# RELATÓRIO DIAGNÓSTICO 403 - 20250626_205948
+
+## RESUMO EXECUTIVO
+- **Data**: 26/06/2025 20:59:48
+- **Problema**: Erro 403 no CloudFront
+- **Domínio**: noticiasontem.com.br
+
+## TESTES REALIZADOS
+1. Acesso direto ao CloudFront
+2. Domínio personalizado
+3. Resolução DNS
+4. Cache do navegador
+5. Arquivo index.html
+
+## POSSÍVEIS SOLUÇÕES
+
+### 1. VERIFICAR S3 BUCKET
+- Confirmar que index.html existe
+- Verificar permissões públicas
+- Confirmar política do bucket
+
+### 2. VERIFICAR CLOUDFRONT
+- Confirmar configuração de origem
+- Verificar Default Root Object (index.html)
+- Revisar comportamentos de cache
+
+### 3. VERIFICAR DNS
+- Confirmar CNAME no Registro.br
+- Aguardar propagação completa
+- Testar com diferentes DNS
+
+### 4. COMANDOS ÚTEIS
+```
+ipconfig /flushdns
+nslookup noticiasontem.com.br
+nslookup www.noticiasontem.com.br
+```
+
+## PRÓXIMOS PASSOS
+1. Executar diagnóstico completo
+2. Verificar configurações AWS
+3. Aguardar propagação DNS se necessário
+4. Testar em modo anônimo

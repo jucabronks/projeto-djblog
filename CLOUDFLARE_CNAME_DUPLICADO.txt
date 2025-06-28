@@ -1,0 +1,46 @@
+🔧 CLOUDFLARE - ATIVAR DOMÍNIO MANUALMENTE
+===========================================
+
+🎯 NAMESERVERS DETECTADOS CORRETOS:
+==================================
+✅ blakely.ns.cloudflare.com
+✅ sevki.ns.cloudflare.com
+
+🚨 PROBLEMA: Cloudflare não detectou ainda
+============================================
+
+📋 SOLUÇÕES PARA TENTAR:
+=======================
+
+1️⃣ FORÇAR VERIFICAÇÃO NO CLOUDFLARE:
+   • Vá para: https://dash.cloudflare.com
+   • Clique em "noticiasontem.com.br"
+   • Procure por "Re-check nameservers" ou "Verificar novamente"
+   • Ou procure na aba "Overview" por um botão "Check nameservers"
+
+2️⃣ AGUARDAR PROPAGAÇÃO:
+   • Pode levar até 24h para o Cloudflare detectar
+   • Nameservers estão corretos, só falta detecção
+
+3️⃣ REMOVER E READICIONAR DOMÍNIO:
+   • No Cloudflare, remova o domínio temporariamente
+   • Adicione novamente o domínio
+   • Configure os nameservers novamente
+
+4️⃣ VERIFICAR STATUS ATUAL:
+   • Execute: python scripts/verificar_nameservers.py
+   • Vamos monitorar o status automaticamente
+
+⚠️  O QUE ESTÁ ACONTECENDO:
+===========================
+• Nameservers estão CORRETOS globalmente
+• Cloudflare ainda não detectou a mudança
+• DNS está funcionando (por isso vemos os nameservers)
+• Questão de tempo/cache do Cloudflare
+
+🚀 ENQUANTO ISSO - ALTERNATIVA:
+===============================
+Podemos tentar validar SSL diretamente no DNS atual
+(sem esperar Cloudflare ativar completamente)
+
+Data: 27/06/2025 12:58:00

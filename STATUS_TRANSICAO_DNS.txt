@@ -1,0 +1,87 @@
+🔄 DOMÍNIO EM TRANSIÇÃO - CLOUDFLARE DNS
+========================================
+
+📋 SITUAÇÃO ATUAL:
+==================
+⏰ DNS em transição: ~1h56m restantes
+🔄 Mudança: Registro.br → Cloudflare DNS
+📡 Novos servidores: blakely.ns.cloudflare.com / sevki.ns.cloudflare.com
+
+⚠️  O QUE ISSO SIGNIFICA:
+=========================
+• Você alterou os servidores DNS no Registro.br
+• Direcionou para Cloudflare (ótima escolha!)
+• Processo leva até 24-48h para completar
+• Durante transição: alguns locais veem DNS antigo, outros novo
+
+🎯 AÇÃO RECOMENDADA - AGUARDAR TRANSIÇÃO:
+========================================
+
+OPÇÃO 1 - AGUARDAR (RECOMENDADO):
+• Aguarde ~2 horas para transição completar
+• DNS Cloudflare será ativo globalmente
+• Configure SSL depois que transição terminar
+
+OPÇÃO 2 - CONFIGURAR AGORA NO CLOUDFLARE:
+• Acesse: https://dash.cloudflare.com
+• Configure registros mesmo durante transição
+• Estarão prontos quando transição completar
+
+🚀 CONFIGURAÇÃO NO CLOUDFLARE (PREPARAR):
+========================================
+
+1️⃣ REGISTROS BÁSICOS:
+A      @             3.167.54.44                 🟨 DNS only
+CNAME  www           d3q2d002qno2yn.cloudfront.net   🟨 DNS only
+
+2️⃣ REGISTROS SSL (quando transição terminar):
+CNAME  _19837e8068f6a4d75e9bdfd772154663    _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws    🟨 DNS only
+CNAME  _88fe1a2469d7ce78bd80f82750e60fef.www _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws  🟨 DNS only
+
+⏰ CRONOGRAMA RECOMENDADO:
+=========================
+
+AGORA (11:00):
+• Configure registros básicos no Cloudflare
+• Aguarde transição DNS
+
+EM ~2 HORAS (13:00):
+• Transição DNS completa
+• Adicione registros SSL
+• Execute: python scripts/configurar_ssl_dominio.py
+• Site funcionando 100%!
+
+🧪 TESTE DURANTE TRANSIÇÃO:
+===========================
+• CloudFront direto: ✅ https://d3q2d002qno2yn.cloudfront.net
+• Domínios personalizados: ⏳ Aguardando transição DNS
+
+📊 VANTAGENS PÓS-TRANSIÇÃO:
+==========================
+✅ DNS mais rápido (Cloudflare vs Registro.br)
+✅ Propagação 1-5 min (vs 30+ min)
+✅ Interface melhor
+✅ Analytics gratuitos
+✅ Proteção DDoS
+
+🎯 STATUS ATUAL:
+===============
+✅ Site funcionando no CloudFront
+✅ AWS configurado perfeitamente
+✅ Cloudflare DNS em configuração
+⏳ Aguardando transição DNS (2h)
+⏳ SSL será configurado pós-transição
+
+📞 PRÓXIMOS PASSOS:
+==================
+1. Configure registros no Cloudflare (opcional agora)
+2. Aguarde transição DNS (~2 horas)
+3. Adicione registros SSL no Cloudflare
+4. Execute script SSL
+5. 🎉 Site 100% funcionando!
+
+IMPORTANTE: Durante transição, alguns testes podem falhar.
+É normal! Aguarde a transição completar.
+
+Data: 27/06/2025 11:02:00
+Transição estimada: 27/06/2025 13:00:00

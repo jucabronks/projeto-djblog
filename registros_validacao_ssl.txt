@@ -1,0 +1,35 @@
+
+REGISTROS DNS PARA VALIDAÇÃO SSL - REGISTRO.BR
+==============================================
+Data: 27/06/2025 12:44:55
+Certificado: noticiasontem.com.br
+Status: PENDING_VALIDATION
+
+REGISTROS PARA ADICIONAR:
+========================
+
+REGISTRO 1 - noticiasontem.com.br:
+Nome: _19837e8068f6a4d75e9bdfd772154663.noticiasontem.com.br.
+Tipo: CNAME
+Valor: _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws.
+TTL: 300
+
+REGISTRO 2 - www.noticiasontem.com.br:
+Nome: _88fe1a2469d7ce78bd80f82750e60fef.www.noticiasontem.com.br.
+Tipo: CNAME
+Valor: _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws.
+TTL: 300
+
+INSTRUÇÕES:
+==========
+1. Acesse: painel.registro.br
+2. Vá em: DNS/Zona de DNS
+3. Adicione os registros CNAME acima
+4. Aguarde 5-30 minutos para validação
+5. Execute: python scripts/configurar_ssl_dominio.py
+
+APÓS VALIDAÇÃO:
+==============
+- Certificado ficará com status ISSUED
+- CloudFront será configurado automaticamente
+- Site funcionará com HTTPS

@@ -1,0 +1,52 @@
+🔍 DIAGNÓSTICO - ERRO 403 NOTICIASONTEM.COM.BR
+==============================================
+
+❌ PROBLEMA IDENTIFICADO:
+DNS ainda não propagou completamente
+
+🔧 STATUS ATUAL:
+- www.noticiasontem.com.br: DNS não resolvendo
+- noticiasontem.com.br: DNS não resolvendo
+- CloudFront direto: ✅ Funcionando
+
+📊 POSSÍVEIS CAUSAS:
+===================
+
+1️⃣ PROPAGAÇÃO DNS LENTA:
+- Tempo normal: 5-15 min
+- Pode levar até 24h em casos raros
+- Varia por provedor de internet
+
+2️⃣ CONFIGURAÇÃO DNS INCOMPLETA:
+- Só foi configurado "www" no Registro.br
+- Domínio raiz (@) pode estar faltando
+
+3️⃣ CACHE DNS LOCAL:
+- Seu computador pode ter cache antigo
+- Provedores de internet têm cache
+
+🛠️ SOLUÇÕES IMEDIATAS:
+======================
+
+🔧 SOLUÇÃO 1: Configurar domínio raiz
+Voltar ao Registro.br e adicionar:
+- Nome: @ (ou vazio)
+- Tipo: CNAME
+- Valor: d3q2d002qno2yn.cloudfront.net
+
+🔧 SOLUÇÃO 2: Limpar cache DNS
+Execute no cmd:
+ipconfig /flushdns
+
+🔧 SOLUÇÃO 3: Aguardar mais tempo
+DNS pode levar até 24h para propagar
+
+🔧 SOLUÇÃO 4: Testar com DNS público
+Mudar DNS para 8.8.8.8 e 8.8.4.4
+
+⏰ AÇÃO RECOMENDADA:
+===================
+1. Verificar se adicionou registro para domínio raiz (@)
+2. Se não, adicionar no Registro.br
+3. Aguardar mais 30-60 minutos
+4. Testar novamente

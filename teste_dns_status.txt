@@ -1,0 +1,37 @@
+🔄 TESTE DNS - AGUARDANDO PROPAGAÇÃO
+===================================
+
+⏰ TESTE REALIZADO ÀS: 18:40
+===========================
+
+📊 RESULTADOS:
+- ❌ noticiasontem.com.br: DNS ainda propagando
+- ❌ www.noticiasontem.com.br: DNS ainda propagando
+
+✅ CONFIGURAÇÃO FEITA:
+======================
+- ✅ Registro www: CNAME → d3q2d002qno2yn.cloudfront.net
+- ✅ Registro raiz: CNAME → d3q2d002qno2yn.cloudfront.net (novo)
+
+⏰ TEMPO DE PROPAGAÇÃO:
+======================
+- Normal: 5-15 minutos
+- Máximo: 24 horas
+- Atual: Recém configurado
+
+🎯 PRÓXIMOS TESTES:
+==================
+- 18:45 (5 min)
+- 18:50 (10 min)
+- 19:00 (20 min)
+
+💡 SITUAÇÃO:
+============
+NORMAL - DNS acabou de ser configurado
+Aguarde mais alguns minutos para propagação
+
+🔔 MONITOR AUTOMÁTICO ATIVO
+===========================
+Sistema avisará quando DNS estiver funcionando
+
+STATUS: AGUARDANDO PROPAGAÇÃO ⏳

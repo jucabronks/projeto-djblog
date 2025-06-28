@@ -1,0 +1,137 @@
+📚 DIFERENÇA ENTRE REGISTROS DNS - CNAME vs A
+=============================================
+
+🎯 REGISTRO TIPO A (Address):
+============================
+
+🔍 O QUE É:
+• Aponta diretamente para um ENDEREÇO IP (IPv4)
+• É o registro mais básico e direto
+• Resolve imediatamente para um número IP
+
+📋 EXEMPLO:
+noticiasontem.com.br A 3.167.54.44
+
+🔗 COMO FUNCIONA:
+1. Usuário digita: noticiasontem.com.br
+2. DNS responde: 3.167.54.44
+3. Navegador conecta diretamente ao IP
+
+✅ VANTAGENS:
+• Resolução mais rápida (1 passo)
+• Obrigatório para domínio raiz (@)
+• Não depende de outros domínios
+• Funciona sempre
+
+❌ DESVANTAGENS:
+• Se IP mudar, precisa atualizar manualmente
+• Não segue mudanças automáticas
+
+🎯 REGISTRO TIPO CNAME (Canonical Name):
+=======================================
+
+🔍 O QUE É:
+• Aponta para outro NOME DE DOMÍNIO
+• É um "apelido" ou "alias"
+• Segue para onde o domínio de destino apontar
+
+📋 EXEMPLO:
+www.noticiasontem.com.br CNAME d3q2d002qno2yn.cloudfront.net
+
+🔗 COMO FUNCIONA:
+1. Usuário digita: www.noticiasontem.com.br
+2. DNS responde: "vá para d3q2d002qno2yn.cloudfront.net"
+3. DNS resolve d3q2d002qno2yn.cloudfront.net para IP
+4. Navegador conecta ao IP final
+
+✅ VANTAGENS:
+• Segue mudanças automáticas
+• Se CloudFront mudar IP, continua funcionando
+• Ideal para serviços que mudam IP frequentemente
+• Facilita manutenção
+
+❌ DESVANTAGENS:
+• Resolução mais lenta (2+ passos)
+• NÃO pode ser usado no domínio raiz
+• Depende do domínio de destino funcionar
+
+🔍 COMPARAÇÃO PRÁTICA:
+=====================
+
+📊 CENÁRIO: CLOUDFRONT MUDA IP
+------------------------------
+
+COM REGISTRO A:
+• Hoje: noticiasontem.com.br A 3.167.54.44
+• CloudFront muda para: 3.167.54.99
+• ❌ Site para de funcionar!
+• 🔧 Você precisa atualizar manualmente
+
+COM REGISTRO CNAME:
+• Hoje: www.noticiasontem.com.br CNAME d3q2d002qno2yn.cloudfront.net
+• CloudFront muda IP para: 3.167.54.99
+• ✅ Site continua funcionando automaticamente!
+• 🎉 Nenhuma ação necessária
+
+🎯 REGRAS IMPORTANTES:
+=====================
+
+🚫 RESTRIÇÕES CNAME:
+• NUNCA use CNAME no domínio raiz (noticiasontem.com.br)
+• NUNCA misture CNAME com outros registros no mesmo nome
+• Use apenas para subdomínios (www, mail, ftp, etc.)
+
+✅ OBRIGATÓRIO TIPO A:
+• Domínio raiz SEMPRE precisa de registro A
+• Registro.br não aceita CNAME na raiz
+• Cloudflare também segue esta regra
+
+📋 NOSSA CONFIGURAÇÃO ATUAL:
+===========================
+
+CORRETO ✅:
+A      noticiasontem.com.br           3.167.54.44              (domínio raiz = IP direto)
+CNAME  www.noticiasontem.com.br       d3q2d002qno2yn.cloudfront.net   (subdomínio = segue CloudFront)
+
+INCORRETO ❌:
+CNAME  noticiasontem.com.br           d3q2d002qno2yn.cloudfront.net   (CNAME na raiz = PROIBIDO)
+
+🎯 CASOS DE USO:
+===============
+
+USE REGISTRO A QUANDO:
+• Domínio raiz (@, noticiasontem.com.br)
+• IP é estático e não muda
+• Quer máxima velocidade de resolução
+• Servidor próprio com IP fixo
+
+USE REGISTRO CNAME QUANDO:
+• Subdomínios (www, api, blog, etc.)
+• Serviços cloud que mudam IP (CloudFront, AWS, etc.)
+• Quer seguir mudanças automáticas
+• Facilitar manutenção
+
+🔍 REGISTROS SSL (VALIDAÇÃO):
+============================
+
+OS REGISTROS SSL SÃO SEMPRE CNAME:
+• _19837e8068f6a4d75e9bdfd772154663.noticiasontem.com.br CNAME _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws
+
+POR QUE CNAME?
+• AWS controla o destino
+• Podem mudar os servidores de validação
+• CNAME segue automaticamente as mudanças
+• É o padrão da indústria para validação
+
+🎉 RESUMO SIMPLES:
+=================
+• A = "Vá para este IP específico"
+• CNAME = "Vá para onde este outro domínio apontar"
+
+• A = Endereço fixo
+• CNAME = Encaminhamento dinâmico
+
+• A = Obrigatório na raiz
+• CNAME = Apenas subdomínios
+
+Data: 27/06/2025 11:10:00

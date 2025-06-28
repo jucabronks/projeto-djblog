@@ -1,0 +1,114 @@
+🔒 GUIA PASSO A PASSO - CADASTRAR CNAME PARA SSL
+=====================================================
+
+📋 REGISTROS PARA ADICIONAR NO CLOUDFLARE:
+==========================================
+
+🔹 REGISTRO 1 (Validação SSL para noticiasontem.com.br):
+   Type: CNAME
+   Name: _19837e8068f6a4d75e9bdfd772154663
+   Target: _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws
+
+🔹 REGISTRO 2 (Validação SSL para www.noticiasontem.com.br):
+   Type: CNAME
+   Name: _88fe1a2469d7ce78bd80f82750e60fef.www
+   Target: _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws
+
+🚀 PASSO A PASSO NO PAINEL CLOUDFLARE:
+======================================
+
+1️⃣ ACESSE O PAINEL:
+   • Vá para: https://dash.cloudflare.com
+   • Faça login com sua conta
+
+2️⃣ NAVEGUE ATÉ DNS:
+   • Clique no domínio "noticiasontem.com.br"
+   • Clique na aba "DNS" → "Records"
+
+3️⃣ VERIFICAR REGISTROS EXISTENTES:
+   ⚠️ IMPORTANTE: Primeiro veja se já existem registros similares!
+   • Procure por registros que começam com "_"
+   • Se encontrar registros com nomes parecidos, REMOVA-OS primeiro
+   • Clique no ícone 🗑️ (lixeira) ao lado do registro antigo
+
+4️⃣ ADICIONAR PRIMEIRO REGISTRO:
+   • Clique em "Add record" (+ Add record)
+   • Preencha os campos:
+     
+     ┌─────────────────────────────────────────────────────────┐
+     │ Type: CNAME                                             │
+     │ Name: _19837e8068f6a4d75e9bdfd772154663                 │
+     │ Target: _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws │
+     │ Proxy status: 🔘 DNS only (desabilitado/cinza)         │
+     │ TTL: Auto ou 3600                                       │
+     └─────────────────────────────────────────────────────────┘
+   
+   • ⚠️ ATENÇÃO: Use apenas "_19837e8068f6a4d75e9bdfd772154663" no Name (sem .noticiasontem.com.br)
+   • Clique em "Save"
+
+5️⃣ ADICIONAR SEGUNDO REGISTRO:
+   • Clique novamente em "Add record"
+   • Preencha os campos:
+     
+     ┌─────────────────────────────────────────────────────────┐
+     │ Type: CNAME                                             │
+     │ Name: _88fe1a2469d7ce78bd80f82750e60fef.www             │
+     │ Target: _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws │
+     │ Proxy status: 🔘 DNS only (desabilitado/cinza)         │
+     │ TTL: Auto ou 3600                                       │
+     └─────────────────────────────────────────────────────────┘
+   
+   • Clique em "Save"
+
+6️⃣ CONFIRMAR ALTERAÇÕES:
+   • Revise se os 2 registros foram adicionados
+   • Os registros ficam ativos automaticamente
+   • Aguarde a propagação (1-5 minutos)
+
+🆘 ERRO "CNAME RECORD ALREADY EXISTS":
+===================================
+• Vá na aba "DNS" → "Records" no Cloudflare
+• Procure por registros que começam com "_"
+• Encontre registros similares aos que você quer adicionar
+• Clique no ícone 🗑️ (lixeira) para deletar o antigo
+• Depois adicione o novo registro
+
+⚠️  DICAS IMPORTANTES:
+=====================
+• Copie e cole os valores EXATAMENTE como mostrado
+• NO CLOUDFLARE: Use só "_19837e8068f6a4d75e9bdfd772154663" (sem domínio)
+• NO CLOUDFLARE: Use só "_88fe1a2469d7ce78bd80f82750e60fef.www" (sem domínio)
+• Proxy status deve estar DESABILITADO (cinza/DNS only)
+• Se existir registro similar, DELETE primeiro
+
+🔍 COMO DEVE FICAR NO PAINEL:
+============================
+Após adicionar, você verá algo assim:
+
+CNAME | _19837e8068f6a4d75e9bdfd772154663.noticiasontem.com.br | _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws
+CNAME | _88fe1a2469d7ce78bd80f82750e60fef.www.noticiasontem.com.br | _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws
+
+⏰ APÓS ADICIONAR:
+==================
+• Aguarde 5-30 minutos para validação
+• Execute: python scripts/configurar_ssl_dominio.py
+• O certificado será validado automaticamente
+• CloudFront será configurado com SSL
+• Site funcionará com HTTPS!
+
+🆘 SE DER PROBLEMA:
+==================
+• Erro "CNAME already exists" → DELETE o registro antigo primeiro
+• Campo "Name" → Use só o hash (sem .noticiasontem.com.br)
+• Proxy status → Deve estar cinza/desabilitado
+• Dúvidas → Tire screenshot e me mostre
+
+📞 PRÓXIMOS PASSOS:
+==================
+1. Adicionar os 2 registros CNAME
+2. Aguardar validação (5-30 min)
+3. Executar script de configuração
+4. Testar site com HTTPS
+5. 🎉 SITE 100% FUNCIONANDO!
+
+Data: 27/06/2025 10:50:15

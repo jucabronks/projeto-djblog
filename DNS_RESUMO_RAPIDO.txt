@@ -1,0 +1,30 @@
+🎯 RESUMO RÁPIDO - O QUE FAZER AGORA
+=====================================
+
+📍 SITUAÇÃO: DNS ainda não configurado
+
+🔧 AÇÃO NECESSÁRIA:
+==================
+
+1️⃣ ACESSE: https://registro.br
+2️⃣ FAÇA LOGIN no seu painel
+3️⃣ VÁ EM: Meus Domínios → noticiasontem.com.br
+4️⃣ CLIQUE EM: "Configurar endereçamento" ou "DNS"
+
+📝 PREENCHA OS CAMPOS:
+=====================
+
+CAMPO: "Endereço do site"
+- Tipo: Nome Alternativo (CNAME)  
+- Valor: d3q2d002qno2yn.cloudfront.net
+
+CAMPO: "Servidor de e-mail"
+- Deixe VAZIO (ou use: aspmx.l.google.com se obrigatório)
+
+💾 SALVE a configuração
+
+⏰ AGUARDE: 5-15 minutos para propagação
+
+🎯 RESULTADO: noticiasontem.com.br funcionando!
+
+Status atual: PRECISA CONFIGURAR DNS

@@ -1,0 +1,77 @@
+📝 PRÓXIMO PASSO: Adicionar Registros DNS
+==========================================
+
+✅ VOCÊ ENCONTROU A OPÇÃO DNS!
+Agora vamos configurar os registros.
+
+🔍 O QUE VOCÊ DEVE ESTAR VENDO:
+===============================
+• Tela de configuração DNS
+• Provavelmente mostra registros existentes
+• Botão para "Adicionar" ou "Novo Registro"
+
+📝 PROCURE POR ESTES BOTÕES:
+============================
+• "Adicionar Registro"
+• "Novo Registro" 
+• "Criar Registro"
+• "+" (sinal de mais)
+• "Add Record"
+• "Incluir"
+
+🎯 OBJETIVO: Adicionar 2 registros CNAME
+========================================
+
+📋 REGISTRO 1 (Domínio Principal):
+==================================
+👆 Clique em "Adicionar Registro"
+
+Preencha os campos:
+🔹 Nome/Host: @ (arroba) ou deixe VAZIO
+🔹 Tipo: CNAME
+🔹 Valor/Destino: d3q2d002qno2yn.cloudfront.net
+🔹 TTL: 300 (se aparecer)
+
+💾 Clique em "Salvar" ou "Adicionar"
+
+📋 REGISTRO 2 (WWW):
+===================
+👆 Clique NOVAMENTE em "Adicionar Registro"
+
+Preencha os campos:
+🔹 Nome/Host: www
+🔹 Tipo: CNAME  
+🔹 Valor/Destino: d3q2d002qno2yn.cloudfront.net
+🔹 TTL: 300 (se aparecer)
+
+💾 Clique em "Salvar" ou "Adicionar"
+
+✅ CONFIRMAR:
+============
+Após adicionar os 2 registros, você deve ver:
+
+📋 Lista de registros DNS com:
+• @ (ou vazio) → CNAME → d3q2d002qno2yn.cloudfront.net
+• www → CNAME → d3q2d002qno2yn.cloudfront.net
+
+💾 Se tiver botão "Aplicar" ou "Confirmar Alterações":
+   → CLIQUE NELE!
+
+⏰ AGUARDAR:
+===========
+• DNS demora 5-30 minutos para propagar
+• Monitor automático está rodando
+• Você será avisado quando estiver funcionando
+
+❌ PROBLEMAS COMUNS:
+===================
+• "CNAME não aceito na raiz" → Use tipo A
+• "Formato inválido" → Remova pontos finais
+• "TTL obrigatório" → Use 300
+• "Campo vazio" → Digite @ no nome
+
+📞 ME AVISE:
+===========
+• Conseguiu adicionar os 2 registros?
+• Que mensagem apareceu?
+• Teve algum erro?

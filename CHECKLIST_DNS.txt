@@ -1,0 +1,57 @@
+📋 CHECKLIST: Configurar DNS - noticiasontem.com.br
+==================================================
+
+✅ PASSO 1: ACESSAR PAINEL
+□ Acesse: https://registro.br
+□ Clique em "Entrar" (canto superior direito)
+□ Digite CPF e senha
+□ Faça login
+
+✅ PASSO 2: ENCONTRAR DNS
+□ Clique em "Meus Domínios"
+□ Clique em "noticiasontem.com.br"
+□ Procure por "DNS" ou "Configurar DNS"
+□ Clique para abrir configuração DNS
+
+✅ PASSO 3: ADICIONAR REGISTROS
+□ Procure botão "Adicionar Registro" ou "Novo"
+
+📝 REGISTRO 1:
+Nome: noticiasontem.com.br (ou deixe vazio)
+Tipo: CNAME
+Valor: d3q2d002qno2yn.cloudfront.net
+TTL: 300
+
+📝 REGISTRO 2:
+Nome: www
+Tipo: CNAME  
+Valor: d3q2d002qno2yn.cloudfront.net
+TTL: 300
+
+✅ PASSO 4: SALVAR
+□ Clique em "Salvar" ou "Confirmar"
+□ Aguarde confirmação
+
+✅ PASSO 5: TESTAR (Após 5-10 minutos)
+□ Abra CMD (Windows + R → cmd)
+□ Digite: nslookup noticiasontem.com.br
+□ Deve aparecer referência ao cloudfront
+
+🎯 RESULTADO ESPERADO:
+Se o DNS estiver correto, você verá algo como:
+"d3q2d002qno2yn.cloudfront.net"
+
+📞 SE TIVER PROBLEMAS:
+• Erro de login → Verifique CPF/senha
+• Não encontra DNS → Procure "Serviços" ou "Configurações"
+• Erro ao salvar → Verifique se campos estão corretos
+• DNS não propaga → Aguarde até 30 minutos
+
+🌐 TESTE FINAL:
+Após DNS configurado, teste:
+http://noticiasontem.com.br
+
+💡 LEMBRE-SE:
+• Use HTTP (não HTTPS ainda)
+• SSL configuramos depois
+• Foque apenas nos 2 registros CNAME

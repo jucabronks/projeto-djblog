@@ -1,0 +1,63 @@
+📝 RESUMO VISUAL: Configurar DNS no Registro.br
+================================================
+
+🎯 OBJETIVO: Configurar noticiasontem.com.br → CloudFront
+
+📋 PASSOS RÁPIDOS:
+================
+
+1️⃣ ACESSO
+   🌐 Site: https://registro.br
+   🔐 Login: CPF + senha
+
+2️⃣ NAVEGAÇÃO  
+   🏠 Meus Domínios
+   👆 Clique: noticiasontem.com.br
+   ⚙️ Procure: DNS / Configurar DNS
+
+3️⃣ REGISTROS (Adicione 2)
+   
+   📝 REGISTRO 1:
+   Nome: @ (ou vazio)
+   Tipo: CNAME  
+   Valor: d3q2d002qno2yn.cloudfront.net
+   
+   📝 REGISTRO 2:
+   Nome: www
+   Tipo: CNAME
+   Valor: d3q2d002qno2yn.cloudfront.net
+
+4️⃣ SALVAR
+   💾 Clique: Salvar/Confirmar
+   ⏰ Aguarde: 5-30 minutos
+
+📱 CAMPOS COMUNS NO PAINEL:
+==========================
+• Nome/Host/Subdomínio → Nome do registro
+• Tipo/Type → CNAME  
+• Valor/Destino/Target → d3q2d002qno2yn.cloudfront.net
+• TTL → 300 (se aparecer)
+
+🎯 RESULTADO ESPERADO:
+=====================
+Após 5-30 minutos:
+✅ http://noticiasontem.com.br → Carrega seu site
+✅ http://www.noticiasontem.com.br → Carrega seu site
+
+🔧 MONITOR AUTOMÁTICO:
+=====================
+Execute: python scripts/monitor_dns.py
+(Avisa quando DNS estiver funcionando)
+
+❌ PROBLEMAS COMUNS:
+===================
+• "Não aceita CNAME na raiz" → Use tipo A
+• "Erro de formato" → Remova pontos finais
+• "TTL obrigatório" → Use 300
+• "Não encontra DNS" → Procure "Serviços"
+
+📞 AJUDA:
+========
+• Me diga em que passo travou
+• Que tela você está vendo
+• Qual erro apareceu

@@ -1,0 +1,26 @@
+📍 SITUAÇÃO ATUAL - ZONA DNS DO REGISTRO.BR
+===========================================
+
+✅ USUÁRIO ESTÁ NA TELA CORRETA!
+- Tela: "Configurar zona de DNS"
+- Opção disponível: "Nova entrada"
+
+🎯 PRÓXIMO PASSO:
+================
+👆 CLIQUE EM: "Nova entrada"
+
+� PRIMEIRO REGISTRO (Domínio principal):
+========================================
+Nome/Host: @ (ou vazio)
+Tipo: CNAME
+Valor: d3q2d002qno2yn.cloudfront.net
+TTL: 300 (ou padrão)
+
+📝 SEGUNDO REGISTRO (WWW):
+=========================
+Nome/Host: www
+Tipo: CNAME
+Valor: d3q2d002qno2yn.cloudfront.net
+TTL: 300 (ou padrão)
+
+🎯 AÇÃO IMEDIATA: CLICAR "Nova entrada"

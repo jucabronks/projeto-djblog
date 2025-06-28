@@ -1,0 +1,42 @@
+
+CONFIGURAÇÃO DNS - REGISTRO.BR
+==============================
+Data: 27/06/2025 10:59:47
+CloudFront IP: 3.167.54.44
+
+REGISTROS PARA ADICIONAR:
+========================
+
+1. DOMÍNIO RAIZ (noticiasontem.com.br):
+   Nome: [VAZIO]
+   Tipo: A  
+   Valor: 3.167.54.44
+   TTL: 3600
+
+2. SUBDOMÍNIO WWW:
+   Nome: www
+   Tipo: CNAME
+   Valor: d3q2d002qno2yn.cloudfront.net
+   TTL: 3600
+
+PASSO A PASSO:
+=============
+1. Acesse: painel.registro.br
+2. Login com CPF e senha
+3. Meus Domínios → noticiasontem.com.br
+4. DNS/Zona de DNS
+5. Adicionar novos registros conforme acima
+6. Salvar alterações
+7. Aguardar 10-15 minutos para propagação
+
+VERIFICAÇÃO:
+===========
+- Execute: ipconfig /flushdns
+- Teste: https://noticiasontem.com.br
+- Teste: https://www.noticiasontem.com.br
+
+STATUS AWS:
+==========
+✅ S3: Configurado e funcionando
+✅ CloudFront: Funcionando (200 OK)
+✅ Site: https://d3q2d002qno2yn.cloudfront.net

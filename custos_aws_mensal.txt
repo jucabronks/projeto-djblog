@@ -1,0 +1,64 @@
+💰 CUSTOS MENSAIS AWS - PROJETO DJBLOG
+======================================
+
+🎯 SEU LIMITE: $10/MÊS
+======================
+
+✅ ANÁLISE DE SEGURANÇA:
+- Seu limite: $10.00/mês
+- Custo atual: ~$0.01/mês
+- MARGEM: 999x menor que o limite!
+
+📊 RECURSOS UTILIZADOS:
+=======================
+
+🗄️ S3 (ARMAZENAMENTO):
+- Site estático: ~10-50 MB
+- Custo: $0.023 por GB/mês
+- Total S3: ~$0.00 - $0.01/mês
+
+🌐 CLOUDFRONT (CDN):
+- Primeiros 1TB grátis/mês
+- Depois: $0.085 por GB
+- Site pequeno: ~1-10 GB/mês
+- Total CloudFront: $0.00/mês (dentro do free tier)
+
+🔄 LAMBDA (se usar APIs):
+- 1 milhão requests grátis/mês
+- Depois: $0.20 por 1M requests
+- Total Lambda: $0.00/mês (dentro do free tier)
+
+📝 DYNAMODB (se usar):
+- 25 GB grátis/mês
+- Depois: $0.25 por GB/mês
+- Total DynamoDB: $0.00/mês (dentro do free tier)
+
+💰 CENÁRIOS DENTRO DO SEU LIMITE:
+================================
+
+🎯 ATUAL (Site simples): $0.01/mês
+📈 10k visitantes/mês: $0.05/mês  
+� 100k visitantes/mês: $1-3/mês
+🔥 500k visitantes/mês: $5-8/mês
+⭐ 1M visitantes/mês: $8-10/mês
+
+✅ CONCLUSÃO: TOTALMENTE SEGURO!
+===============================
+- Custo atual: 999x MENOR que seu limite
+- Pode crescer MUITO sem problemas
+- Free tier protege por 1 ano
+- Arquitetura otimizada para baixo custo
+
+🎁 FREE TIER AWS (primeiro ano):
+===============================
+- CloudFront: 1TB transferência/mês GRÁTIS
+- S3: 5GB armazenamento GRÁTIS
+- Lambda: 1M requests GRÁTIS
+- DynamoDB: 25GB GRÁTIS
+
+� ALERTA AUTOMÁTICO:
+====================
+Configuramos alertas se passar de $5/mês
+(muito antes do seu limite de $10)
+
+✅ RESPOSTA: SIM! ESTÁ PERFEITO! 🎉

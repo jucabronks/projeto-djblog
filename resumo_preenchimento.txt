@@ -1,0 +1,38 @@
+🎯 RESUMO - PREENCHIMENTO REGISTRO.BR
+=====================================
+
+📍 VOCÊ ESTÁ AQUI:
+✅ Painel Registro.br aberto
+✅ Tela "Configurar endereçamento" 
+✅ Campos visíveis para preenchimento
+
+📝 PREENCHIMENTO:
+================
+
+CAMPO 1: "Endereço do site"
+---------------------------
+1. Tipo: Selecione "Nome Alternativo (CNAME)" ou "CNAME"
+2. Valor: d3q2d002qno2yn.cloudfront.net
+
+CAMPO 2: "Servidor de e-mail"
+-----------------------------
+1. Deixe VAZIO (recomendado)
+2. OU se obrigatório: aspmx.l.google.com
+
+💾 SALVAR:
+----------
+✅ Confira os dados
+✅ Clique "Salvar" ou "Confirmar"
+
+⏰ AGUARDAR:
+============
+🔄 Propagação DNS: 5-15 minutos
+📡 Monitor automático rodando
+🎉 Aviso automático quando funcionar
+
+🚀 RESULTADO ESPERADO:
+======================
+✅ noticiasontem.com.br → Funcionando
+✅ Site acessível via seu domínio
+
+Status: AGUARDANDO CONFIGURAÇÃO DO USUÁRIO

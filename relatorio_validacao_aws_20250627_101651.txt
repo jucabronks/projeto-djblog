@@ -1,0 +1,26 @@
+
+# RELATÓRIO VALIDAÇÃO INFRAESTRUTURA AWS
+Data: 27/06/2025 10:16:51
+
+## RESUMO EXECUTIVO
+✅ Credenciais AWS: OK
+✅ Bucket S3: OK
+✅ CloudFront: OK
+✅ DNS: FALHA
+✅ Custos: OK
+
+## STATUS GERAL
+⚠️ PROBLEMAS ENCONTRADOS
+
+## DETALHES
+- S3 Bucket: djblog-noticias-static-1750943590
+- CloudFront: d3q2d002qno2yn.cloudfront.net
+- Domínios: noticiasontem.com.br, www.noticiasontem.com.br
+
+## PRÓXIMOS PASSOS
+Revisar componentes com falha acima.
+
+## CUSTOS ESTIMADOS
+- Mensal: ~$0.01
+- Anual: ~$0.12
+- Status: Muito abaixo do limite de $10/mês

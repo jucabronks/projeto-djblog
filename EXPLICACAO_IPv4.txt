@@ -1,0 +1,82 @@
+📍 EXPLICAÇÃO: 3.167.54.44 É IPv4
+==================================
+
+✅ SIM! 3.167.54.44 É UM ENDEREÇO IPv4
+======================================
+
+🔍 FORMATO IPv4:
+• Quatro números separados por pontos
+• Cada número de 0 a 255
+• Exemplo: 3.167.54.44
+
+📊 BREAKDOWN DO NOSSO IP:
+========================
+3.167.54.44
+│  │   │  │
+│  │   │  └─ 44  (último octeto)
+│  │   └──── 54  (terceiro octeto)  
+│  └──────── 167 (segundo octeto)
+└─────────── 3   (primeiro octeto)
+
+🌐 ESTE IP PERTENCE À AWS:
+=========================
+• Proprietário: Amazon Web Services (AWS)
+• Serviço: CloudFront CDN
+• Localização: Rede global da AWS
+• Tipo: IP dinâmico do CloudFront
+
+🔍 COMPARAÇÃO IPv4 vs IPv6:
+==========================
+
+IPv4 (nosso caso):
+• Formato: 3.167.54.44
+• Tamanho: 32 bits
+• Exemplo de registro DNS: A 3.167.54.44
+
+IPv6 (formato moderno):
+• Formato: 2001:db8::1
+• Tamanho: 128 bits  
+• Exemplo de registro DNS: AAAA 2001:db8::1
+
+📋 NO CONTEXTO DO NOSSO PROJETO:
+===============================
+
+REGISTRO A ATUAL:
+noticiasontem.com.br A 3.167.54.44
+
+SIGNIFICADO:
+• "noticiasontem.com.br" aponta para o IP "3.167.54.44"
+• Este IP é um servidor do CloudFront da AWS
+• Quando alguém acessa o site, vai para este endereço
+
+🔄 POR QUE O IP MUDA:
+====================
+• CloudFront usa múltiplos servidores globalmente
+• O IP pode mudar dependendo da localização do usuário
+• AWS otimiza automaticamente para performance
+• Por isso usamos CNAME para www (segue mudanças automáticas)
+
+🎯 NOSSA CONFIGURAÇÃO ATUAL:
+===========================
+
+DOMÍNIO RAIZ (obrigatório IP fixo):
+A noticiasontem.com.br 3.167.54.44
+
+SUBDOMÍNIO WWW (segue mudanças automáticas):  
+CNAME www.noticiasontem.com.br d3q2d002qno2yn.cloudfront.net
+
+💡 CURIOSIDADE:
+==============
+• Quando você digita "noticiasontem.com.br"
+• DNS resolve para "3.167.54.44"
+• Seu navegador conecta neste endereço IPv4
+• CloudFront entrega o site da AWS
+
+✅ RESUMO:
+=========
+• 3.167.54.44 = IPv4 ✅
+• Pertence à AWS CloudFront ✅  
+• É o endereço físico do servidor ✅
+• Nosso site está hospedado neste IP ✅
+
+Data: 27/06/2025 11:15:00

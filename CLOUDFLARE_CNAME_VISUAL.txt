@@ -1,0 +1,76 @@
+🔥 CLOUDFLARE - CADASTRAR CNAME SSL (VISUAL)
+============================================
+
+📋 DADOS PARA COPIAR E COLAR:
+============================
+
+🔹 REGISTRO 1:
+   Type: CNAME
+   Name: _19837e8068f6a4d75e9bdfd772154663
+   Target: _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws
+
+🔹 REGISTRO 2:
+   Type: CNAME  
+   Name: _88fe1a2469d7ce78bd80f82750e60fef.www
+   Target: _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws
+
+🚀 PASSO A PASSO CLOUDFLARE:
+===========================
+
+1️⃣ ACESSE: https://dash.cloudflare.com
+2️⃣ CLIQUE em "noticiasontem.com.br"
+3️⃣ CLIQUE na aba "DNS" → "Records"
+
+4️⃣ ANTES DE ADICIONAR - VERIFICAR:
+   ⚠️ PROCURE por registros que começam com "_"
+   ⚠️ Se encontrar, CLIQUE na 🗑️ (lixeira) para DELETAR
+
+5️⃣ ADICIONAR REGISTRO 1:
+   • Clique "Add record"
+   • Type: CNAME
+   • Name: _19837e8068f6a4d75e9bdfd772154663
+   • Target: _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws
+   • Proxy status: 🔘 DNS only (CINZA/DESABILITADO)
+   • Save
+
+6️⃣ ADICIONAR REGISTRO 2:
+   • Clique "Add record"
+   • Type: CNAME
+   • Name: _88fe1a2469d7ce78bd80f82750e60fef.www
+   • Target: _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws
+   • Proxy status: 🔘 DNS only (CINZA/DESABILITADO)
+   • Save
+
+🎯 CAMPOS DO CLOUDFLARE:
+=======================
+
+CAMPO CLOUDFLARE → O QUE COLOCAR
+─────────────────────────────────
+Type            → CNAME
+Name            → _19837e8068f6a4d75e9bdfd772154663
+Target/Content  → _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws
+Proxy status    → 🔘 DNS only (CINZA)
+TTL             → Auto
+
+⚠️ ATENÇÃO ESPECIAL:
+===================
+• NO CAMPO "Name": NÃO adicione ".noticiasontem.com.br"
+• NO CAMPO "Target": Cole EXATAMENTE como está
+• "Proxy status": DEVE estar DESABILITADO (cinza)
+• Se der erro "already exists": DELETE o antigo primeiro
+
+✅ COMO DEVE FICAR DEPOIS:
+=========================
+Na lista de DNS você verá:
+
+CNAME | _19837e8068f6a4d75e9bdfd772154663.noticiasontem.com.br | _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws | DNS only
+CNAME | _88fe1a2469d7ce78bd80f82750e60fef.www.noticiasontem.com.br | _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws | DNS only
+
+🔥 PRÓXIMO PASSO:
+================
+Após adicionar os 2 registros:
+• Aguarde 5-10 minutos
+• Execute: python scripts/configurar_ssl_dominio.py
+• 🎉 SSL será configurado automaticamente!
+
+Data: 27/06/2025 12:45:00

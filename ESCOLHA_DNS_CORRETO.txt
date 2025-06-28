@@ -1,0 +1,43 @@
+🎯 PAINEL REGISTRO.BR - ESCOLHA A OPÇÃO CORRETA
+=====================================================
+
+✅ VOCÊ ESTÁ VENDO:
+1. "Utilizando servidores DNS do Registro.br" (atual)
+2. "Alterar servidores DNS" 
+3. "Configurar zona de DNS"
+
+🎯 OPÇÃO CORRETA: "Configurar zona de DNS"
+==========================================
+
+✅ CLIQUE EM: "Configurar zona de DNS"
+
+💡 POR QUE ESTA OPÇÃO?
+======================
+• "Alterar servidores DNS" = Muda para DNS externos (não queremos)
+• "Configurar zona de DNS" = Adiciona registros no DNS do Registro.br (queremos!)
+
+🔄 APÓS CLICAR EM "Configurar zona de DNS":
+==========================================
+Você verá uma tela com:
+• Lista de registros DNS existentes
+• Botão "Adicionar registro" ou "Novo registro"
+• Opções de tipo: A, AAAA, CNAME, MX, TXT, etc.
+
+📝 REGISTROS PARA ADICIONAR:
+===========================
+
+🔹 REGISTRO 1 (Domínio principal):
+Nome: @ (ou deixe vazio)
+Tipo: CNAME
+Valor: d3q2d002qno2yn.cloudfront.net
+TTL: 300 (ou padrão)
+
+🔹 REGISTRO 2 (WWW):
+Nome: www
+Tipo: CNAME  
+Valor: d3q2d002qno2yn.cloudfront.net
+TTL: 300 (ou padrão)
+
+🎯 AÇÃO IMEDIATA:
+================
+👆 CLIQUE EM "Configurar zona de DNS" AGORA!

@@ -1,0 +1,99 @@
+🌐 GUIA CLOUDFLARE DNS - CONFIGURAÇÃO COMPLETA
+===============================================
+
+🎯 VOCÊ ESTÁ USANDO CLOUDFLARE DNS - EXCELENTE ESCOLHA!
+======================================================
+
+📋 SITUAÇÃO ATUAL:
+- Servidores DNS: blakely.ns.cloudflare.com / sevki.ns.cloudflare.com
+- DNS funcionando: noticiasontem.com.br → 3.167.54.44
+- Status: DNS básico OK, precisa ajustar e adicionar SSL
+
+🚀 CONFIGURAÇÃO NO PAINEL CLOUDFLARE:
+===================================
+
+1️⃣ ACESSE O CLOUDFLARE:
+   • Vá para: https://dash.cloudflare.com
+   • Faça login com sua conta
+   • Clique no domínio "noticiasontem.com.br"
+
+2️⃣ VÁ PARA DNS:
+   • Clique na aba "DNS" no menu superior
+   • Você verá a lista de registros DNS
+
+3️⃣ AJUSTAR REGISTRO A (DOMÍNIO RAIZ):
+   • Procure por: "noticiasontem.com.br" tipo "A"
+   • Clique no ícone de "Editar"
+   • Altere o valor para: 3.167.54.44 (IP atual do CloudFront)
+   • Proxy Status: 🟨 "DNS only" (clique para desabilitar proxy)
+   • TTL: Auto
+   • Clique em "Save"
+
+4️⃣ VERIFICAR/AJUSTAR REGISTRO CNAME (WWW):
+   • Procure por: "www" tipo "CNAME"
+   • Se não existir, clique em "Add record"
+   • Configure:
+     - Type: CNAME
+     - Name: www
+     - Target: d3q2d002qno2yn.cloudfront.net
+     - Proxy Status: 🟨 "DNS only"
+     - TTL: Auto
+   • Clique em "Save"
+
+5️⃣ ADICIONAR REGISTROS SSL (VALIDAÇÃO AWS):
+   • Clique em "Add record" para REGISTRO 1:
+     - Type: CNAME
+     - Name: _19837e8068f6a4d75e9bdfd772154663.noticiasontem.com.br
+     - Target: _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws
+     - Proxy Status: 🟨 "DNS only"
+     - TTL: Auto
+   
+   • Clique em "Add record" para REGISTRO 2:
+     - Type: CNAME  
+     - Name: _88fe1a2469d7ce78bd80f82750e60fef.www.noticiasontem.com.br
+     - Target: _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws
+     - Proxy Status: 🟨 "DNS only"
+     - TTL: Auto
+
+⚠️  IMPORTANTE NO CLOUDFLARE:
+============================
+• DESABILITE o proxy (🟨 "DNS only") para TODOS os registros
+• O proxy laranja do Cloudflare vai conflitar com o CloudFront
+• Use "DNS only" para funcionar corretamente
+
+📋 CONFIGURAÇÃO FINAL NO CLOUDFLARE:
+===================================
+A | noticiasontem.com.br | 3.167.54.44 | 🟨 DNS only
+CNAME | www | d3q2d002qno2yn.cloudfront.net | 🟨 DNS only  
+CNAME | _19837e8068f6a4d75e9bdfd772154663.noticiasontem.com.br | _a94a255a3c25cba74c95244e79562393.xlfgrmvvlj.acm-validations.aws | 🟨 DNS only
+CNAME | _88fe1a2469d7ce78bd80f82750e60fef.www.noticiasontem.com.br | _1aa1b9515605c723c3757c748117b9fa.xlfgrmvvlj.acm-validations.aws | 🟨 DNS only
+
+🎯 VANTAGENS DO CLOUDFLARE:
+==========================
+✅ Propagação mais rápida (1-5 minutos)
+✅ Interface mais amigável
+✅ Melhor performance global
+✅ Analytics gratuitos
+✅ Proteção DDoS automática
+
+⏰ APÓS CONFIGURAR:
+==================
+1. Aguarde 5-10 minutos (Cloudflare é mais rápido)
+2. Execute: python scripts/configurar_ssl_dominio.py
+3. Certificado SSL será validado automaticamente
+4. Site funcionará com HTTPS!
+
+🔧 SCRIPTS PARA TESTAR:
+======================
+• python scripts/teste_rapido.py
+• python scripts/validacao_completa_aws.py
+• python scripts/configurar_ssl_dominio.py
+
+🎉 RESULTADO ESPERADO:
+=====================
+✅ https://noticiasontem.com.br → Funcionando
+✅ https://www.noticiasontem.com.br → Funcionando
+✅ SSL/HTTPS → Funcionando
+✅ Performance → Excelente
+
+Data: 27/06/2025 11:00:00
