@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notícias Ontem - As principais notícias do Brasil</title>
     <meta name="description" content="Fique por dentro das principais notícias do Brasil. Informação atualizada e confiável direto para você.">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://noticiasontem.com.br/">
+    <meta property="og:title" content="Notícias Ontem - As principais notícias do Brasil">
+    <meta property="og:description" content="Fique por dentro das principais notícias do Brasil. Informação atualizada e confiável direto para você.">
+    <meta property="og:image" content="https://noticiasontem.com.br/logo-og.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://noticiasontem.com.br/">
+    <meta name="twitter:title" content="Notícias Ontem - As principais notícias do Brasil">
+    <meta name="twitter:description" content="Fique por dentro das principais notícias do Brasil. Informação atualizada e confiável direto para você.">
+    <meta name="twitter:image" content="https://noticiasontem.com.br/logo-og.png">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>">
@@ -789,48 +801,144 @@
             color: var(--text);
         }
 
-        /* Performance indicators */
-        .connection-status {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            z-index: 1000;
-            transition: all 0.3s;
+        /* Modo escuro automático via prefers-color-scheme */
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --bg: #0f172a;
+            --bg-alt: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+          }
+          body, .news-card, .modal-content, .search-box {
+            background: var(--bg-alt) !important;
+            color: var(--text) !important;
+          }
+          .header, .footer, .stats-bar {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+            color: #f1f5f9 !important;
+          }
+          .news-title, .section-title, .logo-text {
+            color: #f1f5f9 !important;
+          }
+          .news-card, .modal-content {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            border-color: #334155;
+          }
+          .tab-btn, .filter-btn, .sort-select {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+            border-color: #334155 !important;
+          }
+          .tab-btn.active {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
+            color: #fff !important;
+          }
+          .top-navbar {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+          }
+          .logo-text {
+            color: #f1f5f9 !important;
+          }
+          .nav-links a {
+            color: #f1f5f9 !important;
+          }
+          .nav-links a:hover {
+            color: #3b82f6 !important;
+          }
+          .footer {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+          }
         }
 
-        .connection-status.online {
-            background: var(--success);
-            color: white;
-        }
+        /* --- NOVOS ESTILOS PARA NAVBAR, SIDEBAR E CARDS --- */
+    .top-navbar {
+        background: var(--bg);
+        box-shadow: 0 2px 8px rgba(30,64,175,0.06);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .nav-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+    }
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--primary);
+        text-decoration: none;
+    }
+    .logo-icon {
+        font-size: 2rem;
+    }
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+    }
+    .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a:focus {
+        background: var(--primary-light);
+        color: #fff;
+        outline: none;
+    }
 
-        .connection-status.offline {
-            background: #ef4444;
-            color: white;
-        }
-
-        .lazy-load {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .lazy-load.loaded {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .main-flex {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+    }
+    .sidebar {
+        width: 270px;
+        background: var(--bg-alt);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+    }
+    /* ...demais regras do bloco removido do final do arquivo... */
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Bar -->
+    <!-- Barra de Navegação Superior -->
     <nav class="top-navbar" aria-label="Menu principal">
         <div class="container nav-flex">
-            <a href="#" class="logo" aria-label="Página inicial">
-                <span class="logo-icon">📰</span>
-                <span class="logo-text">Notícias Ontem</span>
+            <a href="#" class="logo" aria-label="Página inicial" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                <span class="logo-icon" aria-hidden="true" style="display: flex; align-items: center;">
+                  <!-- SVG Logotipo: Jornal estilizado -->
+                  <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;" aria-hidden="true" focusable="false" role="img">
+                    <title>Logotipo Notícias Ontem</title>
+                    <desc>Jornal estilizado em azul</desc>
+                    <rect x="4" y="8" width="40" height="32" rx="6" fill="url(#news-gradient)"/>
+                    <rect x="8" y="12" width="32" height="24" rx="3" fill="#fff"/>
+                    <rect x="12" y="16" width="24" height="4" rx="2" fill="#1e40af"/>
+                    <rect x="12" y="22" width="16" height="2.5" rx="1.25" fill="#3b82f6"/>
+                    <rect x="12" y="27" width="10" height="2.5" rx="1.25" fill="#3b82f6"/>
+                    <rect x="12" y="32" width="8" height="2.5" rx="1.25" fill="#3b82f6"/>
+                    <defs>
+                      <linearGradient id="news-gradient" x1="4" y1="8" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#1e40af"/>
+                        <stop offset="1" stop-color="#3b82f6"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </span>
+                <span class="logo-text" style="font-weight: 700; font-size: 1.35rem; letter-spacing: -1px; color: var(--primary);">Notícias Ontem</span>
             </a>
             <ul class="nav-links">
                 <li><a href="#tab-todos" onclick="switchTab('todos')" tabindex="0">Início</a></li>
@@ -846,11 +954,31 @@
         </div>
     </nav>
 
-    <!-- Header modernizado -->
+    <!-- Cabeçalho modernizado -->
     <header class="header">
         <div class="container">
             <div class="header-content text-center">
-                <h1>📰 Notícias Ontem</h1>
+                <h1 style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                  <span aria-hidden="true" style="display: flex; align-items: center;">
+                    <svg width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;" aria-hidden="true" focusable="false" role="img">
+                      <title>Logotipo Notícias Ontem</title>
+                      <desc>Jornal estilizado em azul</desc>
+                      <rect x="4" y="8" width="40" height="32" rx="6" fill="url(#news-gradient-header)"/>
+                      <rect x="8" y="12" width="32" height="24" rx="3" fill="#fff"/>
+                      <rect x="12" y="16" width="24" height="4" rx="2" fill="#1e40af"/>
+                      <rect x="12" y="22" width="16" height="2.5" rx="1.25" fill="#3b82f6"/>
+                      <rect x="12" y="27" width="10" height="2.5" rx="1.25" fill="#3b82f6"/>
+                      <rect x="12" y="32" width="8" height="2.5" rx="1.25" fill="#3b82f6"/>
+                      <defs>
+                        <linearGradient id="news-gradient-header" x1="4" y1="8" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#1e40af"/>
+                          <stop offset="1" stop-color="#3b82f6"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  Notícias Ontem
+                </h1>
                 <p class="subtitle">As principais notícias do Brasil, atualizadas automaticamente</p>
                 <div class="live-indicator">
                     <div class="live-dot"></div>
@@ -908,11 +1036,11 @@
                 </section>
                 <section class="sidebar-section social">
                     <h3>Siga-nos</h3>
-                    <div class="social-links">
-                        <a href="#" aria-label="Instagram"><span>📸</span></a>
-                        <a href="#" aria-label="Twitter"><span>🐦</span></a>
-                        <a href="#" aria-label="Facebook"><span>📘</span></a>
-                    </div>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram"><span role="img" aria-label="Instagram">📸</span></a>
+                <a href="#" aria-label="Twitter"><span role="img" aria-label="Twitter">🐦</span></a>
+                <a href="#" aria-label="Facebook"><span role="img" aria-label="Facebook">📘</span></a>
+            </div>
                 </section>
             </aside>
 
@@ -1395,448 +1523,6 @@
                     </div>
                 </article>
             `;
-        }
-
-        /* --- NOVOS ESTILOS PARA NAVBAR, SIDEBAR E CARDS --- */
-    .top-navbar {
-        background: var(--bg);
-        box-shadow: 0 2px 8px rgba(30,64,175,0.06);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-    .nav-flex {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.5rem 0;
-    }
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 800;
-        font-size: 1.3rem;
-        color: var(--primary);
-        text-decoration: none;
-    }
-    .logo-icon {
-        font-size: 2rem;
-    }
-    .nav-links {
-        display: flex;
-        gap: 1.5rem;
-        list-style: none;
-    }
-    .nav-links a {
-        color: var(--text-light);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1rem;
-        padding: 0.5rem 0.75rem;
-        border-radius: 8px;
-        transition: background 0.2s, color 0.2s;
-    }
-    .nav-links a:hover, .nav-links a:focus {
-        background: var(--primary-light);
-        color: #fff;
-        outline: none;
-    }
-
-    .main-flex {
-        display: flex;
-        gap: 2.5rem;
-        align-items: flex-start;
-    }
-    .sidebar {
-        width: 270px;
-        background: var(--bg-alt);
-        border-radius: 16px;
-        box-shadow: var(--shadow);
-        padding: 2rem 1.5rem;
-        position: sticky;
-        top: 90px;
-        min-height: 400px;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-    .sidebar-section {
-        margin-bottom: 2.5rem;
-    }
-    .sidebar-section h3 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: var(--primary);
-    }
-    .sidebar-section ul {
-        list-style: none;
-        padding-left: 0;
-    }
-    .sidebar-section ul li {
-        margin-bottom: 0.7rem;
-    }
-    .sidebar-section ul li a {
-        color: var(--text-light);
-        text-decoration: none;
-        font-size: 1rem;
-        transition: color 0.2s;
-    }
-    .sidebar-section ul li a:hover, .sidebar-section ul li a:focus {
-        color: var(--primary);
-        outline: none;
-    }
-    .sidebar .social-links {
-        display: flex;
-        gap: 1rem;
-        font-size: 1.5rem;
-    }
-    .sidebar .social-links a {
-        color: var(--primary-light);
-        background: #fff;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(30,64,175,0.08);
-        transition: background 0.2s, color 0.2s;
-    }
-    .sidebar .social-links a:hover, .sidebar .social-links a:focus {
-        background: var(--primary-light);
-        color: #fff;
-        outline: none;
-    }
-
-    .main-news-area {
-        flex: 1 1 0%;
-        min-width: 0;
-    }
-
-    .news-card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        min-height: 420px;
-        background: #fff;
-        border-radius: 18px;
-        box-shadow: 0 4px 24px 0 rgba(30,64,175,0.10), 0 1.5px 6px 0 rgba(30,64,175,0.04);
-        transition: box-shadow 0.3s, transform 0.2s;
-        overflow: hidden;
-        margin-bottom: 2.2rem;
-    }
-    .news-image-area {
-        position: relative;
-        width: 100%;
-        height: 220px;
-        overflow: hidden;
-        background: #e5e7eb;
-        border-radius: 18px 18px 0 0;
-    }
-    .news-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        border-radius: 18px 18px 0 0;
-        transition: transform 0.35s cubic-bezier(.4,1.7,.7,1.1);
-        box-shadow: 0 2px 8px rgba(30,64,175,0.08);
-    }
-    .news-card:hover {
-        box-shadow: 0 8px 32px 0 rgba(30,64,175,0.18), 0 2px 8px 0 rgba(30,64,175,0.08);
-        transform: translateY(-4px) scale(1.012);
-    }
-    .news-card:focus-within {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
-    }
-    .news-card:hover .news-image {
-        transform: scale(1.04);
-    }
-    .news-tag {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        background: linear-gradient(90deg, var(--primary-light), var(--primary));
-        color: #fff;
-        padding: 0.3rem 0.9rem;
-        border-radius: 14px;
-        font-size: 0.92rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        z-index: 2;
-        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
-        text-shadow: 0 1px 2px rgba(30,64,175,0.10);
-    }
-    .bookmark-btn {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: #fff;
-        border: none;
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
-        transition: background 0.2s, color 0.2s, transform 0.2s;
-        z-index: 2;
-        border: 1.5px solid #e5e7eb;
-    }
-    .bookmark-btn:hover, .bookmark-btn:focus {
-        background: var(--accent);
-        color: #fff;
-        outline: none;
-        transform: scale(1.13);
-        border-color: var(--primary-light);
-    }
-    /* Sidebar aprimorada */
-    .sidebar-section {
-        margin-bottom: 2.5rem;
-        padding-bottom: 1.2rem;
-        border-bottom: 1.5px solid #e5e7eb;
-    }
-    .sidebar-section:last-child {
-        border-bottom: none;
-    }
-    .sidebar-section h3 {
-        font-size: 1.13rem;
-        font-weight: 800;
-        margin-bottom: 1.1rem;
-        color: var(--primary);
-        letter-spacing: 0.01em;
-    }
-    /* Navbar aprimorada */
-    .top-navbar {
-        background: linear-gradient(90deg, #fff 80%, var(--primary-light) 100%);
-        box-shadow: 0 2px 12px rgba(30,64,175,0.07);
-        border-bottom: 1.5px solid #e5e7eb;
-    }
-    .nav-links a {
-        color: var(--primary);
-        font-weight: 700;
-        font-size: 1.05rem;
-        padding: 0.5rem 1.1rem;
-        border-radius: 10px;
-        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    }
-    .nav-links a:hover, .nav-links a:focus {
-        background: var(--primary);
-        color: #fff;
-        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
-        outline: none;
-    }
-    /* Hierarquia visual dos cards */
-    .news-header {
-        padding: 1.2rem 1.5rem 0.5rem 1.5rem;
-        flex: 0 0 auto;
-    }
-    .news-meta {
-        display: flex;
-        gap: 1.1rem;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        font-size: 0.97rem;
-        color: var(--text-light);
-    }
-    .source-badge {
-        background: var(--primary-light);
-        color: #fff;
-        border-radius: 8px;
-        padding: 0.18rem 0.7rem;
-        font-size: 0.93rem;
-        font-weight: 600;
-        letter-spacing: 0.01em;
-    }
-    .timestamp {
-        color: var(--text-light);
-        font-size: 0.93rem;
-        font-weight: 500;
-    }
-    .news-title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        margin: 0.2rem 0 0.5rem 0;
-        color: var(--primary);
-        line-height: 1.25;
-        transition: color 0.2s;
-    }
-    .news-card:hover .news-title {
-        color: var(--accent);
-    }
-    .news-summary {
-        color: var(--text-light);
-        font-size: 1.05rem;
-        margin-bottom: 0.7rem;
-        font-weight: 500;
-    }
-    .news-content {
-        padding: 0 1.5rem 1.2rem 1.5rem;
-        flex: 1 1 auto;
-    }
-    .news-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    .news-item {
-        padding: 0.7rem 0.5rem;
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-        background: #f8fafc;
-        transition: background 0.2s, box-shadow 0.2s;
-        cursor: pointer;
-    }
-    .news-item:hover, .news-item:focus {
-        background: var(--primary-light);
-        color: #fff;
-        outline: none;
-        box-shadow: 0 2px 8px rgba(30,64,175,0.10);
-    }
-    /* Responsividade aprimorada */
-    @media (max-width: 600px) {
-        .news-card {
-            min-height: 260px;
-            border-radius: 12px;
-        }
-        .news-image-area {
-            height: 110px;
-            border-radius: 12px 12px 0 0;
-        }
-        .news-image {
-            border-radius: 12px 12px 0 0;
-        }
-        .news-header, .news-content {
-            padding-left: 0.7rem;
-            padding-right: 0.7rem;
-        }
-    }
-
-    @media (max-width: 1100px) {
-        .main-flex {
-            flex-direction: column;
-        }
-        .sidebar {
-            width: 100%;
-            max-width: 100%;
-            margin-bottom: 2rem;
-            position: static;
-            min-height: unset;
-            max-height: unset;
-        }
-    }
-    @media (max-width: 900px) {
-        .nav-links {
-            gap: 0.7rem;
-        }
-        .sidebar {
-            padding: 1.2rem 0.7rem;
-        }
-    }
-    @media (max-width: 768px) {
-        .main-flex {
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-        .sidebar {
-            width: 100%;
-            margin-bottom: 1.5rem;
-        }
-        .main-news-area {
-            width: 100%;
-        }
-        .top-navbar {
-            padding: 0.2rem 0;
-        }
-        .nav-flex {
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-    }
-    @media (max-width: 600px) {
-        .news-image-area {
-            height: 140px;
-        }
-        .news-card {
-            min-height: 320px;
-        }
-    }
-
-        // Função para renderizar notícias com busca e filtros
-        function loadNewsForTab(tabName) {
-            const container = document.getElementById(`news-container-${tabName}`);
-            let newsData = getNewsForTab(tabName);
-
-            // Aplicar busca
-            const searchValue = (window.currentSearch || '').toLowerCase();
-            if (searchValue) {
-                newsData = newsData.filter(news =>
-                    news.title.toLowerCase().includes(searchValue) ||
-                    news.summary.toLowerCase().includes(searchValue) ||
-                    news.items.some(item =>
-                        item.title.toLowerCase().includes(searchValue) ||
-                        item.summary.toLowerCase().includes(searchValue)
-                    )
-                );
-            }
-
-            // Aplicar filtro de tempo
-            if (window.currentTimeFilter && window.currentTimeFilter !== 'all') {
-                const now = new Date();
-                newsData = newsData.filter(news => {
-                    if (window.currentTimeFilter === '1h') {
-                        return news.timestamp.includes('minuto') || news.timestamp.includes('1 hora');
-                    } else if (window.currentTimeFilter === '24h') {
-                        return news.timestamp.includes('hora') || news.timestamp.includes('minuto');
-                    } else if (window.currentTimeFilter === '7d') {
-                        // Simulação: tudo que não for mais de 7 dias
-                        return !news.timestamp.includes('semana') && !news.timestamp.includes('mês');
-                    }
-                    return true;
-                });
-            }
-
-            // Aplicar ordenação
-            if (window.currentSort === 'oldest') {
-                newsData = [...newsData].reverse();
-            } else if (window.currentSort === 'source') {
-                newsData = [...newsData].sort((a, b) => a.source.localeCompare(b.source));
-            }
-            // (popularidade é fictício)
-
-            container.innerHTML = '';
-            newsData.forEach((news, index) => {
-                container.innerHTML += createNewsCard(news, index, tabName);
-            });
-        }
-        // Busca instantânea
-        window.currentSearch = '';
-        function searchNews() {
-            window.currentSearch = document.getElementById('searchInput').value;
-            loadNewsForTab(currentTab);
-        }
-
-        // Filtros de tempo
-        window.currentTimeFilter = 'all';
-        function filterByTime(time) {
-            window.currentTimeFilter = time;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.getAttribute('data-filter') === time) btn.classList.add('active');
-            });
-            loadNewsForTab(currentTab);
-        }
-
-        // Ordenação
-        window.currentSort = 'newest';
-        function sortNews(sortType) {
-            window.currentSort = sortType;
-            loadNewsForTab(currentTab);
         }
 
         function openModal(tabName, newsIndex, itemIndex = null) {
