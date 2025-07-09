@@ -1,17 +1,11 @@
-name: 🌐 Deploy Site Estático - DESABILITADO
+name: 🌐 Deploy Site Estático Simples
 
 on:
-  # TEMPORARIAMENTE DESABILITADO PARA PRESERVAR CONTEÚDO MANUAL
-  # push:
-  #   branches: [ main ]
+  # Executar quando push para main
+  push:
+    branches: [ main ]
   
-  # repository_dispatch:
-  #   types: [update-news]
-  
-  # schedule:
-  #   - cron: '0 7 * * *'
-  
-  # Permitir execução manual apenas quando necessário
+  # Permitir execução manual
   workflow_dispatch:
 
 # Configurar permissões para GitHub Pages
@@ -26,41 +20,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Gerar site estático
-  generate-site:
+  # Deploy simples sem AWS/Terraform
+  deploy-static:
     runs-on: ubuntu-latest
     
     steps:
     - name: 📥 Checkout code
       uses: actions/checkout@v4
     
-    - name: 🐍 Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-        cache: 'pip'
-    
-    - name: 📦 Install dependencies
+    - name: 🌐 Prepare static site
       run: |
-        pip install boto3 requests feedparser
+        echo "🚀 Preparando site estático com conteúdo manual preservado"
         
-    - name: 🔧 Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-    
-    - name: 🌐 SKIP - Generate site (preserving manual content)
-      run: |
-        echo "⚠️ PULANDO geração automática para preservar conteúdo manual"
-        echo "📝 O index.html atual será usado como está"
+        # Criar estrutura do site
+        mkdir -p site
         
-        # Criar estrutura otimizada do site
-        mkdir -p site/assets/images
-        mkdir -p site/assets/icons
-        
-        # Usar HTML atual (manual)
+        # Copiar HTML principal preservando conteúdo manual
         cp index.html site/
         
         # Criar robots.txt
@@ -68,7 +43,7 @@ jobs:
         echo "Allow: /" >> site/robots.txt
         echo "Sitemap: https://jucabronks.github.io/projeto-djblog/sitemap.xml" >> site/robots.txt
         
-        # Criar sitemap.xml básico
+        # Criar sitemap.xml
         echo '<?xml version="1.0" encoding="UTF-8"?>' > site/sitemap.xml
         echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> site/sitemap.xml
         echo '  <url>' >> site/sitemap.xml
@@ -79,14 +54,12 @@ jobs:
         echo '  </url>' >> site/sitemap.xml
         echo '</urlset>' >> site/sitemap.xml
         
-        echo "✅ Site preservado com conteúdo manual!"
-        echo "📊 Estrutura:"
-        ls -la site/
+        # Criar health.json
+        echo '{"status":"ok","message":"Site estático funcionando","timestamp":"'"$(date -u)"'"}' > site/health.json
         
-    - name: 📊 Generate health report (Skip if no AWS credentials)
-      continue-on-error: true
-      run: |
-        echo '{"status":"manual","message":"Site com conteúdo manual preservado"}' > site/health.json
+        echo "✅ Site preparado com sucesso!"
+        echo "📊 Arquivos criados:"
+        ls -la site/
         
     - name: 📁 Setup Pages
       uses: actions/configure-pages@v4
